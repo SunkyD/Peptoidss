@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laisser un avis — PEPTOIDS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsaXEiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgxNjgsODUsMjQ3LDAuOSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDYwLDAsMTYwLDEpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsaXEpIi8+CiAgPHJlY3QgeD0iMTEiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiByeD0iMiIgZmlsbD0iIzJhMDg0MCIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC40KSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8dGV4dCB4PSIxNiIgeT0iMTIuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSI1LjUiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC43KSI+UDwvdGV4dD4KPC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#00c8ff;--purple:#a855f7;--darker:#010610;--card:rgba(6,14,38,0.95);--border:rgba(0,200,255,0.13);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--darker);color:#fff;font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(1,6,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,0.08);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.nav-back{font-family:'Exo 2',sans-serif;font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;transition:all 0.2s;}
+.nav-back:hover{color:#fff;border-color:rgba(0,200,255,0.3);}
+
+.hero{position:relative;z-index:1;padding:120px 40px 50px;max-width:680px;margin:0 auto;text-align:center;}
+.tag{display:inline-block;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:4px;color:rgba(0,200,255,0.6);border:1px solid rgba(0,200,255,0.15);border-radius:20px;padding:6px 18px;margin-bottom:20px;}
+.hero h1{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(22px,4vw,36px);letter-spacing:3px;line-height:1.2;margin-bottom:14px;}
+.hero h1 span{background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-size:13px;color:rgba(255,255,255,0.35);line-height:1.7;}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 40px 80px;}
+
+/* Star rating */
+.star-row{display:flex;justify-content:center;gap:8px;margin:8px 0 4px;}
+.star{font-size:36px;cursor:pointer;color:rgba(255,255,255,0.1);transition:color 0.15s,transform 0.15s;user-select:none;line-height:1;}
+.star:hover,.star.active{color:#ffd700;transform:scale(1.15);}
+.star-label{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-align:center;height:16px;margin-bottom:8px;}
+
+/* Form */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;}
+.form-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:24px;text-align:center;}
+.fg{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.fg label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.3);text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{background:rgba(0,0,0,0.35);border:1px solid rgba(0,200,255,0.12);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(0,200,255,0.4);}
+.fg select option{background:#020818;}
+.fg textarea{resize:vertical;min-height:100px;line-height:1.6;}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,0.18);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.submit-btn{width:100%;padding:14px;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:12px;font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,200,255,0.25);}
+.note{font-size:11px;color:rgba(255,255,255,0.2);text-align:center;margin-top:12px;line-height:1.6;}
+.err{font-size:12px;color:#ff6060;text-align:center;margin-top:10px;display:none;}
+.success{display:none;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:14px;padding:28px;text-align:center;margin-top:16px;}
+.success.show{display:block;}
+.success p{font-size:13px;color:rgba(0,255,136,0.85);line-height:1.8;}
+.success strong{color:#00ff88;}
+
+/* Rating section label */
+.rating-section{margin-bottom:24px;padding:20px;background:rgba(255,215,0,0.04);border:1px solid rgba(255,215,0,0.1);border-radius:12px;text-align:center;}
+.rating-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,215,0,0.6);margin-bottom:12px;}
+
+.pf{position:relative;z-index:1;border-top:1px solid rgba(0,200,255,0.08);padding:22px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.pf span{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;}
+@media(max-width:600px){nav{padding:0 20px;}.hero{padding:96px 20px 36px;}.wrap{padding:0 16px 60px;}.form-card{padding:22px;}.row2{grid-template-columns:1fr;}.pf{padding:18px 20px;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+</nav>
+
+<div class="hero">
+  <div class="tag">✦ Avis clients ✦</div>
+  <h1>Partagez votre <span>expérience</span></h1>
+  <p>Votre avis compte. Il aide la communauté à faire les bons choix et nous permet d'améliorer nos services.</p>
+</div>
+
+<div class="wrap">
+  <div class="form-card">
+    <div class="form-title">DÉPOSER UN AVIS</div>
+
+    <!-- Stars -->
+    <div class="rating-section">
+      <div class="rating-title">NOTE GLOBALE *</div>
+      <div class="star-row" id="stars">
+        <span class="star" data-v="1">★</span>
+        <span class="star" data-v="2">★</span>
+        <span class="star" data-v="3">★</span>
+        <span class="star" data-v="4">★</span>
+        <span class="star" data-v="5">★</span>
+      </div>
+      <div class="star-label" id="starLabel">Cliquez pour noter</div>
+    </div>
+
+    <div class="row2">
+      <div class="fg">
+        <label>Prénom *</label>
+        <input type="text" id="r-prenom" placeholder="Jean">
+      </div>
+      <div class="fg">
+        <label>Initiale nom *</label>
+        <input type="text" id="r-nom" placeholder="D." maxlength="3">
+      </div>
+    </div>
+    <div class="fg">
+      <label>Produit concerné</label>
+      <select id="r-produit">
+        <option value="">— Tous les produits —</option>
+        <option value="Retatrutide">Retatrutide / GLP-1 Triple</option>
+        <option value="GHK-Cu">GHK-Cu / Copper Peptide</option>
+        <option value="HGH">HGH / Somatropin</option>
+        <option value="Service">Service / Livraison</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Votre avis *</label>
+      <textarea id="r-texte" placeholder="Décrivez votre expérience avec nos produits ou notre service..."></textarea>
+    </div>
+    <div class="fg">
+      <label>Nombre de commandes (optionnel)</label>
+      <select id="r-cmds">
+        <option value="">—</option>
+        <option value="1">1ère commande</option>
+        <option value="2">2 commandes</option>
+        <option value="3-5">3 à 5 commandes</option>
+        <option value="6-10">6 à 10 commandes</option>
+        <option value="10+">Plus de 10 commandes</option>
+      </select>
+    </div>
+
+    <button class="submit-btn" onclick="submitAvis()">PUBLIER MON AVIS →</button>
+    <div class="err" id="r-err"></div>
+    <div class="success" id="r-success">
+      <p><strong>Merci pour votre avis !</strong><br>Il sera visible sur le site après validation par notre équipe (généralement sous 24h).</p>
+    </div>
+    <p class="note">⚡ Votre avis est soumis à modération avant publication. Nous nous réservons le droit de refuser tout avis injurieux ou hors sujet.</p>
+  </div>
+</div>
+
+<footer class="pf">
+  <span>© 2026 PEPTOIDS — Tous droits réservés</span>
+  <span>Avis clients modérés</span>
+</footer>
+
+
+<style id="page-transition-css">
+#pt-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #010610;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+#pt-overlay.in { opacity: 1; pointer-events: all; }
+#pt-scan {
+  position: absolute;
+  top: -2px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c8ff 30%, #a855f7 70%, transparent);
+  box-shadow: 0 0 20px 4px rgba(0,200,255,0.6);
+  opacity: 0;
+}
+#pt-overlay.in #pt-scan {
+  opacity: 1;
+  animation: ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;
+}
+@keyframes ptScan {
+  0%   { top: 0%; opacity: 1; }
+  100% { top: 100%; opacity: 0.3; }
+}
+#pt-logo {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: clamp(20px,4vw,40px); letter-spacing: 8px;
+  background: linear-gradient(90deg, #00c8ff, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; opacity: 0;
+}
+#pt-overlay.in #pt-logo {
+  animation: ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes ptLogoIn {
+  0%   { opacity:0; transform: translate(-50%,-50%) scale(0.7); }
+  60%  { opacity:1; transform: translate(-50%,-50%) scale(1.05); }
+  100% { opacity:0.5; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes fadeInPage {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+body { animation: fadeInPage 0.45s ease forwards; }
+</style>
+
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div></div>
+
+<script>
+var selectedStars = 0;
+var STAR_LABELS = ['','Très mauvais','Mauvais','Correct','Bien','Excellent !'];
+var starEls = document.querySelectorAll('.star');
+
+starEls.forEach(function(s){
+  s.addEventListener('click', function(){
+    selectedStars = parseInt(this.getAttribute('data-v'));
+    updateStars(selectedStars);
+  });
+  s.addEventListener('mouseenter', function(){
+    updateStars(parseInt(this.getAttribute('data-v')), true);
+  });
+  s.addEventListener('mouseleave', function(){
+    updateStars(selectedStars);
+  });
+});
+
+function updateStars(n, hover){
+  starEls.forEach(function(s){
+    var v = parseInt(s.getAttribute('data-v'));
+    s.classList.toggle('active', v <= n);
+  });
+  document.getElementById('starLabel').textContent = STAR_LABELS[n] || (hover ? '' : 'Cliquez pour noter');
+}
+
+function submitAvis(){
+  // ── Rate limiting: max 2 avis / 24h ──
+  try {
+    var _avTs = JSON.parse(localStorage.getItem('peptoids:avis_ts') || '[]');
+    _avTs = _avTs.filter(function(t){ return Date.now() - t < 86400000; });
+    if (_avTs.length >= 2) {
+      var errAv = document.getElementById('r-err');
+      errAv.textContent = '⚠ Vous avez déjà soumis 2 avis aujourd\'hui. Réessayez demain.';
+      errAv.style.display = 'block';
+      return;
+    }
+  } catch(e) {}
+
+  var prenom = document.getElementById('r-prenom').value.trim();
+  var nom    = document.getElementById('r-nom').value.trim();
+  var texte  = document.getElementById('r-texte').value.trim();
+  var produit= document.getElementById('r-produit').value;
+  var cmds   = document.getElementById('r-cmds').value;
+  var err    = document.getElementById('r-err');
+  err.style.display='none';
+
+  if(!selectedStars)     { err.textContent='⚠ Veuillez attribuer une note.'; err.style.display='block'; return; }
+  if(!prenom)            { err.textContent='⚠ Veuillez entrer votre prénom.'; err.style.display='block'; return; }
+  if(!nom)               { err.textContent='⚠ Veuillez entrer votre initiale.'; err.style.display='block'; return; }
+  if(texte.length < 15)  { err.textContent='⚠ Avis trop court (minimum 15 caractères).'; err.style.display='block'; return; }
+
+  // Timestamp rate limiting
+  try {
+    var _avTs2 = JSON.parse(localStorage.getItem('peptoids:avis_ts') || '[]');
+    _avTs2.push(Date.now());
+    localStorage.setItem('peptoids:avis_ts', JSON.stringify(_avTs2));
+  } catch(e) {}
+
+  // Sanitiser les inputs
+  var safePrenom = prenom.replace(/[<>&"']/g, '');
+  var safeNom    = nom.toUpperCase().replace(/[<>&"']/g, '');
+  var safeTexte  = texte.replace(/[<>]/g, '');
+
+  var avis = {
+    id: 'av_'+Date.now(),
+    note: selectedStars,
+    prenom: safePrenom,
+    nom: safeNom,
+    texte: safeTexte,
+    produit: produit,
+    cmds: cmds,
+    date: new Date().toISOString(),
+    approuve: false,
+    lu: false
+  };
+
+  try {
+    var all = JSON.parse(localStorage.getItem('peptoids:avis')||'[]');
+    all.unshift(avis);
+    localStorage.setItem('peptoids:avis', JSON.stringify(all));
+  } catch(e){}
+
+  // Supabase settings save
+  try {
+    fetch('https://xseaecarjsyphxxcxpcw.supabase.co/rest/v1/settings?on_conflict=key', {
+      method:'POST',
+      headers:{apikey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY',Authorization:'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY','Content-Type':'application/json',Prefer:'resolution=merge-duplicates'},
+      body: JSON.stringify({key:'avis', value: JSON.parse(localStorage.getItem('peptoids:avis')||'[]'), updated_at: new Date().toISOString()})
+    }).catch(function(){});
+  } catch(e){}
+
+  document.getElementById('r-success').classList.add('show');
+  document.querySelector('.submit-btn').style.display='none';
+  err.style.display='none';
+}
+
+(function(){
+  var ov=document.getElementById('pt-overlay');
+  window.addEventListener('load',function(){ov.classList.remove('in');});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');
+    if(!a)return;
+    var href=a.getAttribute('href');
+    if(!href||href.startsWith('#')||href.startsWith('http')||href.startsWith('tel')||href.startsWith('mailto')||href.startsWith('javascript'))return;
+    e.preventDefault();ov.classList.add('in');
+    setTimeout(function(){window.location.href=href;},420);
+  });
+})();
+</script>
+<script id="page-transition-js">
+(function(){
+  var ov = document.getElementById('pt-overlay');
+  if (!ov) return;
+  window.addEventListener('load', function(){ ov.classList.remove('in'); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('tel') || href.startsWith('mailto') || href.startsWith('javascript')) return;
+    e.preventDefault();
+    ov.classList.add('in');
+    setTimeout(function(){ window.location.href = href; }, 460);
+  });
+  window.addEventListener('beforeunload', function(){ ov.classList.add('in'); });
+})();
+</script>
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>

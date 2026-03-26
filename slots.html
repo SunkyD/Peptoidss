@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Peptoids — Machine à Sous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan:#00c8ff; --purple:#a855f7; --green:#00ff88;
+  --darker:#010610; --card:rgba(6,14,38,0.95);
+  --border:rgba(0,200,255,0.13); --gold:#ffd700;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--darker);color:#fff;font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);
+  background-size:42px 42px;pointer-events:none;}
+
+canvas#bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(1,6,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,0.08);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.nav-back{font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;transition:all 0.2s;}
+.nav-back:hover{color:#fff;border-color:rgba(0,200,255,0.3);}
+
+.page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:90px 40px 80px;}
+
+/* ── HEADER ── */
+.page-header{text-align:center;margin-bottom:48px;}
+.page-tag{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:4px;color:rgba(255,215,0,0.7);margin-bottom:12px;}
+.page-title{font-family:'Orbitron',monospace;font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:2px;margin-bottom:12px;}
+.page-title span{background:linear-gradient(90deg,var(--gold),#ff8c00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-size:14px;color:rgba(255,255,255,0.38);letter-spacing:1px;}
+
+/* ── MACHINE ── */
+.machine{background:linear-gradient(135deg,rgba(6,14,38,0.98),rgba(10,4,30,0.98));border:1px solid rgba(255,215,0,0.2);border-radius:28px;padding:40px;position:relative;overflow:hidden;box-shadow:0 0 60px rgba(255,215,0,0.05),0 0 120px rgba(168,85,247,0.05);}
+.machine::before{content:'';position:absolute;inset:0;border-radius:28px;background:linear-gradient(135deg,rgba(255,215,0,0.03),transparent 50%,rgba(168,85,247,0.03));pointer-events:none;}
+
+/* Néons décoratifs */
+.neon-line{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,0,0.3),rgba(255,140,0,0.3),transparent);}
+.neon-line.top{top:0;}
+.neon-line.bottom{bottom:0;}
+
+/* ── ROULEAUX ── */
+.reels-container{display:flex;gap:16px;justify-content:center;margin-bottom:32px;}
+.reel-wrap{flex:1;max-width:180px;background:rgba(0,0,0,0.5);border:1px solid rgba(255,215,0,0.15);border-radius:16px;overflow:hidden;position:relative;height:140px;}
+.reel-wrap::before,.reel-wrap::after{content:'';position:absolute;left:0;right:0;height:40px;z-index:2;pointer-events:none;}
+.reel-wrap::before{top:0;background:linear-gradient(to bottom,rgba(1,6,16,0.9),transparent);}
+.reel-wrap::after{bottom:0;background:linear-gradient(to top,rgba(1,6,16,0.9),transparent);}
+.reel-highlight{position:absolute;top:50%;left:0;right:0;height:48px;transform:translateY(-50%);border-top:1px solid rgba(255,215,0,0.25);border-bottom:1px solid rgba(255,215,0,0.25);background:rgba(255,215,0,0.04);z-index:1;pointer-events:none;}
+.reel{display:flex;flex-direction:column;align-items:center;transition:transform 0.05s linear;will-change:transform;}
+.reel-item{height:48px;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0;width:100%;}
+
+/* ── RÉSULTAT ── */
+.result-zone{min-height:64px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;}
+.result-msg{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:2px;text-align:center;padding:16px 28px;border-radius:14px;opacity:0;transform:translateY(10px);transition:all 0.4s ease;}
+.result-msg.show{opacity:1;transform:translateY(0);}
+.result-msg.win{background:linear-gradient(135deg,rgba(255,215,0,0.12),rgba(255,140,0,0.08));border:1px solid rgba(255,215,0,0.35);color:var(--gold);}
+.result-msg.lose{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.35);}
+
+/* ── BOUTON SPIN ── */
+.spin-btn{width:100%;padding:18px;background:linear-gradient(90deg,#ffd700,#ff8c00);border:none;border-radius:16px;font-family:'Orbitron',monospace;font-size:14px;font-weight:900;letter-spacing:3px;color:#000;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.spin-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,215,0,0.4);}
+.spin-btn:disabled{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.2);cursor:not-allowed;transform:none;box-shadow:none;}
+.spin-btn.spinning{animation:btnPulse 0.5s ease infinite alternate;}
+@keyframes btnPulse{from{box-shadow:0 0 20px rgba(255,215,0,0.3);}to{box-shadow:0 0 40px rgba(255,215,0,0.6);}}
+
+/* ── INFOS ── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
+.info-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;text-align:center;}
+.info-card .label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.25);margin-bottom:6px;}
+.info-card .value{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#fff;}
+
+/* ── TABLE DES GAINS ── */
+.prizes-section{margin-top:32px;}
+.prizes-title{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:rgba(255,215,0,0.6);margin-bottom:16px;text-align:center;}
+.prizes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;}
+.prize-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 14px;}
+.prize-combo{font-size:20px;letter-spacing:2px;flex-shrink:0;}
+.prize-label{font-size:12px;color:rgba(255,255,255,0.5);}
+.prize-label strong{color:var(--gold);font-family:'Orbitron',monospace;font-size:11px;}
+
+/* ── CONFETTI ── */
+.confetti-piece{position:fixed;pointer-events:none;z-index:9999;border-radius:2px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1;}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+}
+
+/* ── LOGIN WALL ── */
+.login-wall{text-align:center;padding:60px 20px;}
+.login-wall .icon{font-size:64px;margin-bottom:20px;}
+.login-wall h2{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;letter-spacing:2px;margin-bottom:12px;}
+.login-wall p{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:24px;}
+
+/* ── PT OVERLAY ── */
+#pt-overlay{position:fixed;inset:0;z-index:9999;background:#010610;pointer-events:none;opacity:0;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1);}
+#pt-overlay.in{opacity:1;pointer-events:all;}
+#pt-scan{position:absolute;top:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff 30%,#a855f7 70%,transparent);box-shadow:0 0 20px 4px rgba(0,200,255,0.6);opacity:0;}
+#pt-overlay.in #pt-scan{opacity:1;animation:ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;}
+@keyframes ptScan{0%{top:0%;opacity:1;}100%{top:100%;opacity:0.3;}}
+#pt-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(20px,4vw,40px);letter-spacing:8px;background:linear-gradient(90deg,#00c8ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;}
+#pt-overlay.in #pt-logo{animation:ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+@keyframes ptLogoIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.7);}100%{opacity:0.5;transform:translate(-50%,-50%) scale(1);}}
+@keyframes fadeInPage{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+body{animation:fadeInPage 0.45s ease forwards;}
+
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .page{padding:80px 20px 60px;}
+  .reels-container{gap:8px;}
+  .reel-wrap{height:120px;}
+  .reel-item{height:40px;font-size:26px;}
+  .reel-highlight{height:40px;}
+}
+</style>
+</head>
+<body>
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div>
+<canvas id="bg"></canvas>
+
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-tag">✦ MINI-JEU EXCLUSIF ✦</div>
+    <h2 class="page-title">Lucky <span>PEPTOIDS</span></h2>
+    <p class="page-sub">Tentez votre chance · Une partie par jour · Des coupons à gagner</p>
+  </div>
+
+  <div id="mainContent"></div>
+</div>
+
+<script>
+var SUPABASE_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+var SBH = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' };
+
+// ── CONFIG MACHINE ──
+var SYMBOLS = ['🧬','💊','⚗️','🔬','🧪','💎'];
+var DEFAULT_PRIZES_SLOTS = [
+  { symbol:'💎', combo:['💎','💎','💎'], label:'JACKPOT', value:50,  chance:1  },
+  { symbol:'🧬', combo:['🧬','🧬','🧬'], label:'TRIPLE',  value:20,  chance:4  },
+  { symbol:'💊', combo:['💊','💊','💊'], label:'TRIPLE',  value:10,  chance:7  },
+  { symbol:'⚗️', combo:['⚗️','⚗️','⚗️'], label:'TRIPLE',  value:5,   chance:10 }
+];
+
+function getPrizesFromConfig() {
+  try {
+    var cfg = JSON.parse(localStorage.getItem('peptoids:slots_config') || '{}');
+    if (cfg.prizes && Array.isArray(cfg.prizes) && cfg.prizes.length > 0) {
+      return cfg.prizes.map(function(p) {
+        var sym = p.combo ? p.combo.split('')[0] : '💎';
+        return { symbol:sym, combo:[sym,sym,sym], label:p.label||'GAIN', value:p.value||0, chance:p.chance||0 };
+      });
+    }
+  } catch(e){}
+  return DEFAULT_PRIZES_SLOTS;
+}
+
+var PRIZES = (function() {
+  var prizes = getPrizesFromConfig();
+  var totalChance = prizes.reduce(function(s,p){ return s+p.chance; }, 0);
+  var loseChance = Math.max(0, 100 - totalChance);
+  var result = prizes.map(function(p) {
+    return { combo: p.combo, label: p.label, reward: 'coupon', value: p.value, chance: p.chance };
+  });
+  result.push({ combo: null, label: 'PERDU', reward: null, value: 0, chance: loseChance });
+  return result;
+})();
+
+function getSession()  { try { return JSON.parse(localStorage.getItem('peptoids:account_session')||'null'); } catch(e){ return null; } }
+function getUsers()    { try { return JSON.parse(localStorage.getItem('peptoids:users')||'[]'); } catch(e){ return []; } }
+function saveUsers(u)  { localStorage.setItem('peptoids:users', JSON.stringify(u)); }
+function getSlotCfg()  { try { return JSON.parse(localStorage.getItem('peptoids:slots_config')||'{"active":false,"daily":true}'); } catch(e){ return {active:false,daily:true}; } }
+function getLastSpin(userId) { try { return localStorage.getItem('peptoids:slot_last_'+userId)||null; } catch(e){ return null; } }
+function setLastSpin(userId) { localStorage.setItem('peptoids:slot_last_'+userId, new Date().toDateString()); }
+
+function canSpin(userId) {
+  var cfg = getSlotCfg();
+  if (!cfg.daily) return true;
+  return getLastSpin(userId) !== new Date().toDateString();
+}
+
+function spinResult() {
+  var rand = Math.random() * 100;
+  var cum = 0;
+  for (var i = 0; i < PRIZES.length; i++) {
+    cum += PRIZES[i].chance;
+    if (rand < cum) return PRIZES[i];
+  }
+  return PRIZES[PRIZES.length-1];
+}
+
+// ── RENDU PRINCIPAL ──
+function render() {
+  var cfg = getSlotCfg();
+  var session = getSession();
+  var el = document.getElementById('mainContent');
+
+  if (!cfg.active) {
+    el.innerHTML = '<div class="login-wall"><div class="icon">🎰</div><h2>BIENTÔT DISPONIBLE</h2><p>La machine à sous sera bientôt activée par l\'équipe PEPTOIDS.</p><a href="index.html" style="display:inline-block;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:12px;padding:12px 28px;font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:#000;text-decoration:none;">← RETOUR</a></div>';
+    return;
+  }
+  if (!session) {
+    el.innerHTML = '<div class="login-wall"><div class="icon">🔐</div><h2>CONNEXION REQUISE</h2><p>Connectez-vous à votre espace client pour jouer.</p><a href="compte.html" style="display:inline-block;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:12px;padding:12px 28px;font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:#000;text-decoration:none;">SE CONNECTER</a></div>';
+    return;
+  }
+
+  var played = !canSpin(session.id);
+  var nextReset = played ? 'Revenez demain' : 'Disponible maintenant';
+
+  el.innerHTML = `
+    <div class="machine">
+      <div class="neon-line top"></div>
+      <div class="neon-line bottom"></div>
+
+      <div class="reels-container">
+        <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel" id="reel0"></div></div>
+        <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel" id="reel1"></div></div>
+        <div class="reel-wrap"><div class="reel-highlight"></div><div class="reel" id="reel2"></div></div>
+      </div>
+
+      <div class="result-zone"><div class="result-msg" id="resultMsg"></div></div>
+
+      <button class="spin-btn" id="spinBtn" ${played ? 'disabled' : ''} onclick="doSpin()">
+        ${played ? '✓ PARTIE JOUÉE AUJOURD\'HUI' : '🎰 LANCER LES ROULEAUX'}
+      </button>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="label">TENTATIVES</div>
+          <div class="value">${played ? '0' : '1'} restante</div>
+        </div>
+        <div class="info-card">
+          <div class="label">PROCHAINE PARTIE</div>
+          <div class="value" style="font-size:12px;">${nextReset}</div>
+        </div>
+      </div>
+
+    </div>`;
+
+  initReels();
+
+  // Remplir la table des gains dynamiquement
+  var grid = document.getElementById('prizesGrid');
+  if (grid) {
+    grid.innerHTML = PRIZES.filter(function(p){ return p.reward === 'coupon'; }).map(function(p){
+      var combo = p.combo ? p.combo.join('') : '';
+      return '<div class="prize-row"><div class="prize-combo">' + combo + '</div><div class="prize-label"><strong>' + p.label + ' — Coupon -' + p.value + '€</strong></div></div>';
+    }).join('');
+  }
+}
+
+// ── ROULEAUX ──
+var reelSymbols = [[], [], []];
+
+function initReels() {
+  for (var i = 0; i < 3; i++) {
+    var reel = document.getElementById('reel'+i);
+    if (!reel) continue;
+    var items = '';
+    // 20 symboles par rouleau
+    for (var j = 0; j < 20; j++) {
+      items += '<div class="reel-item">' + SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)] + '</div>';
+    }
+    reel.innerHTML = items;
+    // Positionner au milieu
+    reel.style.transform = 'translateY(-' + (9 * 48) + 'px)';
+  }
+}
+
+var spinning = false;
+
+function doSpin() {
+  if (spinning) return;
+  var session = getSession();
+  if (!session || !canSpin(session.id)) return;
+
+  spinning = true;
+  var btn = document.getElementById('spinBtn');
+  btn.disabled = true;
+  btn.classList.add('spinning');
+  btn.textContent = '⚡ EN COURS...';
+
+  var result = spinResult();
+  // Déterminer les symboles finaux
+  var finalSymbols = result.combo
+    ? result.combo.slice()
+    : [SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)], SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)]];
+
+  // S'assurer que si perdant, pas de triple identique
+  if (!result.combo) {
+    while (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
+      finalSymbols[2] = SYMBOLS[Math.floor(Math.random()*SYMBOLS.length)];
+    }
+  }
+
+  var delays = [0, 400, 800];
+  var done = 0;
+
+  var ITEM_H = 48;
+
+  for (var i = 0; i < 3; i++) {
+    (function(idx, finalSym) {
+      var reel = document.getElementById('reel' + idx);
+      if (!reel) return;
+
+      // Reconstruire le rouleau : 30 items aléatoires + symbole final au centre (position 14)
+      var CENTER = 14;
+      var TOTAL = 30;
+      var html = '';
+      for (var k = 0; k < TOTAL; k++) {
+        if (k === CENTER) {
+          html += '<div class="reel-item">' + finalSym + '</div>';
+        } else {
+          html += '<div class="reel-item">' + SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)] + '</div>';
+        }
+      }
+      reel.innerHTML = html;
+
+      // Position de départ : haut du rouleau
+      var startY = 0;
+      // Position finale : centrer l'item CENTER dans la fenêtre (hauteur 140px, centre à 70px = 1.5 items)
+      var targetY = -(CENTER * ITEM_H - (140/2 - ITEM_H/2));
+      reel.style.transition = 'none';
+      reel.style.transform = 'translateY(' + startY + 'px)';
+
+      var duration = 1400 + idx * 500;
+
+      setTimeout(function() {
+        var t0 = null;
+        // Distance totale = plusieurs tours + atterrissage sur targetY
+        var extraSpins = (3 + idx) * TOTAL * ITEM_H;
+        var totalDist = extraSpins + Math.abs(targetY);
+
+        function animate(ts) {
+          if (!t0) t0 = ts;
+          var elapsed = ts - t0;
+          var progress = Math.min(elapsed / duration, 1);
+          var ease = 1 - Math.pow(1 - progress, 4);
+          var y = startY - totalDist * ease;
+          // Wrap pendant la phase de défilement
+          if (progress < 0.85) {
+            var wrapped = (y % (TOTAL * ITEM_H));
+            reel.style.transform = 'translateY(' + wrapped + 'px)';
+          } else {
+            // Phase finale : aller directement à la position cible
+            var finalEase = (progress - 0.85) / 0.15;
+            var finalE = 1 - Math.pow(1 - finalEase, 3);
+            reel.style.transform = 'translateY(' + (targetY * finalE) + 'px)';
+          }
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            reel.style.transform = 'translateY(' + targetY + 'px)';
+            done++;
+            if (done === 3) onSpinComplete(result, finalSymbols, session);
+          }
+        }
+        requestAnimationFrame(animate);
+      }, idx * 200);
+    })(i, finalSymbols[i]);
+  }
+}
+
+function onSpinComplete(result, finalSymbols, session) {
+  spinning = false;
+  setLastSpin(session.id);
+
+  var msgEl = document.getElementById('resultMsg');
+  var btn = document.getElementById('spinBtn');
+
+  if (result.reward === 'coupon') {
+    // Générer le coupon
+    var code = 'LUCKY-' + Math.random().toString(36).substr(2,6).toUpperCase();
+    var coupon = {
+      code: code, discount: 0, fixedAmount: result.value,
+      discountType: 'fixed', singleUse: true, maxUses: 1, uses: 0,
+      active: true, source: 'slots', userId: session.id,
+      expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+      created: new Date().toISOString()
+    };
+    try {
+      var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos')||'[]');
+      cp.push(coupon);
+      localStorage.setItem('peptoids:custom_promos', JSON.stringify(cp));
+      fetch(SUPABASE_URL+'/rest/v1/promos?on_conflict=code', {method:'POST',headers:SBH,body:JSON.stringify(coupon)}).catch(function(){});
+    } catch(e){}
+
+    msgEl.className = 'result-msg win show';
+    msgEl.innerHTML = '🎉 ' + result.label + ' ! Coupon <strong style="color:var(--gold);letter-spacing:2px;">' + code + '</strong><br><span style="font-size:11px;opacity:0.7;">-' + result.value + '€ · Valable 30 jours · Copié dans vos avantages</span>';
+    launchConfetti();
+    setTimeout(function(){
+      navigator.clipboard && navigator.clipboard.writeText(code).catch(function(){});
+    }, 500);
+  } else {
+    msgEl.className = 'result-msg lose show';
+    msgEl.innerHTML = '😔 Pas de chance cette fois...<br><span style="font-size:11px;opacity:0.5;">Revenez demain pour une nouvelle tentative !</span>';
+  }
+
+  btn.classList.remove('spinning');
+  btn.textContent = '✓ PARTIE JOUÉE AUJOURD\'HUI';
+}
+
+// ── CONFETTI ──
+function launchConfetti() {
+  var colors = ['#ffd700','#ff8c00','#00c8ff','#a855f7','#00ff88','#fff'];
+  for (var i = 0; i < 80; i++) {
+    (function(delay) {
+      setTimeout(function() {
+        var el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.cssText = 'left:' + (Math.random()*100) + 'vw;width:' + (4+Math.random()*8) + 'px;height:' + (4+Math.random()*8) + 'px;background:' + colors[Math.floor(Math.random()*colors.length)] + ';animation-duration:' + (1.5+Math.random()*2) + 's;';
+        document.body.appendChild(el);
+        setTimeout(function(){ el.remove(); }, 4000);
+      }, delay);
+    })(i * 30);
+  }
+}
+
+// ── BACKGROUND PARTICULES ──
+(function(){
+  var canvas = document.getElementById('bg');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W, H, stars = [], particles = [];
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  for (var i=0;i<150;i++) stars.push({x:Math.random()*2000,y:Math.random()*2000,r:Math.random()*1.1,a:Math.random()});
+  for (var j=0;j<40;j++) {
+    var cols=['rgba(255,215,0,','rgba(255,140,0,','rgba(168,85,247,'];
+    particles.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,r:Math.random()*1.5+0.5,a:Math.random()*0.4+0.1,color:cols[Math.floor(Math.random()*cols.length)],p:Math.random()*Math.PI*2});
+  }
+  var t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H); t+=0.008;
+    stars.forEach(function(s){
+      ctx.beginPath();ctx.arc(s.x%W,s.y%H,s.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,'+(s.a*(0.3+0.2*Math.sin(t*0.3+s.x)))+')';ctx.fill();
+    });
+    particles.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;p.p+=0.02;
+      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
+      var a=p.a*(0.5+0.5*Math.sin(p.p));
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.color+a+')';ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── PAGE TRANSITION ──
+(function(){
+  var ov=document.getElementById('pt-overlay');
+  if(!ov)return;
+  window.addEventListener('load',function(){ov.classList.remove('in');});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');if(!a)return;
+    var href=a.getAttribute('href');
+    if(!href||href.startsWith('#')||href.startsWith('http')||href.startsWith('javascript'))return;
+    e.preventDefault();ov.classList.add('in');
+    setTimeout(function(){window.location.href=href;},460);
+  });
+})();
+
+// ── BANDEAU COOKIE ──
+(function(){
+  if(localStorage.getItem('peptoids:cookie_consent')) return;
+  // Pas de bandeau sur cette page
+})();
+
+// ── INIT ──
+// Charger la config depuis Supabase d'abord, puis render
+(function(){
+  fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.slots_config&select=value', {
+    headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+  }).then(function(r){ return r.json(); }).then(function(rows){
+    if (rows && rows[0] && rows[0].value) {
+      localStorage.setItem('peptoids:slots_config', JSON.stringify(rows[0].value));
+    }
+    render();
+  }).catch(function(){ render(); });
+})();
+</script>
+
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <p style="font-size:13px;color:rgba(255,255,255,0.7);flex:1;min-width:240px;">Ce site utilise le stockage local pour gérer votre session et vos coupons. <a href="confidentialite.html" style="color:#a855f7;">Politique de confidentialité</a>.</p>
+  <div style="display:flex;gap:10px;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(c){localStorage.setItem('peptoids:cookie_consent',JSON.stringify({choice:c,date:new Date().toISOString()}));var b=document.getElementById('cookie-banner');b.style.transform='translateY(100%)';}
+  window.setCookieConsent=setCookieConsent;
+  if(!localStorage.getItem('peptoids:cookie_consent'))setTimeout(function(){document.getElementById('cookie-banner').style.transform='translateY(0)';},600);
+})();
+</script>
+</body>
+</html>

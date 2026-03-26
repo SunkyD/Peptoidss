@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — PEPTOIDS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsaXEiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgxNjgsODUsMjQ3LDAuOSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDYwLDAsMTYwLDEpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsaXEpIi8+CiAgPHJlY3QgeD0iMTEiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiByeD0iMiIgZmlsbD0iIzJhMDg0MCIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC40KSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8dGV4dCB4PSIxNiIgeT0iMTIuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSI1LjUiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC43KSI+UDwvdGV4dD4KPC9zdmc+">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#00c8ff;--purple:#a855f7;--darker:#010610;--card:rgba(6,14,38,0.95);--border:rgba(0,200,255,0.13);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--darker);color:#fff;font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(1,6,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,0.08);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.nav-back{font-family:'Exo 2',sans-serif;font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;transition:all 0.2s;}
+.nav-back:hover{color:#fff;border-color:rgba(0,200,255,0.3);}
+
+/* HERO */
+.hero{position:relative;z-index:1;padding:120px 40px 50px;max-width:900px;margin:0 auto;text-align:center;}
+.tag{display:inline-block;font-family:'Orbitron',monospace;font-size:9px;letter-spacing:4px;color:rgba(0,200,255,0.6);border:1px solid rgba(0,200,255,0.15);border-radius:20px;padding:6px 18px;margin-bottom:20px;}
+.hero h1{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(24px,4vw,40px);letter-spacing:3px;line-height:1.2;margin-bottom:14px;}
+.hero h1 span{background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-size:14px;color:rgba(255,255,255,0.35);letter-spacing:0.5px;line-height:1.7;}
+
+/* LAYOUT */
+.main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 40px 80px;display:grid;grid-template-columns:1fr 1.6fr;gap:24px;align-items:start;}
+
+/* INFO CARDS */
+.info-col{display:flex;flex-direction:column;gap:14px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px;display:flex;gap:16px;align-items:flex-start;}
+.info-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ic-cyan{background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);}
+.ic-purple{background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);}
+.ic-green{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);}
+.info-label{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;color:rgba(0,200,255,0.5);margin-bottom:4px;}
+.info-val{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;}
+.info-val strong{color:#fff;}
+
+/* FORM */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:36px;}
+.form-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:24px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.form-group label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;font-family:'Exo 2',sans-serif;}
+.form-group input,
+.form-group select,
+.form-group textarea{background:rgba(0,0,0,0.35);border:1px solid rgba(0,200,255,0.12);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{border-color:rgba(0,200,255,0.4);box-shadow:0 0 0 3px rgba(0,200,255,0.08);}
+.form-group select{cursor:pointer;}
+.form-group select option{background:#020818;color:#fff;}
+.form-group textarea{resize:vertical;min-height:120px;line-height:1.6;}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:rgba(255,255,255,0.2);}
+.submit-btn{width:100%;padding:14px;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:12px;font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;margin-top:4px;}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(0,200,255,0.25);}
+.submit-btn:active{transform:scale(0.98);}
+.form-note{font-size:11px;color:rgba(255,255,255,0.2);text-align:center;margin-top:12px;line-height:1.6;}
+
+/* Success state */
+.success-msg{display:none;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:12px;padding:20px;text-align:center;margin-top:16px;}
+.success-msg.show{display:block;}
+.success-msg p{font-size:13px;color:rgba(0,255,136,0.85);line-height:1.7;}
+.success-msg strong{color:#00ff88;}
+
+/* FAQ */
+.faq-section{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 40px 80px;}
+.faq-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;color:rgba(0,200,255,0.5);margin-bottom:16px;text-align:center;}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;cursor:pointer;transition:border-color 0.2s;}
+.faq-item:hover{border-color:rgba(0,200,255,0.25);}
+.faq-q{font-family:'Exo 2',sans-serif;font-size:13px;font-weight:600;color:#fff;margin-bottom:8px;line-height:1.4;}
+.faq-a{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;}
+
+.pf{position:relative;z-index:1;border-top:1px solid rgba(0,200,255,0.08);padding:22px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.pf span{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;}
+
+@media(max-width:700px){
+  nav{padding:0 20px;}
+  .hero{padding:96px 16px 36px;}
+  .main{padding:0 16px 40px;grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .faq-section{padding:0 16px 60px;}
+  .faq-grid{grid-template-columns:1fr;}
+  .form-card{padding:24px;}
+  .pf{padding:18px 20px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+</nav>
+
+<div class="hero">
+  <div class="tag">✦ Support ✦</div>
+  <h1>Nous <span>contacter</span></h1>
+  <p>Une question sur une commande, un produit ou autre chose ?<br>On vous répond sous 24h.</p>
+</div>
+
+<div class="main">
+
+  <!-- Infos -->
+  <div class="info-col">
+    <div class="info-card">
+      <div class="info-icon ic-cyan">✉</div>
+      <div>
+        <div class="info-label">Email</div>
+        <div class="info-val"><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="53303c3d2732302713233623273c3a37207d3521">[email&#160;protected]</a></strong><br>Réponse sous 24h ouvrées</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon ic-purple">📦</div>
+      <div>
+        <div class="info-label">Suivi commande</div>
+        <div class="info-val">Connectez-vous à votre <a href="compte.html" style="color:rgba(0,200,255,0.7);text-decoration:none;">espace client</a> pour suivre vos commandes et accéder à l'historique.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon ic-green">⏱</div>
+      <div>
+        <div class="info-label">Horaires</div>
+        <div class="info-val"><strong>Lun – Ven</strong><br>9h00 – 18h00</div>
+      </div>
+    </div>
+    <div class="info-card" style="border-color:rgba(255,170,0,0.15);background:rgba(255,170,0,0.04);">
+      <div class="info-icon" style="background:rgba(255,170,0,0.08);border:1px solid rgba(255,170,0,0.2);font-size:18px;">⚠</div>
+      <div>
+        <div class="info-label" style="color:rgba(255,170,0,0.6);">Rappel</div>
+        <div class="info-val" style="color:rgba(255,200,100,0.6);">Nos produits sont réservés à la recherche scientifique uniquement. Nous ne pouvons pas répondre aux demandes d'usage personnel ou médical.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <div class="form-card">
+    <div class="form-title">ENVOYER UN MESSAGE</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prénom *</label>
+        <input type="text" id="f-prenom" placeholder="Jean">
+      </div>
+      <div class="form-group">
+        <label>Nom *</label>
+        <input type="text" id="f-nom" placeholder="Dupont">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email *</label>
+      <input type="email" id="f-email" placeholder="jean.dupont@email.com">
+    </div>
+    <div class="form-group">
+      <label>Sujet *</label>
+      <select id="f-sujet">
+        <option value="">— Choisir un sujet —</option>
+        <option value="commande">Question sur une commande</option>
+        <option value="produit">Information sur un produit</option>
+        <option value="livraison">Problème de livraison</option>
+        <option value="compte">Mon compte / fidélité</option>
+        <option value="retour">Réclamation / retour</option>
+        <option value="autre">Autre</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Numéro de commande (si applicable)</label>
+      <input type="text" id="f-commande" placeholder="PEP-XXXXXXXX">
+    </div>
+    <div class="form-group">
+      <label>Message *</label>
+      <textarea id="f-message" placeholder="Décrivez votre demande en détail..."></textarea>
+    </div>
+    <button class="submit-btn" onclick="sendContact()">ENVOYER →</button>
+    <div id="f-error" style="font-size:12px;color:#ff6060;text-align:center;margin-top:10px;display:none;"></div>
+    <div class="success-msg" id="f-success">
+      <p><strong>Message envoyé !</strong><br>Merci pour votre message. Nous vous répondrons à l'adresse indiquée dans les meilleurs délais (sous 24h ouvrées).</p>
+    </div>
+    <p class="form-note">🔒 Vos données sont traitées conformément à notre <a href="confidentialite.html" style="color:rgba(0,200,255,0.5);text-decoration:none;">politique de confidentialité</a>.</p>
+  </div>
+
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-title">QUESTIONS FRÉQUENTES</div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q">Quand ma commande sera-t-elle expédiée ?</div>
+      <div class="faq-a">Les commandes sont expédiées dans les 2 jours ouvrés suivant la réception du virement bancaire. Vous recevrez un email de confirmation avec le numéro de suivi.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Comment effectuer un virement bancaire ?</div>
+      <div class="faq-a">Lors de la validation de votre commande, vous accédez aux coordonnées bancaires. Mentionnez votre numéro de commande en référence du virement.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Mes produits sont-ils livrés discrètement ?</div>
+      <div class="faq-a">Oui, tous nos colis sont expédiés sous emballage neutre sans mention PEPTOIDS à l'extérieur. La discrétion est notre priorité.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Comment utiliser mes points de fidélité ?</div>
+      <div class="faq-a">Connectez-vous à votre espace client pour consulter votre solde. 2 000 points = un code de réduction de 10€ utilisable à la commande suivante.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Les produits nécessitent-ils une ordonnance ?</div>
+      <div class="faq-a">Nos produits sont des peptides de recherche, non soumis à ordonnance. Ils sont réservés à un usage scientifique uniquement, pas à un usage médical.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Livrez-vous en dehors de la France ?</div>
+      <div class="faq-a">Actuellement, nous livrons uniquement en France métropolitaine via Mondial Relay. Une extension à d'autres pays est envisagée prochainement.</div>
+    </div>
+  </div>
+</div>
+
+<footer class="pf">
+  <span>© 2026 PEPTOIDS — Tous droits réservés</span>
+  <span>Support · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfaca0a1bbaeacbb8fbfaabfbba0a6abbce1a9bd">[email&#160;protected]</a></span>
+</footer>
+
+
+<style id="page-transition-css">
+#pt-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #010610;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+#pt-overlay.in { opacity: 1; pointer-events: all; }
+#pt-scan {
+  position: absolute;
+  top: -2px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c8ff 30%, #a855f7 70%, transparent);
+  box-shadow: 0 0 20px 4px rgba(0,200,255,0.6);
+  opacity: 0;
+}
+#pt-overlay.in #pt-scan {
+  opacity: 1;
+  animation: ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;
+}
+@keyframes ptScan {
+  0%   { top: 0%; opacity: 1; }
+  100% { top: 100%; opacity: 0.3; }
+}
+#pt-logo {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: clamp(20px,4vw,40px); letter-spacing: 8px;
+  background: linear-gradient(90deg, #00c8ff, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; opacity: 0;
+}
+#pt-overlay.in #pt-logo {
+  animation: ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes ptLogoIn {
+  0%   { opacity:0; transform: translate(-50%,-50%) scale(0.7); }
+  60%  { opacity:1; transform: translate(-50%,-50%) scale(1.05); }
+  100% { opacity:0.5; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes fadeInPage {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+body { animation: fadeInPage 0.45s ease forwards; }
+</style>
+
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function sendContact() {
+  // ── Rate limiting: max 3 messages / 10min ──
+  try {
+    var _ctTs = JSON.parse(localStorage.getItem('peptoids:contact_ts') || '[]');
+    _ctTs = _ctTs.filter(function(t){ return Date.now() - t < 600000; });
+    if (_ctTs.length >= 3) {
+      var err2 = document.getElementById('f-err') || document.querySelector('.err');
+      if (err2) { err2.textContent = '⚠️ Trop de messages envoyés. Attendez 10 min.'; err2.style.display='block'; }
+      return;
+    }
+  } catch(e) {}
+
+  var prenom  = document.getElementById('f-prenom').value.trim();
+  var nom     = document.getElementById('f-nom').value.trim();
+  var email   = document.getElementById('f-email').value.trim();
+  var sujet   = document.getElementById('f-sujet').value;
+  var message = document.getElementById('f-message').value.trim();
+  var err     = document.getElementById('f-error');
+
+  err.style.display = 'none';
+
+  if (!prenom || !nom)    { err.textContent = '⚠ Veuillez renseigner votre prénom et nom.'; err.style.display = 'block'; return; }
+  if (!email || !email.includes('@')) { err.textContent = '⚠ Adresse email invalide.'; err.style.display = 'block'; return; }
+  if (!sujet)              { err.textContent = '⚠ Veuillez choisir un sujet.'; err.style.display = 'block'; return; }
+  if (!message || message.length < 10) { err.textContent = '⚠ Message trop court (minimum 10 caractères).'; err.style.display = 'block'; return; }
+
+  // Save to localStorage (récupérable depuis l'admin Emails)
+  try {
+    var leads = JSON.parse(localStorage.getItem('peptoids:leads') || '[]');
+    leads.unshift({ email: email, prenom: prenom.replace(/[<>&]/g,''), nom: nom.replace(/[<>&]/g,''), sujet: sujet, message: message.replace(/[<>]/g,''), source: 'contact', date: new Date().toISOString() });
+    localStorage.setItem('peptoids:leads', JSON.stringify(leads));
+    // Rate limiting timestamp
+    try {
+      var _ctTs2 = JSON.parse(localStorage.getItem('peptoids:contact_ts') || '[]');
+      _ctTs2.push(Date.now());
+      localStorage.setItem('peptoids:contact_ts', JSON.stringify(_ctTs2));
+    } catch(e) {}
+  } catch(e) {}
+
+  // Sync Supabase
+  try {
+    var SB_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+    var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+    var allLeads = JSON.parse(localStorage.getItem('peptoids:leads') || '[]');
+    fetch(SB_URL + '/rest/v1/settings?on_conflict=key', {
+      method: 'POST',
+      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates' },
+      body: JSON.stringify({ key: 'leads', value: allLeads, updated_at: new Date().toISOString() })
+    }).catch(function(){});
+  } catch(e) {}
+
+  // Show success
+  document.getElementById('f-success').classList.add('show');
+  document.querySelector('.submit-btn').style.display = 'none';
+
+  // Clear fields
+  ['f-prenom','f-nom','f-email','f-sujet','f-commande','f-message'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el.tagName === 'SELECT') el.selectedIndex = 0;
+    else el.value = '';
+  });
+}
+
+// Transition
+(function(){
+  var ov=document.getElementById('pt-overlay');
+  window.addEventListener('load',function(){ov.classList.remove('in');});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');
+    if(!a)return;
+    var href=a.getAttribute('href');
+    if(!href||href.startsWith('#')||href.startsWith('http')||href.startsWith('mailto:'))return;
+    e.preventDefault();
+    ov.classList.add('in');
+    setTimeout(function(){window.location.href=href;},350);
+  });
+  window.addEventListener('beforeunload',function(){ov.classList.add('in');});
+})();
+</script>
+
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEPTOIDS — Bientôt disponible</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPgogIDxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ibCIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNhODU1ZjciLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzYzAwYTAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KICA8cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsKSIvPgogIDxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMTAiIGhlaWdodD0iNyIgcng9IjIiIGZpbGw9IiMyYTA4NDAiIHN0cm9rZT0icmdiYSgxNjgsODUsMjQ3LDAuNCkiIHN0cm9rZS13aWR0aD0iMC41Ii8+CiAgPHRleHQgeD0iMTYiIHk9IjEyLjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNS41IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuNykiPlA8L3RleHQ+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:#010610;color:#fff;font-family:'Exo 2',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+
+/* Grid background */
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);
+  background-size:48px 48px;animation:gridPulse 8s ease-in-out infinite;}
+@keyframes gridPulse{0%,100%{opacity:0.6}50%{opacity:1}}
+
+/* Glow orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;}
+.orb1{width:500px;height:500px;background:rgba(0,200,255,0.06);top:-100px;left:-100px;animation:orbFloat1 12s ease-in-out infinite;}
+.orb2{width:400px;height:400px;background:rgba(168,85,247,0.07);bottom:-80px;right:-80px;animation:orbFloat2 14s ease-in-out infinite;}
+.orb3{width:300px;height:300px;background:rgba(0,255,136,0.04);top:50%;left:50%;transform:translate(-50%,-50%);animation:orbFloat3 10s ease-in-out infinite;}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,30px) scale(1.1)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,-40px) scale(1.08)}}
+@keyframes orbFloat3{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.2)}}
+
+/* Main content */
+.wrap{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:0;width:100%;max-width:1000px;padding:0 24px;}
+
+/* Canvas row */
+.vials-row{display:flex;align-items:flex-end;justify-content:center;gap:24px;margin-bottom:48px;position:relative;}
+.vials-row::after{content:'';position:absolute;bottom:-20px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,200,255,0.3),transparent);}
+
+/* Logo */
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(36px,8vw,72px);letter-spacing:8px;background:linear-gradient(90deg,#00c8ff,#a855f7,#00c8ff);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:logoShine 4s linear infinite;margin-bottom:16px;text-align:center;}
+@keyframes logoShine{0%{background-position:0% center}100%{background-position:200% center}}
+
+.tagline{font-family:'Exo 2',sans-serif;font-size:clamp(12px,2vw,16px);letter-spacing:6px;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-bottom:48px;text-align:center;}
+
+/* Status badge */
+.status{display:flex;align-items:center;gap:8px;background:rgba(0,200,255,0.06);border:1px solid rgba(0,200,255,0.2);border-radius:30px;padding:8px 22px;margin-bottom:40px;}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#00ff88;box-shadow:0 0 8px #00ff88;animation:blink 1.5s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 8px #00ff88}50%{opacity:0.4;box-shadow:0 0 3px #00ff88}}
+.status-txt{font-family:'Orbitron',monospace;font-size:10px;letter-spacing:3px;color:rgba(0,200,255,0.7);}
+
+/* Products preview */
+.products-preview{display:flex;gap:12px;margin-bottom:40px;flex-wrap:wrap;justify-content:center;}
+.prod-chip{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:8px 16px;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.3);transition:all 0.3s;}
+.prod-chip:hover{border-color:rgba(0,200,255,0.3);color:rgba(0,200,255,0.7);}
+
+/* Email capture */
+.email-wrap{display:flex;gap:0;max-width:440px;width:100%;margin-bottom:16px;}
+.email-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(0,200,255,0.2);border-right:none;border-radius:12px 0 0 12px;padding:13px 18px;color:#fff;font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.email-input:focus{border-color:rgba(0,200,255,0.5);}
+.email-input::placeholder{color:rgba(255,255,255,0.2);}
+.email-btn{background:linear-gradient(90deg,#00c8ff,#a855f7);border:none;border-radius:0 12px 12px 0;padding:13px 20px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:opacity 0.2s;white-space:nowrap;}
+.email-btn:hover{opacity:0.85;}
+.email-note{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;text-align:center;}
+.email-success{display:none;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:#00ff88;text-align:center;padding:8px;}
+
+/* Footer */
+.cs-footer{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:24px;z-index:2;}
+.cs-footer a{font-size:11px;color:rgba(255,255,255,0.2);text-decoration:none;letter-spacing:1px;transition:color 0.2s;}
+.cs-footer a:hover{color:rgba(0,200,255,0.5);}
+
+/* Scan line effect */
+.scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,200,255,0.4),transparent);animation:scan 6s linear infinite;z-index:0;pointer-events:none;}
+@keyframes scan{0%{top:-2px}100%{top:100%}}
+
+@media(max-width:600px){
+  .vials-row{gap:12px;margin-bottom:32px;}
+  .email-wrap{flex-direction:column;}
+  .email-input{border-right:1px solid rgba(0,200,255,0.2);border-bottom:none;border-radius:12px 12px 0 0;}
+  .email-btn{border-radius:0 0 12px 12px;padding:12px;}
+  .tagline{letter-spacing:3px;}
+  .logo{letter-spacing:4px;}
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="scanline"></div>
+
+<div class="wrap">
+
+  <!-- Vials -->
+  <div class="vials-row">
+    <canvas id="v1" style="display:block;"></canvas>
+    <canvas id="v2" style="display:block;"></canvas>
+    <canvas id="v3" style="display:block;"></canvas>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo">PEPTOIDS</div>
+  <div class="tagline">Advanced Peptide Research · France</div>
+
+  <!-- Status -->
+  <div class="status">
+    <div class="status-dot"></div>
+    <span class="status-txt">LANCEMENT EN COURS DE PRÉPARATION</span>
+  </div>
+
+  <!-- Products -->
+  <div class="products-preview">
+    <div class="prod-chip">⚗️ Retatrutide / GLP-1 Triple</div>
+    <div class="prod-chip">🔬 GHK-Cu / Copper Peptide</div>
+    <div class="prod-chip">💉 HGH / Somatropin</div>
+  </div>
+
+  <!-- Email -->
+  <div class="email-wrap">
+    <input class="email-input" id="csEmail" type="email" placeholder="votre@email.com — soyez notifié au lancement">
+    <button class="email-btn" onclick="subscribe()">NOTIFIER</button>
+  </div>
+  <div class="email-note">Soyez parmi les premiers — offre de lancement exclusive</div>
+  <div class="email-success" id="csSuccess">✓ Inscrit ! Vous serez notifié au lancement.</div>
+
+</div>
+
+
+
+<script>
+// ══ VIALS ══
+var VIALS = [
+  {W:70,H:180,s:0.75,glow:'0,200,255', liq1:'rgba(0,150,255,0.55)',liq2:'rgba(0,60,200,0.70)', cap:'#1a2a50',cap2:'#5a80cc',cr:'rgba(0,180,255,0.9)',lt:'#0055bb',lx:'#003399',ph:0},
+  {W:90,H:220,s:0.95,glow:'168,85,247',liq1:'rgba(190,60,255,0.50)',liq2:'rgba(80,0,180,0.70)',  cap:'#2a0840',cap2:'#8040b0',cr:'rgba(180,80,255,0.9)',lt:'#6600bb',lx:'#440088',ph:1.6},
+  {W:70,H:180,s:0.75,glow:'0,200,100', liq1:'rgba(0,200,100,0.55)',liq2:'rgba(0,90,40,0.80)',   cap:'#0a2010',cap2:'#3a8050',cr:'rgba(0,200,100,0.9)',lt:'#005522',lx:'#003311',ph:3.1}
+];
+
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();}
+
+function initCanvas(v, id) {
+  var cv = document.getElementById(id);
+  var DPR = Math.min(window.devicePixelRatio||1, 2);
+  cv.width = v.W * DPR; cv.height = v.H * DPR;
+  cv.style.width = v.W + 'px'; cv.style.height = v.H + 'px';
+  v.cv = cv; v.DPR = DPR;
+}
+
+function drawVial(v, t) {
+  var cv = v.cv, DPR = v.DPR;
+  var W = cv.width, H = cv.height, ctx = cv.getContext('2d'), sc = DPR * v.s;
+  ctx.clearRect(0,0,W,H);
+  var cx = W/2, fy = Math.sin(t*0.9 + v.ph)*5*DPR;
+  var vHW=20*sc, vX=cx-vHW, vW=vHW*2;
+  var capY=20*DPR+fy, capH=18*sc, stopY=capY+capH, stopH=7*sc;
+  var bodyY=stopY+stopH, bodyH=110*sc, botY=bodyY+bodyH, rad=4*sc;
+
+  // Glow
+  var gr=ctx.createRadialGradient(cx,H*0.6,0,cx,H*0.6,60*sc);
+  gr.addColorStop(0,'rgba('+v.glow+',0.18)');gr.addColorStop(1,'rgba('+v.glow+',0)');
+  ctx.beginPath();ctx.arc(cx,H*0.6,60*sc,0,Math.PI*2);ctx.fillStyle=gr;ctx.fill();
+
+  // Body
+  ctx.save();ctx.shadowColor='rgba('+v.glow+',0.4)';ctx.shadowBlur=14*sc;
+  rr(ctx,vX,bodyY,vW,bodyH,rad);
+  var bg=ctx.createLinearGradient(vX,0,vX+vW,0);
+  bg.addColorStop(0,'rgba(2,6,18,0.97)');bg.addColorStop(0.5,'rgba(10,18,38,0.7)');bg.addColorStop(1,'rgba(2,6,18,0.97)');
+  ctx.fillStyle=bg;ctx.fill();ctx.restore();
+
+  // Liquid
+  var liqTop=bodyY+bodyH*0.3+Math.sin(t*0.8+v.ph)*2*sc;
+  ctx.save();rr(ctx,vX+1.5*sc,bodyY+1.5*sc,vW-3*sc,bodyH-3*sc,rad*0.6);ctx.clip();
+  var lg=ctx.createLinearGradient(0,liqTop,0,botY);
+  lg.addColorStop(0,v.liq1);lg.addColorStop(1,v.liq2);
+  ctx.fillStyle=lg;ctx.fillRect(vX,liqTop,vW,bodyH);
+  ctx.beginPath();ctx.ellipse(cx,liqTop,vHW-1.5*sc,2.5*sc,0,0,Math.PI*2);
+  ctx.fillStyle='rgba('+v.glow+',0.5)';ctx.fill();
+  for(var b=0;b<3;b++){var bx=vX+3*sc+(b*9*sc)%(vW-6*sc),by=liqTop+4*sc+((b*15+t*18)%(bodyH*0.6));ctx.beginPath();ctx.arc(bx,by,(0.9+(b%2)*0.7)*sc,0,Math.PI*2);ctx.fillStyle='rgba('+v.glow+',0.3)';ctx.fill();}
+  ctx.restore();
+
+  // Shine
+  var ls=ctx.createLinearGradient(vX,0,vX+8*sc,0);ls.addColorStop(0,'rgba(255,255,255,0.0)');ls.addColorStop(0.5,'rgba(255,255,255,0.09)');ls.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.save();rr(ctx,vX,bodyY,8*sc,bodyH,rad);ctx.fillStyle=ls;ctx.fill();ctx.restore();
+  rr(ctx,vX,bodyY,vW,bodyH,rad);ctx.strokeStyle='rgba('+v.glow+',0.15)';ctx.lineWidth=0.7;ctx.stroke();
+
+  // Label
+  var lbX=vX+4*sc,lbW=vW-8*sc,lbY=bodyY+bodyH*0.08,lbH=28*sc;
+  ctx.save();rr(ctx,lbX,lbY,lbW,lbH,2*sc);ctx.fillStyle='#f2f8ff';ctx.shadowColor='rgba(0,0,0,0.3)';ctx.shadowBlur=4;ctx.fill();ctx.restore();
+  rr(ctx,lbX,lbY,lbW,8*sc,2*sc);ctx.fillStyle=v.lt;ctx.fill();
+  ctx.textAlign='center';
+  ctx.font='bold '+(3.5*sc)+'px Orbitron,monospace';ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillText('PEPTOIDS',cx,lbY+6*sc);
+  ctx.font='bold '+(6*sc)+'px Orbitron,monospace';ctx.fillStyle=v.lx;ctx.fillText('???',cx,lbY+18*sc);
+  rr(ctx,lbX,lbY+lbH-5*sc,lbW,5*sc,2*sc);ctx.fillStyle=v.lt;ctx.fill();
+  ctx.font=(3*sc)+'px Arial';ctx.fillStyle='rgba(255,255,255,0.8)';ctx.fillText('Rx Only',cx,lbY+lbH-0.5*sc);
+  rr(ctx,lbX,lbY,lbW,lbH,2*sc);ctx.strokeStyle='rgba(130,170,210,0.3)';ctx.lineWidth=0.4;ctx.stroke();
+
+  // Cap
+  ctx.save();ctx.shadowColor='rgba('+v.glow+',0.5)';ctx.shadowBlur=10*sc;
+  rr(ctx,vX,capY,vW,capH,rad);
+  var cg=ctx.createLinearGradient(vX,0,vX+vW,0);
+  cg.addColorStop(0,v.cap+'88');cg.addColorStop(0.5,v.cap2);cg.addColorStop(1,v.cap+'88');
+  ctx.fillStyle=cg;ctx.fill();ctx.strokeStyle='rgba('+v.glow+',0.25)';ctx.lineWidth=0.7;ctx.stroke();ctx.restore();
+  rr(ctx,vX,stopY,vW,stopH,2*sc);ctx.fillStyle='rgba(0,0,0,0.65)';ctx.fill();
+  ctx.save();ctx.shadowColor=v.cr;ctx.shadowBlur=5*sc;
+  rr(ctx,vX-1.5,stopY-1.5,vW+3,4,1.5);ctx.strokeStyle=v.cr;ctx.lineWidth=1.3;ctx.stroke();ctx.restore();
+}
+
+// Init
+initCanvas(VIALS[0], 'v1');
+initCanvas(VIALS[1], 'v2');
+initCanvas(VIALS[2], 'v3');
+
+var t0 = null;
+function loop(ts) {
+  if(!t0) t0=ts;
+  var t = (ts-t0)/1000;
+  VIALS.forEach(function(v){ drawVial(v,t); });
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ══ EMAIL SUBSCRIBE ══
+function subscribe() {
+  var email = document.getElementById('csEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('csEmail').style.borderColor = 'rgba(255,68,102,0.5)';
+    setTimeout(function(){ document.getElementById('csEmail').style.borderColor = 'rgba(0,200,255,0.2)'; }, 1500);
+    return;
+  }
+  try {
+    var leads = JSON.parse(localStorage.getItem('peptoids:leads')||'[]');
+    leads.unshift({ email, source:'coming-soon', date: new Date().toISOString() });
+    localStorage.setItem('peptoids:leads', JSON.stringify(leads));
+  } catch(e) {}
+  document.querySelector('.email-wrap').style.display = 'none';
+  document.querySelector('.email-note').style.display = 'none';
+  document.getElementById('csSuccess').style.display = 'block';
+}
+document.getElementById('csEmail').addEventListener('keydown', function(e){ if(e.key==='Enter') subscribe(); });
+</script>
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>

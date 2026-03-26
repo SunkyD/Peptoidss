@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produit — PEPTOIDS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ibCIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNhODU1ZjciLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzYzAwYTAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsKSIvPjxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMTAiIGhlaWdodD0iNyIgcng9IjIiIGZpbGw9IiMyYTA4NDAiIHN0cm9rZT0icmdiYSgxNjgsODUsMjQ3LDAuNCkiIHN0cm9rZS13aWR0aD0iMC41Ii8+PHRleHQgeD0iMTYiIHk9IjEyLjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNS41IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuNykiPlA8L3RleHQ+PC9zdmc+">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style id="page-transition-css">
+#pt-overlay{position:fixed;inset:0;z-index:9999;background:#010610;pointer-events:none;opacity:0;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1);}
+#pt-overlay.in{opacity:1;pointer-events:all;}
+#pt-scan{position:absolute;top:-2px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00c8ff 30%,#a855f7 70%,transparent);box-shadow:0 0 20px 4px rgba(0,200,255,0.6);opacity:0;}
+#pt-overlay.in #pt-scan{opacity:1;animation:ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;}
+@keyframes ptScan{0%{top:0%;opacity:1}100%{top:100%;opacity:0.3}}
+#pt-logo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(20px,4vw,40px);letter-spacing:8px;background:linear-gradient(90deg,#00c8ff,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;}
+#pt-overlay.in #pt-logo{animation:ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+@keyframes ptLogoIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.7)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}100%{opacity:0.5;transform:translate(-50%,-50%) scale(1)}}
+@keyframes fadeInPage{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+body{animation:fadeInPage 0.45s ease forwards;}
+</style>
+<style>
+:root{--cyan:#00c8ff;--purple:#a855f7;--green:#00ff88;--gold:#ffd700;--darker:#010610;--dark:#020818;--card:rgba(6,14,38,0.98);--card2:rgba(4,10,28,0.95);--border:rgba(0,200,255,0.12);--border2:rgba(255,255,255,0.06);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--darker);color:#fff;font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(1,6,16,0.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(0,200,255,0.08);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.nav-actions{display:flex;align-items:center;gap:12px;}
+.nav-btn{font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;transition:all 0.2s;font-family:'Exo 2',sans-serif;}
+.nav-btn:hover{color:#fff;border-color:rgba(0,200,255,0.3);}
+.nav-btn.accent{background:rgba(0,200,255,0.08);border-color:rgba(0,200,255,0.25);color:var(--cyan);}
+.nav-btn.accent:hover{background:rgba(0,200,255,0.15);}
+.page{position:relative;z-index:1;padding-top:64px;}
+.not-found{display:none;text-align:center;padding:120px 20px;}
+.not-found .emoji{font-size:56px;margin-bottom:20px;}
+.not-found h2{font-family:'Orbitron',monospace;font-size:18px;color:rgba(255,255,255,0.3);margin-bottom:24px;}
+.breadcrumb{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:20px 40px 0;display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.25);}
+.breadcrumb a{color:rgba(255,255,255,0.25);text-decoration:none;transition:color 0.2s;}
+.breadcrumb a:hover{color:var(--cyan);}
+.breadcrumb span{color:rgba(0,200,255,0.5);}
+.product-main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:28px 40px 60px;display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:start;}
+.product-visual{position:sticky;top:88px;}
+.vial-stage{background:transparent;border:none;border-radius:0;padding:20px 20px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:420px;position:relative;overflow:visible;margin-bottom:8px;}
+
+.vial-glow{position:absolute;width:280px;height:280px;border-radius:50%;filter:blur(70px);pointer-events:none;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.18;}
+.badge-label{position:absolute;top:18px;right:18px;font-family:'Orbitron',monospace;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 14px;border-radius:20px;}
+#vialCanvas{position:relative;z-index:1;display:block;}
+.guarantees{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:0;}
+.guarantee{background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:12px 8px;text-align:center;transition:border-color 0.2s;}
+.guarantee:hover{border-color:rgba(0,200,255,0.2);}
+.guarantee-icon{font-size:18px;margin-bottom:5px;display:block;}
+.guarantee-label{font-size:9px;letter-spacing:1px;color:rgba(255,255,255,0.35);text-transform:uppercase;line-height:1.3;}
+.product-info{display:flex;flex-direction:column;gap:0;}
+.product-eyebrow{font-size:10px;letter-spacing:4px;color:rgba(0,200,255,0.6);text-transform:uppercase;margin-bottom:10px;}
+.product-title{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(22px,2.8vw,34px);letter-spacing:2px;line-height:1.2;color:#fff;margin-bottom:4px;}
+.product-subtitle{font-size:13px;color:rgba(255,255,255,0.3);letter-spacing:3px;text-transform:uppercase;margin-bottom:22px;}
+.stars-row{display:flex;align-items:center;gap:6px;margin-bottom:22px;}
+.stars{color:#ffd700;font-size:15px;letter-spacing:2px;}
+.stars-count{font-size:12px;color:rgba(255,255,255,0.25);}
+.divider{height:1px;background:var(--border2);margin:18px 0;}
+.price-block{display:flex;align-items:baseline;gap:14px;margin-bottom:10px;flex-wrap:wrap;}
+.price-main{font-family:'Orbitron',monospace;font-weight:900;font-size:44px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.price-old{font-size:18px;color:rgba(255,255,255,0.2);text-decoration:line-through;}
+.price-save{font-family:'Orbitron',monospace;font-size:10px;background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.2);border-radius:20px;padding:3px 10px;color:var(--green);letter-spacing:1px;}
+.price-unit{font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;margin-bottom:18px;}
+.stock-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.stock-indicator{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:11px;letter-spacing:1px;font-weight:600;}
+.si-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.stock-bar-wrap{flex:1;height:3px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.stock-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease;}
+.offer-pill{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(255,170,0,0.1),rgba(255,80,0,0.06));border:1px solid rgba(255,170,0,0.25);border-radius:12px;padding:10px 16px;font-size:12px;color:rgba(255,200,100,0.9);margin-bottom:18px;}
+.delivery-strip{display:flex;align-items:center;gap:12px;background:rgba(0,200,255,0.04);border:1px solid rgba(0,200,255,0.12);border-radius:12px;padding:13px 16px;margin-bottom:18px;font-size:11px;color:rgba(255,255,255,0.45);}
+.delivery-icon{font-size:18px;flex-shrink:0;}
+.buy-row{display:flex;gap:12px;align-items:stretch;margin-bottom:12px;}
+.qty-wrap{display:flex;align-items:center;background:var(--card2);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.qty-btn{width:42px;height:56px;background:transparent;border:none;color:rgba(255,255,255,0.5);font-size:18px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.qty-btn:hover{color:var(--cyan);background:rgba(0,200,255,0.06);}
+.qty-val{width:40px;text-align:center;font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;}
+.btn-add-main{flex:1;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:14px;height:56px;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.25s;position:relative;overflow:hidden;}
+.btn-add-main::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);opacity:0;transition:opacity 0.2s;}
+.btn-add-main:hover::after{opacity:1;}
+.btn-add-main:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,200,255,0.35);}
+.btn-add-main:active{transform:translateY(0);}
+.btn-add-main:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-wishlist{width:56px;height:56px;background:var(--card2);border:1px solid var(--border);border-radius:14px;font-size:20px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.btn-wishlist:hover{border-color:rgba(255,68,102,0.4);background:rgba(255,68,102,0.06);}
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+.spec-item{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.spec-icon{font-size:14px;flex-shrink:0;}
+.spec-label{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.25);text-transform:uppercase;margin-bottom:2px;}
+.spec-val{font-size:12px;color:#fff;font-weight:600;}
+.product-bottom{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 40px 80px;}
+.desc-block{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:18px;}
+.desc-block h3{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border2);}
+.desc-block p{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.9;margin-bottom:12px;}
+.desc-block p:last-child{margin-bottom:0;}
+.desc-block ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.desc-block li{font-size:13px;color:rgba(255,255,255,0.5);padding-left:20px;position:relative;line-height:1.7;}
+.desc-block li::before{content:'→';position:absolute;left:0;color:var(--cyan);font-size:11px;}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+.bottom-cta{background:linear-gradient(135deg,rgba(0,200,255,0.06),rgba(168,85,247,0.04));border:1px solid rgba(0,200,255,0.18);border-radius:20px;padding:40px;text-align:center;}
+.bottom-cta h3{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:10px;}
+.bottom-cta p{font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:24px;}
+.btn-cta-back{display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:13px 28px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.6);text-decoration:none;transition:all 0.2s;margin-right:12px;}
+.btn-cta-back:hover{border-color:rgba(0,200,255,0.3);color:var(--cyan);}
+.btn-cta-buy{display:inline-block;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:12px;padding:13px 32px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;}
+.btn-cta-buy:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,255,0.3);}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(4,10,28,0.98);border:1px solid var(--green);border-radius:14px;padding:14px 28px;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:2px;color:var(--green);z-index:9000;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 24px rgba(0,255,136,0.2);pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+@media(max-width:960px){.product-main{grid-template-columns:1fr;gap:32px;}.product-visual{position:relative;top:auto;}.bottom-grid{grid-template-columns:1fr;}}
+@media(max-width:600px){nav{padding:0 20px;}.breadcrumb{padding:16px 20px 0;}.product-main{padding:20px 20px 40px;}.product-bottom{padding:0 20px 60px;}.price-main{font-size:34px;}.vial-stage{min-height:360px;}.guarantees{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <div class="nav-actions">
+    <a href="produits.html" class="nav-btn">← Catalogue</a>
+    <a href="index.html" class="nav-btn accent">🛒 Panier</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="not-found" id="notFound">
+    <div class="emoji">⚗️</div>
+    <h2>Produit introuvable</h2>
+    <a href="produits.html" class="btn-cta-back">← Voir le catalogue</a>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Accueil</a><span>/</span>
+    <a href="produits.html">Produits</a><span>/</span>
+    <span id="breadName" style="color:rgba(255,255,255,0.5);">—</span>
+  </div>
+
+  <div class="product-main" id="productMain">
+    <!-- GAUCHE -->
+    <div class="product-visual">
+      <div class="vial-stage" id="vialStage">
+        <div class="vial-glow" id="vialGlow"></div>
+        <span class="badge-label" id="vialBadge" style="display:none;"></span>
+        <canvas id="vialCanvas"></canvas>
+      </div>
+      <div class="guarantees">
+        <div class="guarantee"><span class="guarantee-icon">🔒</span><div class="guarantee-label">Paiement sécurisé</div></div>
+        <div class="guarantee"><span class="guarantee-icon">📦</span><div class="guarantee-label">Emballage discret</div></div>
+        <div class="guarantee"><span class="guarantee-icon">⚗️</span><div class="guarantee-label">Pureté certifiée</div></div>
+        <div class="guarantee"><span class="guarantee-icon">⚡</span><div class="guarantee-label">Expédition 48h</div></div>
+      </div>
+    </div>
+
+    <!-- DROITE -->
+    <div class="product-info">
+      <div class="product-eyebrow" id="prodCategory">—</div>
+      <div class="product-title"   id="prodName">—</div>
+      <div class="product-subtitle" id="prodSubtitle">—</div>
+      <div class="stars-row">
+        <div class="stars">★★★★★</div>
+        <div class="stars-count">5.0 · <span style="color:rgba(0,200,255,0.6);cursor:pointer;" onclick="window.location.href='avis.html'">Voir les avis</span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="price-block">
+        <div class="price-main" id="priceNew">—</div>
+        <div class="price-old"  id="priceOld"></div>
+        <div class="price-save" id="priceSave" style="display:none;"></div>
+      </div>
+      <div class="price-unit">/ flacon · TVA incluse</div>
+      <div class="stock-row">
+        <div class="stock-indicator" id="stockIndicator">
+          <div class="si-dot" id="stockDot"></div>
+          <span id="stockText">—</span>
+        </div>
+        <div class="stock-bar-wrap"><div class="stock-bar-fill" id="stockBarFill"></div></div>
+      </div>
+      <div class="offer-pill" id="offerPill" style="display:none;"><span>🎁</span><span id="offerText"></span></div>
+      <div class="delivery-strip">
+        <span class="delivery-icon">🚚</span>
+        <div>Livraison <strong>Mondial Relay</strong> · <strong>4,99€</strong> · <strong style="color:var(--green);">Offerte dès 100€</strong> · Emballage neutre</div>
+      </div>
+      <div class="buy-row">
+        <div class="qty-wrap">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-val" id="qtyVal">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <button class="btn-add-main" id="btnAdd" onclick="addToCart()">+ AJOUTER AU PANIER</button>
+        <button class="btn-wishlist" onclick="toggleWish()" id="btnWish" title="Favoris">♡</button>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.18);letter-spacing:1px;margin-bottom:20px;text-align:center;">Paiement par virement bancaire · Confirmation sous 24h</div>
+      <div class="specs-grid" id="specsGrid"></div>
+    </div>
+  </div>
+
+  <div class="product-bottom" id="productBottom">
+    <div class="desc-block"><h3>Description</h3><p id="descText">—</p></div>
+    <div class="bottom-grid">
+      <div class="desc-block"><h3>Composition &amp; Qualité</h3><ul id="compositionList"></ul></div>
+      <div class="desc-block"><h3>Expédition &amp; Service</h3><ul>
+        <li>Emballage neutre sans identification</li>
+        <li>Livraison Mondial Relay en point relais</li>
+        <li>Suivi de colis par email</li>
+        <li>Délai : 2-4 jours ouvrés après expédition</li>
+        <li>Offerte dès 100€ d'achat</li>
+        <li>Support via la page Contact</li>
+      </ul></div>
+    </div>
+    <div class="desc-block" style="border-color:rgba(255,170,0,0.2);background:rgba(255,100,0,0.03);">
+      <h3 style="color:rgba(255,170,0,0.6);">⚠️ Usage &amp; Avertissement</h3>
+      <p style="color:rgba(255,200,100,0.55);">Les produits PEPTOIDS sont destinés exclusivement à des fins de recherche scientifique en laboratoire. Ils ne sont pas approuvés pour un usage humain ou vétérinaire. En passant commande, vous certifiez avoir 18 ans ou plus et être conscient de ces restrictions légales.</p>
+    </div>
+    <div class="bottom-cta">
+      <h3>PRÊT À COMMANDER ?</h3>
+      <p>Ajoutez ce produit à votre panier et finalisez votre commande.</p>
+      <a href="produits.html" class="btn-cta-back">← Autres produits</a>
+      <button class="btn-cta-buy" onclick="addToCart()">+ AJOUTER AU PANIER</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span id="toastMsg">Ajouté au panier</span></div>
+
+<script>
+var PRODUITS = {
+  'Retatrutide': {
+    name:'Retatrutide', subtitle:'GLP-1 Triple Agonist',
+    category:'Peptide · Agoniste Triple GLP-1/GIP/Glucagon',
+    desc:"Le Retatrutide est l'agoniste triple des récepteurs GLP-1, GIP et Glucagon de nouvelle génération. Développé pour les protocoles de recherche métabolique avancée, chaque flacon est lyophilisé sous atmosphère inerte avec une pureté analytique certifiée à 99.8% par HPLC. Un certificat d'analyse individuel est inclus avec chaque commande.",
+    couleur:'blue', glow:'0,200,255',
+    liq1:'rgba(0,150,255,0.55)',liq2:'rgba(0,60,200,0.70)',
+    cap:'#1a2a50',cap2:'#5a80cc',cr:'rgba(0,180,255,0.9)',lt:'#0055bb',lx:'#003399',
+    badge:'BEST-SELLER', badgeBg:'linear-gradient(135deg,#ff6b00,#ff3300)', badgeTxt:'#fff',
+    offer:'-20% sur la 3ème fiole commandée',
+    prix:{normal:49.99, barred:79.99},
+    specs:[
+      {icon:'🧪',label:'Pureté',val:'≥ 99.8% (HPLC)'},
+      {icon:'📦',label:'Format',val:'Lyophilisé stérile'},
+      {icon:'⚗️',label:'Conditionnement',val:'Flacon 20mg'},
+      {icon:'❄️',label:'Stockage',val:'-20°C recommandé'},
+      {icon:'📋',label:'Certificat',val:'CoA inclus'},
+      {icon:'🔬',label:'Usage',val:'Recherche uniquement'}
+    ],
+    composition:["Retatrutide ≥99.8% (HPLC)","Lyophilisat stérile sans excipient","Flacon 20mg lyophilisé","Production en laboratoire certifié ISO","Analyse individuelle par lot","Eau bactériostatique de reconstitution incluse"]
+  },
+  'GHK-Cu': {
+    name:'GHK-Cu', subtitle:'Copper Peptide Complex',
+    category:'Peptide · Régénération & Anti-oxydant',
+    desc:"Le GHK-Cu est un tripeptide cuivre naturellement présent dans le plasma humain, à activité régénérante, anti-inflammatoire et anti-oxydante documentée. Pureté analytique certifiée, lyophilisé en flacon stérile de 100mg. Idéal pour les protocoles de recherche dermatologique et régénérative.",
+    couleur:'purple', glow:'168,85,247',
+    liq1:'rgba(190,60,255,0.50)',liq2:'rgba(80,0,180,0.70)',
+    cap:'#2a0840',cap2:'#8040b0',cr:'rgba(180,80,255,0.9)',lt:'#6600bb',lx:'#440088',
+    badge:'NOUVEAU', badgeBg:'linear-gradient(135deg,#a855f7,#6600bb)', badgeTxt:'#fff',
+    offer:'-50% sur la 3ème fiole commandée',
+    prix:{normal:44.99, barred:64.99},
+    specs:[
+      {icon:'🧪',label:'Pureté',val:'≥ 99.5% (HPLC)'},
+      {icon:'📦',label:'Format',val:'Lyophilisé stérile'},
+      {icon:'⚗️',label:'Conditionnement',val:'Flacon 100mg'},
+      {icon:'❄️',label:'Stockage',val:'-20°C recommandé'},
+      {icon:'📋',label:'Certificat',val:'CoA inclus'},
+      {icon:'🔬',label:'Usage',val:'Recherche uniquement'}
+    ],
+    composition:["GHK-Cu ≥99.5% (HPLC)","Complexe cuivre tripeptidique lyophilisé","Sans conservateur ni excipient","Synthèse peptidique phase solide (SPPS)","Analyse de masse confirmée (MS)","Eau bactériostatique de reconstitution incluse"]
+  },
+  'HGH': {
+    name:'HGH', subtitle:'Somatropin rDNA — 10 IU',
+    category:'Hormone · Somatotropine Recombinante',
+    desc:"Hormone de croissance humaine recombinante (somatotropine rDNA), 10 IU par flacon. Produite par expression en E. coli recombinant, séquence identique à la hGH endogène (191 acides aminés). Pureté >99% par SDS-PAGE et HPLC. Flacon lyophilisé stérile avec eau bactériostatique incluse.",
+    couleur:'clear', glow:'200,220,255',
+    liq1:'rgba(200,230,255,0.25)',liq2:'rgba(150,200,255,0.40)',
+    cap:'#1a2840',cap2:'#2a5aaa',cr:'rgba(180,210,255,0.7)',lt:'#334455',lx:'#223344',
+    badge:'', badgeBg:'', badgeTxt:'',
+    offer:'',
+    prix:{normal:54.99, barred:74.99},
+    specs:[
+      {icon:'🧪',label:'Pureté',val:'> 99% (SDS-PAGE)'},
+      {icon:'📦',label:'Format',val:'Lyophilisé stérile'},
+      {icon:'⚗️',label:'Dosage',val:'10 IU / flacon'},
+      {icon:'❄️',label:'Stockage',val:'-20°C (non reconstitué)'},
+      {icon:'📋',label:'Certificat',val:'CoA inclus'},
+      {icon:'🔬',label:'Usage',val:'Recherche uniquement'}
+    ],
+    composition:["Somatropin rDNA >99% (SDS-PAGE)","191 acides aminés, séquence hGH native","Expression en E. coli recombinant","Lyophilisat stérile 10 IU","Eau bactériostatique de reconstitution incluse"]
+  }
+};
+
+function getPrix(){try{return JSON.parse(localStorage.getItem('peptoids:prices')||'{}');}catch(e){return{};}}
+function getStock(){try{return JSON.parse(localStorage.getItem('peptoids:stock')||'{}');}catch(e){return{};}}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+function rgba(r,g,b,a){ return `rgba(${r},${g},${b},${a})`; }
+
+function drawVial(canvas, cfg, t, bubbles) {
+  const DPR = window.devicePixelRatio || 1;
+  const CW = canvas.clientWidth  || canvas.width/DPR;
+  const CH = canvas.clientHeight || canvas.height/DPR;
+  // Ensure canvas resolution matches display
+  if (canvas.width !== CW*DPR || canvas.height !== CH*DPR) {
+    canvas.width  = CW * DPR;
+    canvas.height = CH * DPR;
+  }
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const sc = DPR;
+  const cx = W/2;
+
+  // Vial geometry (in canvas px)
+  const vHalfW = 46*sc;
+  const vX = cx - vHalfW;
+  const vW = vHalfW*2;
+  const capY  = 14*sc, capH = 32*sc;
+  const stopY = capY+capH, stopH = 12*sc;
+  const bodyY = stopY+stopH, bodyH = 140*sc;
+  const botY  = bodyY+bodyH;
+  const rad   = 7*sc;
+
+  // Float + tilt animation
+  const floatY = Math.sin(t*1.35 + cfg.phaseOffset) * 9*sc;
+  const tilt   = Math.sin(t*0.85 + cfg.phaseOffset) * 2.6;
+  const gA     = 0.45 + 0.35*Math.sin(t*1.15 + cfg.phaseOffset);
+
+  ctx.save();
+  ctx.translate(cx, H*0.5);
+  ctx.rotate(tilt * Math.PI/180);
+  ctx.translate(-cx, -H*0.5 + floatY);
+
+  const {glowR:gR, glowG:gG, glowB:gB} = cfg;
+
+  // ── GLASS BODY ──
+  {
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB, gA*0.75);
+    ctx.shadowBlur  = (22+12*Math.sin(t+cfg.phaseOffset)) * sc;
+    const g = ctx.createLinearGradient(vX,0,vX+vW,0);
+    g.addColorStop(0,   'rgba(2,6,18,0.97)');
+    g.addColorStop(0.06,'rgba(7,14,34,0.90)');
+    g.addColorStop(0.18,'rgba(5,10,24,0.80)');
+    g.addColorStop(0.50,'rgba(9,16,34,0.70)');
+    g.addColorStop(0.82,'rgba(5,10,24,0.80)');
+    g.addColorStop(0.94,'rgba(4,8,20,0.90)');
+    g.addColorStop(1,   'rgba(1,3,10,0.97)');
+    roundRect(ctx, vX, bodyY, vW, bodyH, rad);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.restore();
+  }
+
+  // ── LIQUID ──
+  const liqTop = bodyY + bodyH*0.28;
+  const liqH   = botY - liqTop;
+  {
+    ctx.save();
+    roundRect(ctx, vX+2*sc, bodyY+2*sc, vW-4*sc, bodyH-4*sc, rad-2*sc);
+    ctx.clip();
+
+    // Main liquid fill
+    const liqAlpha0 = cfg.liqAlpha0 !== undefined ? cfg.liqAlpha0 : 0.55;
+    const liqAlpha1 = cfg.liqAlpha1 !== undefined ? cfg.liqAlpha1 : 0.70;
+    const lg = ctx.createLinearGradient(0, liqTop, 0, botY);
+    lg.addColorStop(0,   rgba(cfg.liqR0, cfg.liqG0, cfg.liqB0, liqAlpha0));
+    lg.addColorStop(0.4, rgba( (cfg.liqR0+cfg.liqR1)>>1, (cfg.liqG0+cfg.liqG1)>>1, (cfg.liqB0+cfg.liqB1)>>1, (liqAlpha0+liqAlpha1)/2));
+    lg.addColorStop(1,   rgba(cfg.liqR1, cfg.liqG1, cfg.liqB1, liqAlpha1));
+    ctx.fillStyle = lg;
+    ctx.fillRect(vX+2*sc, liqTop, vW-4*sc, liqH);
+
+    // Left edge shine on liquid
+    const ls = ctx.createLinearGradient(vX+2*sc, 0, vX+18*sc, 0);
+    ls.addColorStop(0,'rgba(255,255,255,0)');
+    ls.addColorStop(0.5,'rgba(255,255,255,0.10)');
+    ls.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = ls;
+    ctx.fillRect(vX+2*sc, liqTop, 16*sc, liqH);
+
+    // Inner radial glow
+    const cg = ctx.createRadialGradient(cx, liqTop+liqH*0.45, 2*sc, cx, liqTop+liqH*0.45, vHalfW*0.75);
+    cg.addColorStop(0, rgba(gR,gG,gB,0.16));
+    cg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = cg;
+    ctx.fillRect(vX+2*sc, liqTop, vW-4*sc, liqH);
+
+    // Meniscus curve
+    ctx.beginPath();
+    ctx.ellipse(cx, liqTop, vHalfW-3*sc, 5*sc, 0, 0, Math.PI*2);
+    const mg = ctx.createLinearGradient(vX, liqTop, vX+vW, liqTop);
+    mg.addColorStop(0,    rgba(gR,gG,gB,0.04));
+    mg.addColorStop(0.3,  rgba(gR,gG,gB,0.75));
+    mg.addColorStop(0.7,  rgba(gR,gG,gB,0.50));
+    mg.addColorStop(1,    rgba(gR,gG,gB,0.04));
+    ctx.fillStyle = mg; ctx.fill();
+
+    // Animated shimmer line
+    const sa = 0.3 + 0.7*Math.abs(Math.sin(t*2.2+cfg.phaseOffset));
+    ctx.beginPath();
+    ctx.ellipse(cx, liqTop+1.5*sc, vHalfW-10*sc, 2.0*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle = rgba(gR,gG,gB,sa);
+    ctx.fill();
+
+    // Bubbles
+    bubbles.forEach(b => {
+      const bx = vX+4*sc + b.x*(vW-8*sc);
+      const by = liqTop + b.y*liqH;
+      if (by < liqTop || by > botY-4*sc) return;
+      // bubble body
+      ctx.beginPath(); ctx.arc(bx, by, b.r*sc, 0, Math.PI*2);
+      ctx.fillStyle = rgba(gR,gG,gB, b.op*0.5);
+      ctx.fill();
+      // bubble rim
+      ctx.beginPath(); ctx.arc(bx, by, b.r*sc, 0, Math.PI*2);
+      ctx.strokeStyle = rgba(gR,gG,gB, b.op*0.9);
+      ctx.lineWidth = 0.6*sc;
+      ctx.stroke();
+      // specular glint
+      ctx.beginPath(); ctx.arc(bx - b.r*0.32*sc, by - b.r*0.32*sc, b.r*0.3*sc, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  // ── GLASS SHINES ──
+  // Left vertical shine
+  {
+    const ls = ctx.createLinearGradient(vX,0,vX+15*sc,0);
+    ls.addColorStop(0,'rgba(255,255,255,0)');
+    ls.addColorStop(0.55,'rgba(255,255,255,0.15)');
+    ls.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.save(); roundRect(ctx, vX, bodyY, 15*sc, bodyH, rad); ctx.fillStyle=ls; ctx.fill(); ctx.restore();
+  }
+  // Right subtle shine
+  {
+    const rs = ctx.createLinearGradient(vX+vW-12*sc,0,vX+vW,0);
+    rs.addColorStop(0,'rgba(255,255,255,0)');
+    rs.addColorStop(1,'rgba(255,255,255,0.05)');
+    ctx.save(); roundRect(ctx, vX+vW-12*sc, bodyY, 12*sc, bodyH, rad); ctx.fillStyle=rs; ctx.fill(); ctx.restore();
+  }
+  // Top rim glint
+  ctx.beginPath();
+  ctx.ellipse(cx - vHalfW*0.22, bodyY+2*sc, vHalfW*0.44, 2.2*sc, 0, 0, Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,0.13)'; ctx.fill();
+
+  // Glass edge stroke with glow
+  {
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB, gA*0.4);
+    ctx.shadowBlur  = 9*sc;
+    roundRect(ctx, vX, bodyY, vW, bodyH, rad);
+    ctx.strokeStyle = rgba(gR,gG,gB,0.20);
+    ctx.lineWidth = 1.2*sc;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── LABEL ──
+  {
+    const lbX = vX+9*sc, lbW = vW-18*sc;
+    const lbY = bodyY + bodyH*0.08, lbH = 54*sc;
+    // white bg with drop shadow
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=8*sc; ctx.shadowOffsetY=3*sc;
+    roundRect(ctx, lbX, lbY, lbW, lbH, 4*sc);
+    ctx.fillStyle='#f2f8ff'; ctx.fill();
+    ctx.restore();
+    // top colour band
+    roundRect(ctx, lbX, lbY, lbW, 12*sc, 4*sc);
+    ctx.fillStyle=cfg.labelTop; ctx.fill();
+    ctx.fillRect(lbX, lbY+8*sc, lbW, 4*sc);
+    // brand tiny
+    ctx.font=`bold ${6*sc}px Orbitron,monospace`; ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.textAlign='center';
+    ctx.fillText('PEPTOIDS', cx, lbY+9.5*sc);
+    // product name
+    ctx.font=`bold ${10*sc}px Orbitron,monospace`; ctx.fillStyle=cfg.labelText;
+    ctx.fillText(cfg.name, cx, lbY+26*sc);
+    // divider
+    ctx.beginPath(); ctx.moveTo(lbX+4*sc, lbY+30*sc); ctx.lineTo(lbX+lbW-4*sc, lbY+30*sc);
+    ctx.strokeStyle='#bcd0e0'; ctx.lineWidth=0.6*sc; ctx.stroke();
+    // sub text
+    ctx.font=`${5.5*sc}px Arial,sans-serif`; ctx.fillStyle='#445566';
+    ctx.fillText(cfg.sub, cx, lbY+40*sc);
+    ctx.font=`${5*sc}px Arial,sans-serif`; ctx.fillStyle='#778899';
+    ctx.fillText(cfg.dose, cx, lbY+50*sc);
+    // bottom band
+    ctx.fillStyle=cfg.labelTop;
+    ctx.fillRect(lbX, lbY+lbH-8*sc, lbW, 8*sc);
+    roundRect(ctx, lbX, lbY+lbH-8*sc, lbW, 8*sc, 4*sc); // bottom corners
+    ctx.fill();
+    ctx.font=`${4.8*sc}px Arial,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.85)';
+    ctx.fillText('Rx Only', cx, lbY+lbH-1.5*sc);
+    // label border
+    roundRect(ctx, lbX, lbY, lbW, lbH, 4*sc);
+    ctx.strokeStyle='rgba(130,170,210,0.45)'; ctx.lineWidth=0.7*sc; ctx.stroke();
+  }
+
+  // ── RUBBER STOPPER ──
+  {
+    const stG = ctx.createLinearGradient(vX+4*sc,0,vX+vW-4*sc,0);
+    stG.addColorStop(0,'#0c0c0c'); stG.addColorStop(0.22,'#2e2e2e');
+    stG.addColorStop(0.5,'#4e4e4e'); stG.addColorStop(0.78,'#2e2e2e'); stG.addColorStop(1,'#0c0c0c');
+    roundRect(ctx, vX+4*sc, stopY, vW-8*sc, stopH, 3*sc);
+    ctx.fillStyle=stG; ctx.fill();
+    // stopper sheen
+    ctx.beginPath();
+    ctx.ellipse(cx - vHalfW*0.26, stopY+3*sc, vHalfW*0.27, 2.0*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.07)'; ctx.fill();
+  }
+
+  // ── ALUMINIUM CAP ──
+  {
+    const cg = ctx.createLinearGradient(vX+2*sc,0,vX+vW-2*sc,0);
+    cg.addColorStop(0,   cfg.capDark);
+    cg.addColorStop(0.18,cfg.capMid);
+    cg.addColorStop(0.38,cfg.capLight);
+    cg.addColorStop(0.50,cfg.capLight);
+    cg.addColorStop(0.62,cfg.capMid);
+    cg.addColorStop(0.82,cfg.capDark);
+    cg.addColorStop(1,   cfg.capDark);
+    roundRect(ctx, vX+2*sc, capY, vW-4*sc, capH, 5*sc);
+    ctx.fillStyle=cg; ctx.fill();
+
+    // cap top ellipse
+    const ctg = ctx.createRadialGradient(cx-vHalfW*0.14,capY,2*sc,cx,capY+6*sc,vHalfW*0.9);
+    ctg.addColorStop(0, cfg.capLight); ctg.addColorStop(1, cfg.capDark);
+    ctx.beginPath(); ctx.ellipse(cx, capY, vHalfW-2*sc, 7*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle=ctg; ctx.fill();
+
+    // cap vertical glint
+    ctx.save(); roundRect(ctx, vX+2*sc, capY, vW-4*sc, capH, 5*sc); ctx.clip();
+    const csg = ctx.createLinearGradient(cx-6*sc,0,cx+4*sc,0);
+    csg.addColorStop(0,'rgba(255,255,255,0)');
+    csg.addColorStop(0.5,'rgba(255,255,255,0.22)');
+    csg.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=csg; ctx.fillRect(cx-8*sc, capY+2*sc, 12*sc, capH-4*sc);
+    ctx.restore();
+
+    // top glint
+    ctx.beginPath();
+    ctx.ellipse(cx - vHalfW*0.2, capY, vHalfW*0.34, 2.8*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.fill();
+  }
+
+  // ── CRIMP RING ──
+  {
+    const crg = ctx.createLinearGradient(vX,0,vX+vW,0);
+    crg.addColorStop(0,   cfg.crimpDark);
+    crg.addColorStop(0.25,cfg.crimpMid);
+    crg.addColorStop(0.5, cfg.crimpLight);
+    crg.addColorStop(0.75,cfg.crimpMid);
+    crg.addColorStop(1,   cfg.crimpDark);
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB,0.95);
+    ctx.shadowBlur  = (7+4*Math.sin(t*2+cfg.phaseOffset))*sc;
+    ctx.fillStyle=crg;
+    ctx.fillRect(vX, capY+capH-1*sc, vW, 7*sc);
+    ctx.restore();
+    // bright neon top line
+    ctx.fillStyle = rgba(gR,gG,gB,0.5);
+    ctx.fillRect(vX, capY+capH-1*sc, vW, 2*sc);
+  }
+
+  // ── GLASS BOTTOM ──
+  {
+    ctx.save();
+    ctx.shadowColor=rgba(gR,gG,gB,0.25); ctx.shadowBlur=9*sc;
+    ctx.beginPath(); ctx.ellipse(cx, botY+4*sc, vHalfW-5*sc, 5*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(2,6,18,0.95)'; ctx.fill();
+    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(cx - vHalfW*0.24, botY+3*sc, vHalfW*0.27, 2.1*sc, 0,0,Math.PI*2);
+    ctx.fillStyle=rgba(gR,gG,gB,0.14); ctx.fill();
+  }
+
+  ctx.restore(); // end transform
+
+  // ── FLOOR SHADOW ──
+  {
+    const sw = (35+16*Math.abs(Math.sin(t*1.35+cfg.phaseOffset)))*sc;
+    const sg = ctx.createRadialGradient(cx, H-11*sc, 0, cx, H-11*sc, sw);
+    sg.addColorStop(0, rgba(gR,gG,gB,0.30));
+    sg.addColorStop(0.5, rgba(gR,gG,gB,0.10));
+    sg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(cx, H-11*sc, sw, 5.5*sc, 0,0,Math.PI*2);
+    ctx.fillStyle=sg; ctx.fill();
+  }
+}
+
+function drawVial(canvas, cfg, t, bubbles) {
+  const DPR = window.devicePixelRatio || 1;
+  const CW = canvas.clientWidth  || canvas.width/DPR;
+  const CH = canvas.clientHeight || canvas.height/DPR;
+  // Ensure canvas resolution matches display
+  if (canvas.width !== CW*DPR || canvas.height !== CH*DPR) {
+    canvas.width  = CW * DPR;
+    canvas.height = CH * DPR;
+  }
+  const W = canvas.width, H = canvas.height;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+
+  const sc = DPR;
+  const cx = W/2;
+
+  // Vial geometry (in canvas px)
+  const vHalfW = 46*sc;
+  const vX = cx - vHalfW;
+  const vW = vHalfW*2;
+  const capY  = 14*sc, capH = 32*sc;
+  const stopY = capY+capH, stopH = 12*sc;
+  const bodyY = stopY+stopH, bodyH = 140*sc;
+  const botY  = bodyY+bodyH;
+  const rad   = 7*sc;
+
+  // Float + tilt animation
+  const floatY = Math.sin(t*1.35 + cfg.phaseOffset) * 9*sc;
+  const tilt   = Math.sin(t*0.85 + cfg.phaseOffset) * 2.6;
+  const gA     = 0.45 + 0.35*Math.sin(t*1.15 + cfg.phaseOffset);
+
+  ctx.save();
+  ctx.translate(cx, H*0.5);
+  ctx.rotate(tilt * Math.PI/180);
+  ctx.translate(-cx, -H*0.5 + floatY);
+
+  const {glowR:gR, glowG:gG, glowB:gB} = cfg;
+
+  // ── GLASS BODY ──
+  {
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB, gA*0.75);
+    ctx.shadowBlur  = (22+12*Math.sin(t+cfg.phaseOffset)) * sc;
+    const g = ctx.createLinearGradient(vX,0,vX+vW,0);
+    g.addColorStop(0,   'rgba(2,6,18,0.97)');
+    g.addColorStop(0.06,'rgba(7,14,34,0.90)');
+    g.addColorStop(0.18,'rgba(5,10,24,0.80)');
+    g.addColorStop(0.50,'rgba(9,16,34,0.70)');
+    g.addColorStop(0.82,'rgba(5,10,24,0.80)');
+    g.addColorStop(0.94,'rgba(4,8,20,0.90)');
+    g.addColorStop(1,   'rgba(1,3,10,0.97)');
+    roundRect(ctx, vX, bodyY, vW, bodyH, rad);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.restore();
+  }
+
+  // ── LIQUID ──
+  const liqTop = bodyY + bodyH*0.28;
+  const liqH   = botY - liqTop;
+  {
+    ctx.save();
+    roundRect(ctx, vX+2*sc, bodyY+2*sc, vW-4*sc, bodyH-4*sc, rad-2*sc);
+    ctx.clip();
+
+    // Main liquid fill
+    const liqAlpha0 = cfg.liqAlpha0 !== undefined ? cfg.liqAlpha0 : 0.55;
+    const liqAlpha1 = cfg.liqAlpha1 !== undefined ? cfg.liqAlpha1 : 0.70;
+    const lg = ctx.createLinearGradient(0, liqTop, 0, botY);
+    lg.addColorStop(0,   rgba(cfg.liqR0, cfg.liqG0, cfg.liqB0, liqAlpha0));
+    lg.addColorStop(0.4, rgba( (cfg.liqR0+cfg.liqR1)>>1, (cfg.liqG0+cfg.liqG1)>>1, (cfg.liqB0+cfg.liqB1)>>1, (liqAlpha0+liqAlpha1)/2));
+    lg.addColorStop(1,   rgba(cfg.liqR1, cfg.liqG1, cfg.liqB1, liqAlpha1));
+    ctx.fillStyle = lg;
+    ctx.fillRect(vX+2*sc, liqTop, vW-4*sc, liqH);
+
+    // Left edge shine on liquid
+    const ls = ctx.createLinearGradient(vX+2*sc, 0, vX+18*sc, 0);
+    ls.addColorStop(0,'rgba(255,255,255,0)');
+    ls.addColorStop(0.5,'rgba(255,255,255,0.10)');
+    ls.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = ls;
+    ctx.fillRect(vX+2*sc, liqTop, 16*sc, liqH);
+
+    // Inner radial glow
+    const cg = ctx.createRadialGradient(cx, liqTop+liqH*0.45, 2*sc, cx, liqTop+liqH*0.45, vHalfW*0.75);
+    cg.addColorStop(0, rgba(gR,gG,gB,0.16));
+    cg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = cg;
+    ctx.fillRect(vX+2*sc, liqTop, vW-4*sc, liqH);
+
+    // Meniscus curve
+    ctx.beginPath();
+    ctx.ellipse(cx, liqTop, vHalfW-3*sc, 5*sc, 0, 0, Math.PI*2);
+    const mg = ctx.createLinearGradient(vX, liqTop, vX+vW, liqTop);
+    mg.addColorStop(0,    rgba(gR,gG,gB,0.04));
+    mg.addColorStop(0.3,  rgba(gR,gG,gB,0.75));
+    mg.addColorStop(0.7,  rgba(gR,gG,gB,0.50));
+    mg.addColorStop(1,    rgba(gR,gG,gB,0.04));
+    ctx.fillStyle = mg; ctx.fill();
+
+    // Animated shimmer line
+    const sa = 0.3 + 0.7*Math.abs(Math.sin(t*2.2+cfg.phaseOffset));
+    ctx.beginPath();
+    ctx.ellipse(cx, liqTop+1.5*sc, vHalfW-10*sc, 2.0*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle = rgba(gR,gG,gB,sa);
+    ctx.fill();
+
+    // Bubbles
+    bubbles.forEach(b => {
+      const bx = vX+4*sc + b.x*(vW-8*sc);
+      const by = liqTop + b.y*liqH;
+      if (by < liqTop || by > botY-4*sc) return;
+      // bubble body
+      ctx.beginPath(); ctx.arc(bx, by, b.r*sc, 0, Math.PI*2);
+      ctx.fillStyle = rgba(gR,gG,gB, b.op*0.5);
+      ctx.fill();
+      // bubble rim
+      ctx.beginPath(); ctx.arc(bx, by, b.r*sc, 0, Math.PI*2);
+      ctx.strokeStyle = rgba(gR,gG,gB, b.op*0.9);
+      ctx.lineWidth = 0.6*sc;
+      ctx.stroke();
+      // specular glint
+      ctx.beginPath(); ctx.arc(bx - b.r*0.32*sc, by - b.r*0.32*sc, b.r*0.3*sc, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  // ── GLASS SHINES ──
+  // Left vertical shine
+  {
+    const ls = ctx.createLinearGradient(vX,0,vX+15*sc,0);
+    ls.addColorStop(0,'rgba(255,255,255,0)');
+    ls.addColorStop(0.55,'rgba(255,255,255,0.15)');
+    ls.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.save(); roundRect(ctx, vX, bodyY, 15*sc, bodyH, rad); ctx.fillStyle=ls; ctx.fill(); ctx.restore();
+  }
+  // Right subtle shine
+  {
+    const rs = ctx.createLinearGradient(vX+vW-12*sc,0,vX+vW,0);
+    rs.addColorStop(0,'rgba(255,255,255,0)');
+    rs.addColorStop(1,'rgba(255,255,255,0.05)');
+    ctx.save(); roundRect(ctx, vX+vW-12*sc, bodyY, 12*sc, bodyH, rad); ctx.fillStyle=rs; ctx.fill(); ctx.restore();
+  }
+  // Top rim glint
+  ctx.beginPath();
+  ctx.ellipse(cx - vHalfW*0.22, bodyY+2*sc, vHalfW*0.44, 2.2*sc, 0, 0, Math.PI*2);
+  ctx.fillStyle='rgba(255,255,255,0.13)'; ctx.fill();
+
+  // Glass edge stroke with glow
+  {
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB, gA*0.4);
+    ctx.shadowBlur  = 9*sc;
+    roundRect(ctx, vX, bodyY, vW, bodyH, rad);
+    ctx.strokeStyle = rgba(gR,gG,gB,0.20);
+    ctx.lineWidth = 1.2*sc;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── LABEL ──
+  {
+    const lbX = vX+9*sc, lbW = vW-18*sc;
+    const lbY = bodyY + bodyH*0.08, lbH = 54*sc;
+    // white bg with drop shadow
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,0.5)'; ctx.shadowBlur=8*sc; ctx.shadowOffsetY=3*sc;
+    roundRect(ctx, lbX, lbY, lbW, lbH, 4*sc);
+    ctx.fillStyle='#f2f8ff'; ctx.fill();
+    ctx.restore();
+    // top colour band
+    roundRect(ctx, lbX, lbY, lbW, 12*sc, 4*sc);
+    ctx.fillStyle=cfg.labelTop; ctx.fill();
+    ctx.fillRect(lbX, lbY+8*sc, lbW, 4*sc);
+    // brand tiny
+    ctx.font=`bold ${6*sc}px Orbitron,monospace`; ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.textAlign='center';
+    ctx.fillText('PEPTOIDS', cx, lbY+9.5*sc);
+    // product name
+    ctx.font=`bold ${10*sc}px Orbitron,monospace`; ctx.fillStyle=cfg.labelText;
+    ctx.fillText(cfg.name, cx, lbY+26*sc);
+    // divider
+    ctx.beginPath(); ctx.moveTo(lbX+4*sc, lbY+30*sc); ctx.lineTo(lbX+lbW-4*sc, lbY+30*sc);
+    ctx.strokeStyle='#bcd0e0'; ctx.lineWidth=0.6*sc; ctx.stroke();
+    // sub text
+    ctx.font=`${5.5*sc}px Arial,sans-serif`; ctx.fillStyle='#445566';
+    ctx.fillText(cfg.sub, cx, lbY+40*sc);
+    ctx.font=`${5*sc}px Arial,sans-serif`; ctx.fillStyle='#778899';
+    ctx.fillText(cfg.dose, cx, lbY+50*sc);
+    // bottom band
+    ctx.fillStyle=cfg.labelTop;
+    ctx.fillRect(lbX, lbY+lbH-8*sc, lbW, 8*sc);
+    roundRect(ctx, lbX, lbY+lbH-8*sc, lbW, 8*sc, 4*sc); // bottom corners
+    ctx.fill();
+    ctx.font=`${4.8*sc}px Arial,sans-serif`; ctx.fillStyle='rgba(255,255,255,0.85)';
+    ctx.fillText('Rx Only', cx, lbY+lbH-1.5*sc);
+    // label border
+    roundRect(ctx, lbX, lbY, lbW, lbH, 4*sc);
+    ctx.strokeStyle='rgba(130,170,210,0.45)'; ctx.lineWidth=0.7*sc; ctx.stroke();
+  }
+
+  // ── RUBBER STOPPER ──
+  {
+    const stG = ctx.createLinearGradient(vX+4*sc,0,vX+vW-4*sc,0);
+    stG.addColorStop(0,'#0c0c0c'); stG.addColorStop(0.22,'#2e2e2e');
+    stG.addColorStop(0.5,'#4e4e4e'); stG.addColorStop(0.78,'#2e2e2e'); stG.addColorStop(1,'#0c0c0c');
+    roundRect(ctx, vX+4*sc, stopY, vW-8*sc, stopH, 3*sc);
+    ctx.fillStyle=stG; ctx.fill();
+    // stopper sheen
+    ctx.beginPath();
+    ctx.ellipse(cx - vHalfW*0.26, stopY+3*sc, vHalfW*0.27, 2.0*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.07)'; ctx.fill();
+  }
+
+  // ── ALUMINIUM CAP ──
+  {
+    const cg = ctx.createLinearGradient(vX+2*sc,0,vX+vW-2*sc,0);
+    cg.addColorStop(0,   cfg.capDark);
+    cg.addColorStop(0.18,cfg.capMid);
+    cg.addColorStop(0.38,cfg.capLight);
+    cg.addColorStop(0.50,cfg.capLight);
+    cg.addColorStop(0.62,cfg.capMid);
+    cg.addColorStop(0.82,cfg.capDark);
+    cg.addColorStop(1,   cfg.capDark);
+    roundRect(ctx, vX+2*sc, capY, vW-4*sc, capH, 5*sc);
+    ctx.fillStyle=cg; ctx.fill();
+
+    // cap top ellipse
+    const ctg = ctx.createRadialGradient(cx-vHalfW*0.14,capY,2*sc,cx,capY+6*sc,vHalfW*0.9);
+    ctg.addColorStop(0, cfg.capLight); ctg.addColorStop(1, cfg.capDark);
+    ctx.beginPath(); ctx.ellipse(cx, capY, vHalfW-2*sc, 7*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle=ctg; ctx.fill();
+
+    // cap vertical glint
+    ctx.save(); roundRect(ctx, vX+2*sc, capY, vW-4*sc, capH, 5*sc); ctx.clip();
+    const csg = ctx.createLinearGradient(cx-6*sc,0,cx+4*sc,0);
+    csg.addColorStop(0,'rgba(255,255,255,0)');
+    csg.addColorStop(0.5,'rgba(255,255,255,0.22)');
+    csg.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=csg; ctx.fillRect(cx-8*sc, capY+2*sc, 12*sc, capH-4*sc);
+    ctx.restore();
+
+    // top glint
+    ctx.beginPath();
+    ctx.ellipse(cx - vHalfW*0.2, capY, vHalfW*0.34, 2.8*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.fill();
+  }
+
+  // ── CRIMP RING ──
+  {
+    const crg = ctx.createLinearGradient(vX,0,vX+vW,0);
+    crg.addColorStop(0,   cfg.crimpDark);
+    crg.addColorStop(0.25,cfg.crimpMid);
+    crg.addColorStop(0.5, cfg.crimpLight);
+    crg.addColorStop(0.75,cfg.crimpMid);
+    crg.addColorStop(1,   cfg.crimpDark);
+    ctx.save();
+    ctx.shadowColor = rgba(gR,gG,gB,0.95);
+    ctx.shadowBlur  = (7+4*Math.sin(t*2+cfg.phaseOffset))*sc;
+    ctx.fillStyle=crg;
+    ctx.fillRect(vX, capY+capH-1*sc, vW, 7*sc);
+    ctx.restore();
+    // bright neon top line
+    ctx.fillStyle = rgba(gR,gG,gB,0.5);
+    ctx.fillRect(vX, capY+capH-1*sc, vW, 2*sc);
+  }
+
+  // ── GLASS BOTTOM ──
+  {
+    ctx.save();
+    ctx.shadowColor=rgba(gR,gG,gB,0.25); ctx.shadowBlur=9*sc;
+    ctx.beginPath(); ctx.ellipse(cx, botY+4*sc, vHalfW-5*sc, 5*sc, 0, 0, Math.PI*2);
+    ctx.fillStyle='rgba(2,6,18,0.95)'; ctx.fill();
+    ctx.restore();
+    ctx.beginPath(); ctx.ellipse(cx - vHalfW*0.24, botY+3*sc, vHalfW*0.27, 2.1*sc, 0,0,Math.PI*2);
+    ctx.fillStyle=rgba(gR,gG,gB,0.14); ctx.fill();
+  }
+
+  ctx.restore(); // end transform
+
+  // ── FLOOR SHADOW ──
+  {
+    const sw = (35+16*Math.abs(Math.sin(t*1.35+cfg.phaseOffset)))*sc;
+    const sg = ctx.createRadialGradient(cx, H-11*sc, 0, cx, H-11*sc, sw);
+    sg.addColorStop(0, rgba(gR,gG,gB,0.30));
+    sg.addColorStop(0.5, rgba(gR,gG,gB,0.10));
+    sg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.ellipse(cx, H-11*sc, sw, 5.5*sc, 0,0,Math.PI*2);
+    ctx.fillStyle=sg; ctx.fill();
+  }
+}
+
+// ── ANIMATION LOOP ──
+let _t0 = null;
+function _loop(ts) {
+  if (!_t0) _t0 = ts;
+  const t = (ts - _t0) / 1000;
+  VIAL_CONFIGS.forEach((cfg, i) => {
+    const c = document.getElementById(cfg.id);
+    if (!c) return;
+    // update bubbles
+    BUBBLES[i].forEach(b => {
+      b.y += b.vy; b.x += b.vx;
+      if (b.y < 0.01) { b.y = 0.80+Math.random()*0.18; b.x = 0.2+Math.random()*0.6; b.op = 0.12+Math.random()*0.5; }
+      if (b.x < 0.04 || b.x > 0.96) b.vx *= -1;
+    });
+    drawVial(c, cfg, t, BUBBLES[i]);
+  });
+  // Sur mobile : limiter à 20fps pour éviter le bug de scroll iOS
+  var isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    setTimeout(function(){ requestAnimationFrame(_loop); }, 50);
+  } else {
+    requestAnimationFrame(_loop);
+  }
+}
+requestAnimationFrame(_loop);
+
+
+// ── Map des configs par couleur (format index.html) ──
+var VIAL_CONFIGS_MAP = {
+  'blue': {
+    capDark:'#0a1535', capMid:'#2a5aaa', capLight:'#88bbee', capTop:'#4477cc',
+    crimpDark:'#001a55', crimpMid:'#1a88ee', crimpLight:'#66ccff',
+    liqR0:0,liqG0:150,liqB0:255, liqR1:0,liqG1:80,liqB1:220,
+    liqAlpha0:0.55, liqAlpha1:0.70,
+    glowR:0,glowG:180,glowB:255,
+    labelTop:'#0055bb', labelText:'#003399', phaseOffset:0
+  },
+  'purple': {
+    capDark:'#1a0535', capMid:'#6a20b0', capLight:'#c080f0', capTop:'#9040cc',
+    crimpDark:'#2a0855', crimpMid:'#9040ee', crimpLight:'#cc88ff',
+    liqR0:190,liqG0:60,liqB0:255, liqR1:80,liqG1:0,liqB1:180,
+    liqAlpha0:0.50, liqAlpha1:0.70,
+    glowR:168,glowG:85,glowB:247,
+    labelTop:'#6600bb', labelText:'#440088', phaseOffset:1.6
+  },
+  'clear': {
+    capDark:'#0a1828', capMid:'#2a5888', capLight:'#88aabb', capTop:'#3a6688',
+    crimpDark:'#0a2040', crimpMid:'#2a60aa', crimpLight:'#88bbdd',
+    liqR0:200,liqG0:230,liqB0:255, liqR1:150,liqG1:200,liqB1:255,
+    liqAlpha0:0.20, liqAlpha1:0.35,
+    glowR:180,glowG:210,glowB:255,
+    labelTop:'#334455', labelText:'#223344', phaseOffset:2.2
+  },
+  'green': {
+    capDark:'#051a0a', capMid:'#1a7a30', capLight:'#55cc66', capTop:'#2a8840',
+    crimpDark:'#052210', crimpMid:'#22aa44', crimpLight:'#66ee88',
+    liqR0:0,liqG0:200,liqB0:100, liqR1:0,liqG1:90,liqB1:40,
+    liqAlpha0:0.55, liqAlpha1:0.80,
+    glowR:0,glowG:200,glowB:100,
+    labelTop:'#005522', labelText:'#003311', phaseOffset:0.8
+  },
+  'red': {
+    capDark:'#200505', capMid:'#882020', capLight:'#ee6666', capTop:'#aa3333',
+    crimpDark:'#300808', crimpMid:'#aa2222', crimpLight:'#ff7777',
+    liqR0:255,liqG0:60,liqB0:60, liqR1:180,liqG1:0,liqB1:0,
+    liqAlpha0:0.55, liqAlpha1:0.80,
+    glowR:255,glowG:60,glowB:60,
+    labelTop:'#bb0000', labelText:'#880000', phaseOffset:1.0
+  },
+  'gold': {
+    capDark:'#1a1000', capMid:'#886600', capLight:'#ddaa33', capTop:'#aa8800',
+    crimpDark:'#221500', crimpMid:'#aa8800', crimpLight:'#ffcc44',
+    liqR0:255,liqG0:200,liqB0:0, liqR1:180,liqG1:120,liqB1:0,
+    liqAlpha0:0.55, liqAlpha1:0.80,
+    glowR:255,glowG:180,glowB:0,
+    labelTop:'#886600', labelText:'#553300', phaseOffset:3.1
+  }
+};
+
+
+var prodKey = new URLSearchParams(window.location.search).get('id') || '';
+var prodData = PRODUITS[prodKey];
+
+// ── Chercher aussi dans les produits custom ──
+if (!prodData) {
+  try {
+    var customProds = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+    var cp = customProds.find(function(p){ return p.id === prodKey; });
+    if (cp) {
+      prodData = {
+        name:     cp.nom,
+        subtitle: cp.dosage || cp.categorie,
+        category: cp.categorie || 'Peptide · Recherche',
+        desc:     cp.description || 'Peptide de recherche de haute pureté.',
+        couleur:  cp.couleur || 'blue',
+        glow:     cp.couleur === 'purple' ? '168,85,247' : cp.couleur === 'green' ? '0,200,100' : '0,200,255',
+        liq1:     cp.couleur === 'purple' ? 'rgba(190,60,255,0.50)' : cp.couleur === 'green' ? 'rgba(0,200,100,0.55)' : 'rgba(0,150,255,0.55)',
+        liq2:     cp.couleur === 'purple' ? 'rgba(80,0,180,0.70)' : cp.couleur === 'green' ? 'rgba(0,90,40,0.80)' : 'rgba(0,60,200,0.70)',
+        cap:      cp.couleur === 'purple' ? '#2a0840' : cp.couleur === 'green' ? '#0a2010' : '#1a2a50',
+        cap2:     cp.couleur === 'purple' ? '#8040b0' : cp.couleur === 'green' ? '#3a8050' : '#5a80cc',
+        cr:       cp.couleur === 'purple' ? 'rgba(180,80,255,0.9)' : cp.couleur === 'green' ? 'rgba(0,200,100,0.9)' : 'rgba(0,180,255,0.9)',
+        lt:       cp.couleur === 'purple' ? '#6600bb' : cp.couleur === 'green' ? '#005522' : '#0055bb',
+        lx:       cp.couleur === 'purple' ? '#440088' : cp.couleur === 'green' ? '#003311' : '#003399',
+        badge:    cp.badge || '',
+        badgeBg:  cp.badge ? 'linear-gradient(135deg,#a855f7,#00c8ff)' : '',
+        badgeTxt: '#fff',
+        offer:    '',
+        prix:     { normal: parseFloat(cp.prix) || 49.99, barred: parseFloat(cp.prixBarre) || 79.99 },
+        specs:    cp.specs && cp.specs.length ? cp.specs : [
+          {icon:'🧪',label:'Pureté',val:'≥ 99.5%'},
+          {icon:'📦',label:'Format',val:'Lyophilisé stérile'},
+          {icon:'⚗️',label:'Conditionnement',val:cp.dosage || 'Flacon'},
+          {icon:'❄️',label:'Stockage',val:'-20°C recommandé'},
+          {icon:'📋',label:'Certificat',val:'CoA inclus'},
+          {icon:'🔬',label:'Usage',val:'Recherche uniquement'}
+        ],
+        composition: cp.composition && cp.composition.length ? cp.composition : [
+          cp.nom + ' ≥99.5% (HPLC)',
+          'Lyophilisat stérile sans excipient',
+          'Production en laboratoire certifié',
+          'Eau bactériostatique de reconstitution incluse'
+        ]
+      };
+    }
+  } catch(e) {}
+}
+
+var qty = 1;
+var wished = false;
+
+if (!prodData) {
+  document.getElementById('productMain').style.display='none';
+  document.getElementById('productBottom').style.display='none';
+  document.getElementById('breadcrumb').style.display='none';
+  document.getElementById('notFound').style.display='';
+} else {
+  document.title = prodData.name + ' — PEPTOIDS';
+  var savedPrix = getPrix()[prodKey] || {};
+  var normalP = savedPrix.normal || prodData.prix.normal;
+  var barredP = savedPrix.barred || prodData.prix.barred;
+  var stockObj = getStock();
+  var qty_stock = stockObj[prodKey] !== undefined ? stockObj[prodKey] : 10;
+  document.getElementById('breadName').textContent  = prodData.name;
+  document.getElementById('prodCategory').textContent = prodData.category;
+  document.getElementById('prodName').textContent    = prodData.name;
+  document.getElementById('prodSubtitle').textContent = prodData.subtitle;
+  document.getElementById('descText').textContent    = prodData.desc;
+  document.getElementById('priceNew').textContent = normalP.toFixed(2).replace('.',',') + '€';
+  document.getElementById('priceOld').textContent = barredP.toFixed(2).replace('.',',') + '€';
+  var savePct = Math.round((1 - normalP/barredP) * 100);
+  if (savePct > 0) { document.getElementById('priceSave').textContent='-'+savePct+'%'; document.getElementById('priceSave').style.display=''; }
+  var sc_color = qty_stock<=0 ? '#ff4466' : qty_stock<=3 ? '#ffaa00' : '#00ff88';
+  var sc_text  = qty_stock<=0 ? 'Rupture de stock' : qty_stock<=3 ? qty_stock+' restants — presque épuisé' : qty_stock+' en stock';
+  var ind = document.getElementById('stockIndicator');
+  ind.style.background = qty_stock<=0?'rgba(255,68,102,0.08)':qty_stock<=3?'rgba(255,170,0,0.08)':'rgba(0,255,136,0.06)';
+  ind.style.border = '1px solid '+sc_color+'33';
+  document.getElementById('stockDot').style.cssText='width:7px;height:7px;border-radius:50%;background:'+sc_color+';box-shadow:0 0 6px '+sc_color+';flex-shrink:0;';
+  document.getElementById('stockText').textContent=sc_text;
+  document.getElementById('stockText').style.color=sc_color;
+  document.getElementById('stockBarFill').style.cssText='width:'+Math.min(100,qty_stock*10)+'%;height:100%;border-radius:3px;background:'+sc_color+';';
+  if (qty_stock<=0) { document.getElementById('btnAdd').disabled=true; document.getElementById('btnAdd').textContent='RUPTURE DE STOCK'; }
+  if (prodData.badge) {
+    var b=document.getElementById('vialBadge'); b.style.display='';
+    b.textContent=prodData.badge;
+    b.style.cssText+='background:'+prodData.badgeBg+';color:'+prodData.badgeTxt+';font-family:Orbitron,monospace;font-size:8px;font-weight:700;letter-spacing:2px;padding:5px 14px;border-radius:20px;position:absolute;top:18px;right:18px;';
+  }
+  document.getElementById('vialGlow').style.background='rgba('+prodData.glow+',1)';
+  if (prodData.offer) { document.getElementById('offerPill').style.display=''; document.getElementById('offerText').textContent=prodData.offer; }
+  document.getElementById('specsGrid').innerHTML=prodData.specs.map(function(s){return '<div class="spec-item"><span class="spec-icon">'+s.icon+'</span><div class="spec-text"><div class="spec-label">'+s.label+'</div><div class="spec-val">'+s.val+'</div></div></div>';}).join('');
+  document.getElementById('compositionList').innerHTML=prodData.composition.map(function(c){return '<li>'+c+'</li>';}).join('');
+  // Créer la config au format index.html
+  var vCfg = Object.assign({}, VIAL_CONFIGS_MAP[prodData.couleur] || VIAL_CONFIGS_MAP['blue'], {
+    name: prodData.name.split('/')[0].trim().substring(0,10),
+    sub:  prodData.subtitle ? prodData.subtitle.substring(0,18) : '',
+    dose: prodData.prix ? prodData.prix.normal.toFixed(2).replace('.',',')+'€ / fl.' : ''
+  });
+
+  // Bubbles pour la fiole produit
+  var vBubbles = Array.from({length:9}, function(){
+    return {
+      x:  0.2 + Math.random()*0.6,
+      y:  0.3 + Math.random()*0.65,
+      r:  1.0 + Math.random()*2.6,
+      vy: -(1.8e-4 + Math.random()*4e-4),
+      vx: (Math.random()-0.5)*1.4e-4,
+      op: 0.12 + Math.random()*0.5
+    };
+  });
+
+  // Canvas taille : correspond aux fioles de index.html
+  var cv = document.getElementById('vialCanvas');
+  cv.style.width  = '220px';
+  cv.style.height = '280px';
+
+  var t0 = null;
+  function loop(ts) {
+    if (!t0) t0 = ts;
+    var t = (ts - t0) / 1000;
+    // Animer les bulles
+    vBubbles.forEach(function(b){
+      b.y += b.vy;
+      b.x += b.vx;
+      if (b.y < 0) { b.y = 1.0; b.x = 0.2 + Math.random()*0.6; }
+      if (b.x < 0.05 || b.x > 0.95) b.vx *= -1;
+    });
+    drawVial(cv, vCfg, t, vBubbles);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
+function changeQty(delta){qty=Math.max(1,Math.min(10,qty+delta));document.getElementById('qtyVal').textContent=qty;}
+function toggleWish(){wished=!wished;var b=document.getElementById('btnWish');b.textContent=wished?'♥':'♡';b.style.color=wished?'#ff4466':'';b.style.borderColor=wished?'rgba(255,68,102,0.4)':'';}
+function addToCart(){
+  if(!prodData)return;
+  var price=parseFloat(document.getElementById('priceNew').textContent.replace(',','.').replace('€',''));
+  try{
+    var pending=JSON.parse(localStorage.getItem('peptoids:pending_add')||'[]');
+    for(var i=0;i<qty;i++) pending.push({key:prodKey,name:prodData.name,price:price,emoji:prodData.couleur==='blue'?'🔵':prodData.couleur==='purple'?'🟣':'🟢'});
+    localStorage.setItem('peptoids:pending_add',JSON.stringify(pending));
+    localStorage.setItem('peptoids:open_cart','1');
+  }catch(e){}
+  document.getElementById('toastMsg').textContent='✓ '+qty+'x '+prodData.name+' ajouté'+(qty>1?'s':'');
+  document.getElementById('toast').classList.add('show');
+  setTimeout(function(){window.location.href='index.html';},1300);
+}
+</script>
+
+<script id="page-transition-js">
+(function(){
+  var ov=document.getElementById('pt-overlay');
+  if(!ov)return;
+  window.addEventListener('load',function(){ov.classList.remove('in');});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');if(!a)return;
+    var href=a.getAttribute('href');
+    if(!href||href.startsWith('#')||href.startsWith('http')||href.startsWith('tel')||href.startsWith('mailto')||href.startsWith('javascript'))return;
+    e.preventDefault();ov.classList.add('in');
+    setTimeout(function(){window.location.href=href;},460);
+  });
+  window.addEventListener('beforeunload',function(){ov.classList.add('in');});
+})();
+</script>
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>

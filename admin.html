@@ -1,0 +1,3375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEPTOIDS — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan: #00c8ff;
+  --purple: #a855f7;
+  --green: #00ff88;
+  --red: #ff4466;
+  --dark: #010610;
+  --card: rgba(6,14,38,0.97);
+  --border: rgba(0,200,255,0.13);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--dark); color:#fff; font-family:'Exo 2',sans-serif; min-height:100vh; overflow-x:hidden; }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:#010610; }
+::-webkit-scrollbar-thumb { background:linear-gradient(var(--cyan),var(--purple)); border-radius:4px; }
+body::before {
+  content:''; position:fixed; inset:0; z-index:0;
+  background-image: linear-gradient(rgba(0,200,255,0.025) 1px,transparent 1px), linear-gradient(90deg,rgba(0,200,255,0.025) 1px,transparent 1px);
+  background-size:40px 40px; pointer-events:none;
+}
+
+/* LOGIN */
+#loginScreen { position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; background:radial-gradient(ellipse at 50% 40%,rgba(0,80,180,0.12),transparent 70%),var(--dark); }
+.login-box { background:var(--card); border:1px solid rgba(0,200,255,0.2); border-radius:20px; padding:48px 40px; width:360px; text-align:center; box-shadow:0 0 60px rgba(0,200,255,0.08),0 40px 80px rgba(0,0,0,0.6); animation:fadeInUp 0.5s ease both; }
+.login-logo { font-family:'Orbitron',monospace; font-weight:900; font-size:26px; letter-spacing:4px; background:linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.login-sub { font-size:11px; letter-spacing:3px; color:rgba(255,255,255,0.25); text-transform:uppercase; margin-bottom:32px; }
+.login-label { font-size:11px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; text-align:left; margin-bottom:8px; display:block; }
+.login-input { width:100%; background:rgba(0,0,0,0.5); border:1px solid rgba(0,200,255,0.18); border-radius:10px; padding:13px 16px; color:#fff; font-family:'Exo 2',sans-serif; font-size:14px; outline:none; transition:border-color 0.2s; letter-spacing:2px; margin-bottom:20px; }
+.login-input:focus { border-color:rgba(0,200,255,0.5); }
+.login-btn { width:100%; padding:14px; background:linear-gradient(90deg,var(--cyan),var(--purple)); border:none; border-radius:10px; font-family:'Orbitron',monospace; font-weight:700; font-size:12px; letter-spacing:2px; color:#000; cursor:pointer; box-shadow:0 0 25px rgba(0,200,255,0.25); transition:transform 0.2s; }
+.login-btn:hover { transform:translateY(-2px); }
+.login-error { margin-top:14px; font-size:12px; color:var(--red); letter-spacing:1px; display:none; }
+
+/* ADMIN */
+#adminScreen { display:none; position:relative; z-index:1; min-height:100vh; }
+.topbar { position:sticky; top:0; z-index:50; background:rgba(1,6,16,0.92); backdrop-filter:blur(20px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 32px; height:60px; }
+.topbar-logo { font-family:'Orbitron',monospace; font-weight:900; font-size:18px; letter-spacing:3px; background:linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.topbar-badge { background:rgba(0,200,255,0.08); border:1px solid rgba(0,200,255,0.25); border-radius:999px; padding:4px 14px; font-size:10px; letter-spacing:2px; color:var(--cyan); font-family:'Orbitron',monospace; }
+.logout-btn { background:rgba(255,60,60,0.08); border:1px solid rgba(255,60,60,0.25); border-radius:8px; padding:7px 16px; font-family:'Orbitron',monospace; font-size:10px; letter-spacing:1px; color:rgba(255,100,100,0.7); cursor:pointer; transition:all 0.2s; }
+.logout-btn:hover { background:rgba(255,60,60,0.18); color:#ff6060; }
+.admin-main { padding:32px; max-width:1200px; margin:0 auto; }
+
+/* STATS */
+.stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
+.stat-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; }
+.stat-card-label { font-size:10px; letter-spacing:3px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:10px; }
+.stat-card-value { font-family:'Orbitron',monospace; font-weight:900; font-size:28px; background:linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.stat-card-sub { font-size:11px; color:rgba(255,255,255,0.25); margin-top:4px; }
+
+/* TABS */
+.tabs { display:flex; gap:4px; margin-bottom:28px; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:12px; padding:5px; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:thin; scrollbar-color:rgba(0,200,255,0.2) transparent; }
+.tabs::-webkit-scrollbar { height:3px; }
+.tabs::-webkit-scrollbar-track { background:transparent; }
+.tabs::-webkit-scrollbar-thumb { background:rgba(0,200,255,0.2); border-radius:3px; }
+.tab-btn { flex-shrink:0; padding:10px 16px; border:none; border-radius:8px; font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:1.5px; cursor:pointer; transition:all 0.2s; background:transparent; color:rgba(255,255,255,0.35); white-space:nowrap; }
+.tab-btn.active { background:linear-gradient(90deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15)); border:1px solid rgba(0,200,255,0.3); color:#fff; }
+.tab-btn:hover:not(.active) { color:rgba(255,255,255,0.6); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* ORDERS */
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.section-head h2 { font-family:'Orbitron',monospace; font-size:14px; letter-spacing:2px; color:#fff; }
+.section-head span { font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:1px; }
+.orders-wrap { background:var(--card); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+.orders-table { width:100%; border-collapse:collapse; }
+.orders-table thead tr { border-bottom:1px solid rgba(0,200,255,0.1); background:rgba(0,200,255,0.03); }
+.orders-table th { padding:14px 18px; text-align:left; font-family:'Orbitron',monospace; font-size:9px; letter-spacing:2px; color:rgba(0,200,255,0.6); text-transform:uppercase; }
+.orders-table td { padding:16px 18px; font-size:12px; color:rgba(255,255,255,0.7); border-bottom:1px solid rgba(0,200,255,0.05); vertical-align:middle; }
+.orders-table tbody tr:hover { background:rgba(0,200,255,0.04); }
+.orders-table tbody tr:last-child td { border-bottom:none; }
+.order-id { font-family:'Orbitron',monospace; font-size:10px; color:var(--cyan); letter-spacing:1px; }
+.order-total { font-family:'Orbitron',monospace; font-weight:700; font-size:13px; color:#fff; }
+.order-date { font-size:11px; color:rgba(255,255,255,0.35); }
+.order-items { font-size:11px; color:rgba(255,255,255,0.45); line-height:1.7; }
+.status-select { background:rgba(0,0,0,0.4); border:1px solid rgba(0,200,255,0.2); border-radius:6px; padding:5px 8px; color:#fff; font-family:'Orbitron',monospace; font-size:9px; letter-spacing:1px; cursor:pointer; outline:none; }
+.empty-orders { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.2); }
+.empty-orders .icon { font-size:40px; margin-bottom:14px; }
+.empty-orders p { font-family:'Orbitron',monospace; font-size:12px; letter-spacing:2px; }
+.loading { text-align:center; padding:40px; color:rgba(0,200,255,0.4); font-family:'Orbitron',monospace; font-size:11px; letter-spacing:2px; }
+.refresh-btn { background:rgba(0,200,255,0.07); border:1px solid rgba(0,200,255,0.2); border-radius:8px; padding:7px 16px; font-family:'Orbitron',monospace; font-size:10px; letter-spacing:1px; color:rgba(0,200,255,0.6); cursor:pointer; transition:all 0.2s; }
+.refresh-btn:hover { background:rgba(0,200,255,0.15); color:var(--cyan); }
+.clear-btn { background:rgba(255,60,60,0.07); border:1px solid rgba(255,60,60,0.2); border-radius:8px; padding:7px 16px; font-family:'Orbitron',monospace; font-size:10px; letter-spacing:1px; color:rgba(255,100,100,0.6); cursor:pointer; transition:all 0.2s; }
+.clear-btn:hover { background:rgba(255,60,60,0.16); color:#ff6060; }
+
+/* PROMOS */
+.promo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px; margin-bottom:28px; }
+.promo-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:10px; position:relative; transition:border-color 0.2s; }
+.promo-card:hover { border-color:rgba(0,200,255,0.3); }
+.promo-card-code { font-family:'Orbitron',monospace; font-weight:900; font-size:18px; letter-spacing:2px; background:linear-gradient(90deg,var(--cyan),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.promo-card-discount { font-family:'Orbitron',monospace; font-size:13px; color:var(--green); font-weight:700; }
+.promo-card-uses { font-size:11px; color:rgba(255,255,255,0.35); }
+.promo-status { display:inline-block; padding:3px 10px; border-radius:6px; font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:1px; }
+.promo-active   { background:rgba(0,255,136,0.1); color:var(--green); border:1px solid rgba(0,255,136,0.3); }
+.promo-inactive { background:rgba(255,60,60,0.1); color:var(--red); border:1px solid rgba(255,60,60,0.3); }
+.promo-del-btn { position:absolute; top:12px; right:12px; background:rgba(255,60,60,0.06); border:1px solid rgba(255,60,60,0.2); border-radius:6px; padding:4px 8px; color:rgba(255,100,100,0.5); cursor:pointer; font-size:11px; transition:all 0.2s; }
+.promo-del-btn:hover { background:rgba(255,60,60,0.18); color:#ff6060; }
+.promo-action-btn { background:rgba(0,200,255,0.06); border:1px solid rgba(0,200,255,0.2); border-radius:6px; padding:6px 12px; color:rgba(0,200,255,0.6); cursor:pointer; font-family:'Orbitron',monospace; font-size:9px; font-weight:700; letter-spacing:1px; transition:all 0.2s; width:100%; }
+.promo-action-btn:hover { background:rgba(0,200,255,0.15); color:var(--cyan); }
+.fixed-badge { position:absolute; top:12px; right:12px; background:rgba(0,200,255,0.1); border:1px solid rgba(0,200,255,0.3); border-radius:6px; padding:3px 8px; font-family:'Orbitron',monospace; font-size:8px; color:rgba(0,200,255,0.7); letter-spacing:1px; }
+.discount-edit { width:64px; background:rgba(0,0,0,0.4); border:1px solid rgba(0,200,255,0.2); border-radius:6px; padding:5px 8px; color:#00ff88; font-family:'Orbitron',monospace; font-size:13px; font-weight:700; outline:none; text-align:center; }
+.promo-form-wrap { background:var(--card); border:1px solid rgba(0,200,255,0.18); border-radius:16px; padding:24px; margin-bottom:24px; }
+.promo-form-title { font-family:'Orbitron',monospace; font-size:11px; letter-spacing:2px; color:var(--cyan); margin-bottom:18px; }
+.promo-form-grid { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; align-items:end; }
+.promo-field label { font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; display:block; margin-bottom:6px; }
+.promo-input { width:100%; background:rgba(0,0,0,0.4); border:1px solid rgba(0,200,255,0.15); border-radius:8px; padding:10px 13px; color:#fff; font-family:'Exo 2',sans-serif; font-size:13px; outline:none; transition:border-color 0.2s; }
+.promo-input:focus { border-color:rgba(0,200,255,0.5); }
+.promo-create-btn { padding:10px 20px; background:linear-gradient(90deg,var(--cyan),var(--purple)); border:none; border-radius:8px; font-family:'Orbitron',monospace; font-weight:700; font-size:10px; letter-spacing:1px; color:#000; cursor:pointer; white-space:nowrap; box-shadow:0 0 20px rgba(0,200,255,0.2); transition:transform 0.2s; }
+.promo-create-btn:hover { transform:translateY(-1px); }
+.promo-error { font-size:11px; color:#ff8888; margin-top:10px; display:none; }
+
+@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+@media(max-width:600px) { .admin-main{padding:16px} .topbar{padding:0 16px} .promo-form-grid{grid-template-columns:1fr 1fr} }
+</style>
+
+<style id="page-transition-css">
+#pt-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #010610;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+#pt-overlay.in  { opacity: 1; pointer-events: all; }
+#pt-overlay.out { opacity: 0; pointer-events: none; }
+#pt-line {
+  position: absolute; top: 50%; left: 0;
+  height: 1px; width: 0%;
+  background: linear-gradient(90deg, transparent, #00c8ff, #a855f7, transparent);
+  transform: translateY(-50%);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px rgba(0,200,255,0.8);
+}
+#pt-overlay.in #pt-line { width: 100%; }
+</style>
+</head>
+<body>
+<div id="pt-overlay"><div id="pt-line"></div></div>
+
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:36px;margin-bottom:20px;">🔐</div>
+    <div class="login-logo">PEPTOIDS</div>
+    <div class="login-sub">Espace Administrateur</div>
+    <label class="login-label">Mot de passe</label>
+    <input class="login-input" type="password" id="pwdInput" placeholder="••••••••">
+    <button class="login-btn" id="loginBtn">ACCÉDER →</button>
+    <div class="login-error" id="loginError">⚠ Mot de passe incorrect</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminScreen">
+  <div class="topbar">
+    <div class="topbar-logo">PEPTOIDS</div>
+    <div class="topbar-badge">✦ ADMIN ✦</div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div id="visitorsOnline" style="background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.25);border-radius:999px;padding:4px 14px;font-size:10px;letter-spacing:1px;color:rgba(0,255,136,0.8);font-family:'Orbitron',monospace;display:flex;align-items:center;gap:6px;">
+        <span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:inline-block;box-shadow:0 0 6px #00ff88;animation:blink 1.5s ease-in-out infinite;"></span>
+        <span id="visitorsCount">0</span> en ligne
+      </div>
+      <button class="logout-btn" id="logoutBtn">⏻ Déconnexion</button>
+    </div>
+  </div>
+  <!-- ══ STOCK ALERT BANNER ══ -->
+  <div id="stockAlertBanner" style="display:none;background:linear-gradient(90deg,rgba(255,170,0,0.12),rgba(255,100,0,0.08));border-bottom:1px solid rgba(255,170,0,0.3);padding:10px 32px;display:none;align-items:center;gap:12px;flex-wrap:wrap;">
+    <span style="font-size:16px;">⚠️</span>
+    <span style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#ffaa00;">ALERTE STOCK</span>
+    <span id="stockAlertText" style="font-size:12px;color:rgba(255,200,100,0.8);flex:1;"></span>
+    <button onclick="switchTab('stock');document.getElementById('stockAlertBanner').style.display='none';" style="background:rgba(255,170,0,0.15);border:1px solid rgba(255,170,0,0.4);border-radius:8px;padding:5px 14px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:1px;color:#ffaa00;cursor:pointer;">VOIR STOCK →</button>
+    <button onclick="document.getElementById('stockAlertBanner').style.display='none';" style="background:transparent;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:16px;line-height:1;">✕</button>
+  </div>
+
+  <div class="admin-main">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-card-label">Commandes totales</div><div class="stat-card-value" id="statTotal">—</div><div class="stat-card-sub">Depuis l'ouverture</div></div>
+      <div class="stat-card"><div class="stat-card-label">Nouvelles commandes</div><div class="stat-card-value" id="statNew">—</div><div class="stat-card-sub">En attente</div></div>
+      <div class="stat-card"><div class="stat-card-label">Chiffre d'affaires</div><div class="stat-card-value" id="statCA">—</div><div class="stat-card-sub">Total</div></div>
+      <div class="stat-card"><div class="stat-card-label">Panier moyen</div><div class="stat-card-value" id="statAvg">—</div><div class="stat-card-sub">Par commande</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" id="tabBtnOrders">📋 Commandes</button>
+      <button class="tab-btn" id="tabBtnPromos">🎟 Codes Promo</button>
+      <button class="tab-btn" id="tabBtnStock">📦 Stock<span id="stockBadge" style="display:none;background:#ff4466;color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700;margin-left:6px;">!</span></button>
+      <button class="tab-btn" id="tabBtnPP">🏷 Promos Article</button>
+      <button class="tab-btn" id="tabBtnPrix">💰 Prix</button>
+      <button class="tab-btn" id="tabBtnProduits">➕ Produits</button>
+      <button class="tab-btn" id="tabBtnEmails">📧 Emails</button>
+      <button class="tab-btn" id="tabBtnComptes">👥 Comptes</button>
+      <button class="tab-btn" id="tabBtnGraphiques">📊 Graphiques</button>
+      <button class="tab-btn" id="tabBtnBanniere">📣 Bannière</button>
+      <button class="tab-btn" id="tabBtnVirement">🏦 Virement</button>
+      <button class="tab-btn" id="tabBtnVip">👑 VIP</button>
+      <button class="tab-btn" id="tabBtnMessages">📩 Messages</button>
+      <button class="tab-btn" id="tabBtnAvis">⭐ Avis</button>
+      <button class="tab-btn" id="tabBtnSlots">🎰 Machine à Sous</button>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="tab-panel active" id="tabOrders">
+      <div class="section-head">
+        <h2>📋 COMMANDES</h2>
+        <div style="display:flex;gap:10px;">
+          <button class="refresh-btn" id="refreshBtn">↻ Actualiser</button>
+          <button class="clear-btn" id="clearBtn">🗑 Vider</button>
+        </div>
+      </div>
+      <div class="orders-wrap">
+        <div class="loading" id="loadingEl">Chargement...</div>
+        <table class="orders-table" id="ordersTable" style="display:none;">
+          <thead><tr><th>ID</th><th>Date</th><th>Client</th><th>Produits</th><th>Total</th><th>Statut</th></tr></thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+        <div class="empty-orders" id="emptyOrders" style="display:none;">
+          <div class="icon">📦</div><p>Aucune commande pour le moment</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMOS -->
+    <div class="tab-panel" id="tabPromos">
+      <div class="promo-form-wrap">
+        <div class="promo-form-title">✦ CRÉER UN CODE PROMO</div>
+        <div class="promo-form-grid">
+          <div class="promo-field"><label>Code</label><input class="promo-input" id="newCode" type="text" placeholder="EX: SUMMER20"></div>
+          <div class="promo-field"><label>Réduction (%)</label><input class="promo-input" id="newDiscount" type="number" placeholder="10" min="1" max="99"></div>
+          <div class="promo-field"><label>Utilisations max</label><input class="promo-input" id="newMaxUses" type="number" placeholder="illimité" min="1"></div>
+          <div class="promo-field"><label>Montant fixe (€)</label><input class="promo-input" id="newFixed" type="number" placeholder="0" min="0" title="Réduction fixe en € (ex: 10€). Si renseigné, le % est ignoré."></div>
+          <div class="promo-field"><label>Expiration</label><input class="promo-input" id="newExpires" type="date" style="color-scheme:dark;" title="Laisser vide = sans expiration"></div>
+          <div class="promo-field" style="grid-column:1/-1;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.2);border-radius:10px;">
+              <input type="checkbox" id="newSingleUse" style="accent-color:#ffd700;width:16px;height:16px;cursor:pointer;">
+              <span style="font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:#ffd700;">👑 USAGE UNIQUE VIP</span>
+              <span style="font-size:11px;color:rgba(255,215,0,0.5);margin-left:auto;">Le code ne peut être utilisé qu'une seule fois par client</span>
+            </label>
+          </div>
+          <div><button class="promo-create-btn" id="createPromoBtn">+ Créer</button></div>
+        </div>
+        <div class="promo-error" id="promoError"></div>
+      </div>
+      <div class="section-head">
+        <h2>🎟 TOUS LES CODES</h2>
+        <span id="promoCount">0 code(s)</span>
+      </div>
+      <div class="promo-grid" id="promoGrid"></div>
+    </div>
+
+    <!-- STOCK -->
+    <div class="tab-panel" id="tabStock">
+      <div class="section-head">
+        <h2>📦 GESTION DU STOCK</h2>
+        <button class="refresh-btn" onclick="loadStock()">↻ Actualiser</button>
+      </div>
+      <div id="stockGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;"></div>
+    </div>
+
+    <!-- PROMOS PRODUIT -->
+    <div class="tab-panel" id="tabProductPromos">
+      <div class="promo-form-wrap" style="margin-bottom:24px;">
+        <div class="promo-form-title">✦ AJOUTER UNE PROMO SUR UN ARTICLE</div>
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:end;">
+          <div class="promo-field">
+            <label>Produit</label>
+            <select class="promo-input" id="ppProduct">
+              <option value="Retatrutide">Retatrutide / GLP-1 Triple</option>
+              <option value="GHK-Cu">GHK-Cu / Copper Peptide</option>
+              <option value="HGH">HGH / Somatropin</option>
+            </select>
+          </div>
+          <div class="promo-field"><label>Réduction (%)</label><input class="promo-input" id="ppDiscount" type="number" placeholder="15" min="1" max="99"></div>
+          <div class="promo-field"><label>Label affiché</label><input class="promo-input" id="ppLabel" type="text" placeholder="PROMO -15%"></div>
+          <div><button class="promo-create-btn" id="createPPBtn">+ Appliquer</button></div>
+        </div>
+        <div class="promo-error" id="ppError"></div>
+      </div>
+      <div class="section-head">
+        <h2>🏷 PROMOS PAR ARTICLE</h2>
+        <span id="ppCount">0 promo(s)</span>
+      </div>
+      <div id="ppGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+
+    <!-- PRIX -->
+    <div class="tab-panel" id="tabPrix">
+      <div class="section-head">
+        <h2>💰 GESTION DES PRIX</h2>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);">Les promos article se synchronisent automatiquement</span>
+      </div>
+      <div id="prixGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;"></div>
+    </div>
+    <div class="tab-panel" id="tabProduits">
+      <div class="promo-form-wrap" style="margin-bottom:24px;">
+        <div class="promo-form-title">✦ AJOUTER UN PRODUIT</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div class="promo-field"><label>Nom du produit *</label><input class="promo-input" id="pNom" type="text" placeholder="Ex: BPC-157"></div>
+          <div class="promo-field"><label>Sous-titre / type</label><input class="promo-input" id="pCategorie" type="text" placeholder="Ex: Peptide · Récupération"></div>
+        </div>
+        <!-- IA GENERATION -->
+        <div style="margin-bottom:14px;background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(0,200,255,0.04));border:1px solid rgba(168,85,247,0.25);border-radius:12px;padding:16px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:10px;">
+            <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#a855f7;">✦ GÉNÉRATION IA</div>
+            <button onclick="genererFicheProduit()" id="btnGenIA" style="background:linear-gradient(90deg,#a855f7,#00c8ff);border:none;border-radius:8px;padding:8px 18px;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;">
+              ✨ Générer la fiche avec IA
+            </button>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.35);line-height:1.6;margin-bottom:10px;">
+            Remplissez le nom, le sous-titre et le dosage — Claude génère automatiquement la description, la composition et les specs.
+          </div>
+          <div style="font-size:10px;color:rgba(0,255,136,0.6);letter-spacing:1px;">
+            ✦ Système intelligent hors-ligne — base de 30+ peptides intégrée. Aucune clé requise.
+          </div>
+          <div id="iaStatus" style="margin-top:10px;font-size:11px;display:none;"></div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div class="promo-field"><label>Description (auto-générée ou manuelle)</label><textarea class="promo-input" id="pDesc" rows="3" placeholder="Cliquez sur 'Générer avec IA' ou écrivez manuellement..." style="resize:vertical;"></textarea></div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div class="promo-field"><label>Composition & Qualité (auto-générée ou manuelle)</label><textarea class="promo-input" id="pComposition" rows="3" placeholder="Ex: BPC-157 ≥99.5%, Lyophilisat stérile, Eau bactériostatique incluse..." style="resize:vertical;"></textarea></div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <div class="promo-field"><label>Specs techniques (auto-générées — format JSON)</label><textarea class="promo-input" id="pSpecs" rows="2" placeholder="Auto-généré par l'IA..." style="resize:vertical;font-size:11px;font-family:monospace;"></textarea></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div class="promo-field"><label>Prix normal (€) *</label><input class="promo-input" id="pPrix" type="number" min="0" step="0.01" placeholder="49.99"></div>
+          <div class="promo-field"><label>Prix barré (€)</label><input class="promo-input" id="pPrixBarre" type="number" min="0" step="0.01" placeholder="79.99"></div>
+          <div class="promo-field"><label>Dosage / Contenu</label><input class="promo-input" id="pDosage" type="text" placeholder="Ex: 10 mg / 1 mL"></div>
+          <div class="promo-field"><label>Stock initial</label><input class="promo-input" id="pStock" type="number" min="0" placeholder="10"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+          <div class="promo-field">
+            <label>Couleur liquide</label>
+            <select class="promo-input" id="pCouleur">
+              <option value="blue">🔵 Bleu (cyan)</option>
+              <option value="purple">🟣 Violet</option>
+              <option value="green">🟢 Vert</option>
+              <option value="clear">💧 Transparent</option>
+              <option value="red">🔴 Rouge</option>
+              <option value="gold">🟡 Or</option>
+            </select>
+          </div>
+          <div class="promo-field">
+            <label>Badge</label>
+            <select class="promo-input" id="pBadge">
+              <option value="">Aucun</option>
+              <option value="BEST-SELLER">⭐ BEST-SELLER</option>
+              <option value="NOUVEAU">✨ NOUVEAU</option>
+              <option value="PROMO">🔥 PROMO</option>
+              <option value="EXCLUSIF">💎 EXCLUSIF</option>
+            </select>
+          </div>
+        </div>
+        <div class="promo-error" id="produitError"></div>
+        <button class="promo-create-btn" id="createProduitBtn" style="width:100%;padding:14px;">➕ Ajouter le produit à la boutique</button>
+      </div>
+      <div class="section-head">
+        <h2>🧪 PRODUITS EN LIGNE</h2>
+        <span id="produitsCount">0 produit(s)</span>
+      </div>
+      <div id="produitsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+    </div>
+
+    <!-- EMAILS -->
+    <div class="tab-panel" id="tabEmails">
+      <div class="section-head">
+        <h2>📧 EMAILS COLLECTÉS</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span id="emailsCount" style="font-size:11px;color:rgba(255,255,255,0.3);">0 email(s)</span>
+          <button class="refresh-btn" id="exportEmailsBtn">⬇ Exporter CSV</button>
+          <button class="clear-btn" id="clearEmailsBtn">🗑 Vider</button>
+        </div>
+      </div>
+      <div class="orders-wrap">
+        <table class="orders-table" id="emailsTable" style="display:none;">
+          <thead><tr><th>#</th><th>Email</th><th>Date de collecte</th><th>Source</th></tr></thead>
+          <tbody id="emailsBody"></tbody>
+        </table>
+        <div class="empty-orders" id="emailsEmpty" style="display:none;">
+          <div class="icon">📭</div>
+          <p>Aucun email collecté</p>
+        </div>
+        <div class="loading" id="emailsLoading">Chargement...</div>
+      </div>
+    </div>
+
+    <!-- COMPTES -->
+    <div class="tab-panel" id="tabComptes">
+      <div class="section-head">
+        <h2>👥 GESTION DES COMPTES</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span id="comptesCount" style="font-size:11px;color:rgba(255,255,255,0.3);">0 compte(s)</span>
+          <button class="refresh-btn" onclick="loadComptes()">↻ Actualiser</button>
+        </div>
+      </div>
+      <div class="orders-wrap">
+        <table class="orders-table" id="comptesTable" style="display:none;">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Inscrit le</th>
+              <th>Niveau</th>
+              <th>Points</th>
+              <th>Commandes</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="comptesBody"></tbody>
+        </table>
+        <div class="empty-orders" id="comptesEmpty" style="display:none;">
+          <div class="icon">👥</div><p>Aucun compte client</p>
+        </div>
+        <div class="loading" id="comptesLoading">Chargement...</div>
+      </div>
+    </div>
+
+    <!-- GRAPHIQUES -->
+    <div class="tab-panel" id="tabGraphiques">
+      <div class="section-head">
+        <h2>📊 GRAPHIQUES</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <select id="graphPeriod" style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.2);border-radius:8px;padding:6px 12px;color:#fff;font-family:Orbitron,monospace;font-size:10px;outline:none;cursor:pointer;">
+            <option value="7">7 derniers jours</option>
+            <option value="30" selected>30 derniers jours</option>
+            <option value="90">3 derniers mois</option>
+            <option value="365">Cette année</option>
+          </select>
+          <button class="refresh-btn" onclick="loadGraphiques()">↻ Actualiser</button>
+        </div>
+      </div>
+
+      <!-- Graphique CA -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(0,200,255,0.7);margin-bottom:20px;">💰 CHIFFRE D'AFFAIRES</div>
+        <div style="position:relative;height:200px;">
+          <canvas id="caChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Graphique Produits -->
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+        <div style="font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,0.8);margin-bottom:20px;">🏆 PRODUITS LES PLUS VENDUS</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;">
+          <div style="position:relative;height:220px;">
+            <canvas id="produitsChart"></canvas>
+          </div>
+          <div id="produitsLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNIÈRE -->
+    <div class="tab-panel" id="tabBanniere">
+      <div class="section-head">
+        <h2>📣 BANNIÈRE PROMO</h2>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);">Affichée en haut de la boutique</span>
+      </div>
+
+      <!-- ── COMING SOON TOGGLE ── -->
+      <div style="background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(0,200,255,0.04));border:1px solid rgba(168,85,247,0.25);border-radius:16px;padding:24px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:#a855f7;margin-bottom:6px;">🎬 MODE COMING SOON</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;">Redirige automatiquement les visiteurs vers <strong style="color:#fff;">coming-soon.html</strong>.<br>Toi seul peux accéder au site via <strong style="color:#00c8ff;">/?admin=1</strong> ou depuis cette page.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="csStatusLabel" style="font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.3);">INACTIF</span>
+            <div id="csToggleWrap" onclick="toggleComingSoon()" style="width:52px;height:28px;border-radius:14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);cursor:pointer;position:relative;transition:all 0.3s;">
+              <div id="csToggleKnob" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#555;transition:all 0.3s;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:10px 14px;background:rgba(0,0,0,0.2);border-radius:8px;font-size:11px;color:rgba(255,255,255,0.25);font-family:'Exo 2',sans-serif;">
+          💡 Une fois activé, les visiteurs voient <code style="color:#a855f7;">coming-soon.html</code>. Pour accéder au site toi-même : ouvre <code style="color:#00c8ff;">index.html?admin=1</code> ou reste sur cette page admin.
+        </div>
+        <div id="csMsg" style="margin-top:10px;font-size:12px;display:none;"></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+        <!-- Formulaire -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div class="promo-field" style="margin-bottom:14px;">
+            <label>Texte principal *</label>
+            <input class="promo-input" id="bText" type="text" placeholder="Ex: OFFRE DE LANCEMENT — -15% sur tout le site">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+            <div class="promo-field">
+              <label>Emoji</label>
+              <input class="promo-input" id="bEmoji" type="text" placeholder="🔥" maxlength="4" style="font-size:18px;text-align:center;">
+            </div>
+            <div class="promo-field">
+              <label>Code promo (optionnel)</label>
+              <input class="promo-input" id="bCode" type="text" placeholder="EX: LAUNCH15" style="text-transform:uppercase;">
+            </div>
+          </div>
+          <div class="promo-field" style="margin-bottom:20px;">
+            <label>Couleur de fond</label>
+            <div style="display:flex;gap:8px;margin-top:6px;" id="bColorPicker">
+              <div onclick="selectBannerColor('cyan')"   data-color="cyan"   style="width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#00c8ff,#0080ff);cursor:pointer;border:2px solid transparent;transition:all 0.2s;"></div>
+              <div onclick="selectBannerColor('orange')" data-color="orange" style="width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#ff8c00,#ff4500);cursor:pointer;border:2px solid transparent;transition:all 0.2s;"></div>
+              <div onclick="selectBannerColor('violet')" data-color="violet" style="width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#a855f7,#7c3aed);cursor:pointer;border:2px solid transparent;transition:all 0.2s;"></div>
+              <div onclick="selectBannerColor('green')"  data-color="green"  style="width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#00ff88,#00cc44);cursor:pointer;border:2px solid transparent;transition:all 0.2s;"></div>
+              <div onclick="selectBannerColor('gold')"   data-color="gold"   style="width:32px;height:32px;border-radius:8px;background:linear-gradient(90deg,#ffd700,#ff8c00);cursor:pointer;border:2px solid transparent;transition:all 0.2s;"></div>
+            </div>
+            <input type="hidden" id="bColor" value="cyan">
+          </div>
+          <div style="display:flex;gap:10px;">
+            <button class="promo-create-btn" style="flex:1;" onclick="saveBanner(true)">▶ Activer la bannière</button>
+            <button class="clear-btn" onclick="saveBanner(false)">⏹ Désactiver</button>
+          </div>
+          <div id="banniereMsg" style="margin-top:12px;font-size:12px;display:none;"></div>
+        </div>
+
+        <!-- Aperçu -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:Orbitron,monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">APERÇU</div>
+          <div id="bannerPreview" style="border-radius:10px;padding:10px 16px;display:flex;align-items:center;justify-content:center;gap:10px;font-family:Orbitron,monospace;font-size:11px;font-weight:700;color:#000;background:linear-gradient(90deg,#00c8ff,#0080ff);min-height:40px;transition:background 0.3s;">
+            <span id="previewEmoji">🔥</span>
+            <span id="previewText">OFFRE SPÉCIALE</span>
+            <span id="previewCode" style="background:rgba(0,0,0,0.2);border-radius:4px;padding:2px 8px;display:none;"></span>
+          </div>
+          <div style="margin-top:20px;">
+            <div style="font-family:Orbitron,monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:10px;">STATUT ACTUEL</div>
+            <div id="banniereStatut" style="font-size:13px;color:rgba(255,255,255,0.5);">Chargement...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIREMENT -->
+    <div class="tab-panel" id="tabVirement">
+      <div class="section-head">
+        <h2>🏦 COORDONNÉES BANCAIRES</h2>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);">Affichées au client lors de la commande</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div class="promo-field" style="margin-bottom:14px;">
+            <label>Titulaire du compte *</label>
+            <input class="promo-input" id="vTitulaire" type="text" placeholder="Ex: PEPTOIDS SAS">
+          </div>
+          <div class="promo-field" style="margin-bottom:14px;">
+            <label>Nom de la banque</label>
+            <input class="promo-input" id="vBanque" type="text" placeholder="Ex: Crédit Agricole">
+          </div>
+          <div class="promo-field" style="margin-bottom:14px;">
+            <label>IBAN *</label>
+            <input class="promo-input" id="vIban" type="text" placeholder="FR76 XXXX XXXX XXXX XXXX XXXX XXX" style="font-family:Orbitron,monospace;letter-spacing:1px;">
+          </div>
+          <div class="promo-field" style="margin-bottom:20px;">
+            <label>BIC / SWIFT</label>
+            <input class="promo-input" id="vBic" type="text" placeholder="Ex: AGRIFRPP">
+          </div>
+          <div id="virementAdminMsg" style="font-size:12px;display:none;margin-bottom:12px;"></div>
+          <button class="promo-create-btn" style="width:100%;" onclick="saveVirement()">💾 Sauvegarder</button>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:Orbitron,monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">APERÇU CLIENT</div>
+          <div style="background:linear-gradient(135deg,rgba(0,255,136,0.06),rgba(0,200,100,0.03));border:1px solid rgba(0,255,136,0.2);border-radius:10px;padding:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <span style="font-size:18px;">🏦</span>
+              <div style="font-family:Orbitron,monospace;font-size:9px;color:#00ff88;letter-spacing:2px;">PAIEMENT PAR VIREMENT</div>
+            </div>
+            <div id="vPreviewContent" style="font-size:12px;color:rgba(255,255,255,0.5);">Renseignez vos coordonnées →</div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:rgba(255,170,0,0.06);border:1px solid rgba(255,170,0,0.15);border-radius:8px;font-size:11px;color:rgba(255,200,100,0.7);line-height:1.7;">
+            ⚠️ Le client verra ces informations à l'étape 2 du checkout avec des boutons pour copier l'IBAN et le BIC.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIP -->
+    <div class="tab-panel" id="tabVip">
+      <div class="section-head">
+        <h2>👑 ESPACE VIP</h2>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3);">Codes d'accès et produits exclusifs</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+
+        <!-- Codes VIP -->
+        <div style="background:var(--card);border:1px solid rgba(255,170,0,0.2);border-radius:16px;padding:24px;">
+          <div style="font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;color:#ffd700;margin-bottom:16px;">🔐 CODES D'ACCÈS VIP</div>
+          <div class="promo-field" style="margin-bottom:12px;">
+            <label>Nom / Label (ex: Jean Dupont)</label>
+            <input class="promo-input" id="vipLabel" type="text" placeholder="Nom du client VIP">
+          </div>
+          <div class="promo-field" style="margin-bottom:16px;">
+            <label>Code d'accès</label>
+            <input class="promo-input" id="vipCode" type="text" placeholder="Code secret du client">
+          </div>
+          <button class="promo-create-btn" style="width:100%;margin-bottom:16px;background:linear-gradient(90deg,rgba(255,215,0,0.8),rgba(255,140,0,0.8));color:#000;" onclick="addVipCode()">+ Ajouter ce client VIP</button>
+          <div id="vipCodesList"></div>
+        </div>
+
+        <!-- Produits VIP -->
+        <div style="background:var(--card);border:1px solid rgba(255,170,0,0.2);border-radius:16px;padding:24px;">
+          <div style="font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;color:#ffd700;margin-bottom:16px;">🧪 PRODUITS VIP</div>
+          <div class="promo-field" style="margin-bottom:10px;">
+            <label>Nom du produit *</label>
+            <input class="promo-input" id="vpNom" type="text" placeholder="Ex: BPC-157 Premium">
+          </div>
+          <div class="promo-field" style="margin-bottom:10px;">
+            <label>Catégorie</label>
+            <input class="promo-input" id="vpCat" type="text" placeholder="Ex: Peptide · Exclusif">
+          </div>
+          <div class="promo-field" style="margin-bottom:10px;">
+            <label>Description</label>
+            <textarea class="promo-input" id="vpDesc" rows="2" style="resize:vertical;" placeholder="Description courte..."></textarea>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div class="promo-field">
+              <label>Prix (€) *</label>
+              <input class="promo-input" id="vpPrix" type="number" min="0" step="0.01" placeholder="99.99">
+            </div>
+            <div class="promo-field">
+              <label>Prix barré (€)</label>
+              <input class="promo-input" id="vpBarre" type="number" min="0" step="0.01" placeholder="149.99">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div class="promo-field">
+              <label>Couleur fiole</label>
+              <select class="promo-input" id="vpCouleur">
+                <option value="gold">🟡 Or</option>
+                <option value="purple">🟣 Violet</option>
+                <option value="blue">🔵 Bleu</option>
+                <option value="green">🟢 Vert</option>
+                <option value="red">🔴 Rouge</option>
+                <option value="clear">💧 Transparent</option>
+              </select>
+            </div>
+            <div class="promo-field">
+              <label>Stock initial</label>
+              <input class="promo-input" id="vpStock" type="number" min="0" placeholder="10">
+            </div>
+          </div>
+          <button class="promo-create-btn" style="width:100%;background:linear-gradient(90deg,rgba(255,215,0,0.8),rgba(255,140,0,0.8));color:#000;" onclick="addVipProduct()">+ Ajouter ce produit VIP</button>
+        </div>
+      </div>
+
+      <!-- Liste produits VIP -->
+      <div style="background:var(--card);border:1px solid rgba(255,170,0,0.15);border-radius:16px;padding:24px;">
+        <div style="font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;color:#ffd700;margin-bottom:16px;">📦 PRODUITS VIP EN LIGNE</div>
+        <div id="vipProductsList"></div>
+      </div>
+    </div>
+
+    <!-- MESSAGES CONTACT -->
+    <div class="tab-panel" id="tabMessages">
+      <div class="section-head">
+        <h2>📩 MESSAGES CONTACT</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span id="msgCount" style="font-size:12px;color:rgba(255,255,255,0.3);">0 message(s)</span>
+          <button class="clear-btn" onclick="clearMessages()">🗑 Vider</button>
+          <button class="promo-action-btn" onclick="exportMessages()">⬇ Export CSV</button>
+        </div>
+      </div>
+      <div id="msgEmpty" style="text-align:center;padding:60px 0;font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.15);">Aucun message reçu</div>
+      <div id="msgList" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+
+    <!-- AVIS -->
+    <!-- ══ MACHINE À SOUS ══ -->
+    <div class="tab-panel" id="tabSlots">
+      <div class="section-head"><h2>🎰 MACHINE À SOUS</h2><span>Activez le mini-jeu, configurez les gains et les taux de drop</span></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div><div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;">Statut de la machine</div><div style="font-size:12px;color:rgba(255,255,255,0.35);">Quand activée, un lien 🎰 Lucky apparaît dans la nav du site</div></div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="slotsStatusBadge" style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:20px;">—</div>
+          <button id="slotsToggleBtn" onclick="toggleSlots()" class="promo-create-btn" style="padding:10px 24px;font-size:11px;">—</button>
+          <a href="slots.html" target="_blank" style="font-size:11px;color:var(--cyan);text-decoration:none;letter-spacing:1px;padding:10px 16px;border:1px solid rgba(0,200,255,0.2);border-radius:8px;">🔗 Voir →</a>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;">
+        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">CONFIG GÉNÉRALE</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div><label style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">PARTIES PAR JOUR</label>
+            <select id="slotsDailyLimit" class="promo-input" style="padding:10px 14px;"><option value="1">1 partie / jour</option><option value="3">3 parties / jour</option><option value="0">Illimité</option></select></div>
+          <div><label style="font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.4);display:block;margin-bottom:8px;">CONNEXION REQUISE</label>
+            <select id="slotsLoginRequired" class="promo-input" style="padding:10px 14px;"><option value="1">Oui (recommandé)</option><option value="0">Non</option></select></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;">
+        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:6px;">TABLE DES GAINS</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:16px;">Modifiez les gains (€) et les taux. Le reste va automatiquement en "Perdu".</div>
+        <div id="slotsRewardsEditor"></div>
+        <div style="margin-top:12px;padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:rgba(255,255,255,0.4);">❌ Perdu (complément automatique)</span>
+          <span id="slotsLoseChance" style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:rgba(255,255,255,0.3);">—%</span>
+        </div>
+      </div>
+      <button onclick="saveSlotsConfig()" class="promo-create-btn" style="width:100%;padding:14px;font-size:12px;">💾 SAUVEGARDER TOUTE LA CONFIG</button>
+      <div id="slotsSaveMsg" style="font-size:12px;color:var(--green);margin-top:10px;min-height:18px;text-align:center;"></div>
+    </div>
+
+    <div class="tab-panel" id="tabAvis">
+      <div class="section-head">
+        <h2>⭐ AVIS CLIENTS</h2>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <span id="avisCount" style="font-size:12px;color:rgba(255,255,255,0.3);">0 avis</span>
+          <button class="clear-btn" onclick="clearAvis()">🗑 Tout vider</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+        <button class="promo-action-btn" id="avisFilterAll" onclick="filterAvis('all')" style="background:rgba(0,200,255,0.15);">Tous</button>
+        <button class="promo-action-btn" id="avisFilterPending" onclick="filterAvis('pending')">En attente</button>
+        <button class="promo-action-btn" id="avisFilterApproved" onclick="filterAvis('approved')">Approuvés</button>
+        <button class="promo-action-btn" id="avisFilterRejected" onclick="filterAvis('rejected')">Rejetés</button>
+      </div>
+      <div id="avisEmpty" style="text-align:center;padding:60px 0;font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.15);">Aucun avis reçu</div>
+      <div id="avisList" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+#compteModal { display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); align-items:center; justify-content:center; padding:20px; }
+#compteModal.open { display:flex; }
+.compte-modal-box { background:var(--card); border:1px solid rgba(0,200,255,0.25); border-radius:20px; padding:32px; width:100%; max-width:540px; max-height:90vh; overflow-y:auto; position:relative; animation:fadeInUp 0.3s ease; }
+.modal-close { position:absolute; top:16px; right:16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 10px; color:rgba(255,255,255,0.5); cursor:pointer; font-size:14px; transition:all 0.2s; }
+.modal-close:hover { color:#fff; }
+.modal-field-label { font-size:10px; letter-spacing:2px; color:rgba(0,200,255,0.6); text-transform:uppercase; margin-bottom:4px; }
+.modal-field-val { font-size:13px; color:rgba(255,255,255,0.8); margin-bottom:12px; }
+.modal-section { font-family:Orbitron,monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.4); margin:20px 0 12px; padding-bottom:6px; border-bottom:1px solid rgba(0,200,255,0.1); }
+.pts-input { background:rgba(0,0,0,0.4); border:1px solid rgba(0,200,255,0.2); border-radius:8px; padding:8px 12px; color:#fff; font-family:Orbitron,monospace; font-size:14px; font-weight:700; outline:none; width:120px; text-align:center; }
+</style>
+
+<div id="compteModal">
+  <div class="compte-modal-box">
+    <button class="modal-close" onclick="closeCompteModal()">✕</button>
+    <div style="font-family:Orbitron,monospace;font-weight:900;font-size:16px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:24px;">DÉTAIL DU COMPTE</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+      <div><div class="modal-field-label">Prénom</div><div class="modal-field-val" id="mPrenom">—</div></div>
+      <div><div class="modal-field-label">Nom</div><div class="modal-field-val" id="mNom">—</div></div>
+      <div><div class="modal-field-label">Email</div><div class="modal-field-val" id="mEmail">—</div></div>
+      <div><div class="modal-field-label">Membre depuis</div><div class="modal-field-val" id="mDate">—</div></div>
+      <div><div class="modal-field-label">Code parrainage</div><div class="modal-field-val" id="mRefCode">—</div></div>
+      <div><div class="modal-field-label">Parrainé par</div><div class="modal-field-val" id="mReferredBy">—</div></div>
+    </div>
+    <div class="modal-section">FIDÉLITÉ</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:16px;">
+      <div><div class="modal-field-label">Niveau</div><div class="modal-field-val" id="mLevel">—</div></div>
+      <div><div class="modal-field-label">Commandes</div><div class="modal-field-val" id="mOrders">—</div></div>
+      <div><div class="modal-field-label">Total dépensé</div><div class="modal-field-val" id="mTotal">—</div></div>
+      <div><div class="modal-field-label">Filleuls</div><div class="modal-field-val" id="mFilleuls">—</div></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(168,85,247,0.08);border:1px solid rgba(168,85,247,0.2);border-radius:10px;padding:14px;margin-bottom:20px;">
+      <span style="font-size:22px;">⭐</span>
+      <div style="flex:1;">
+        <div style="font-family:Orbitron,monospace;font-size:10px;color:rgba(168,85,247,0.8);letter-spacing:1px;margin-bottom:8px;">MODIFIER LES POINTS</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input type="number" class="pts-input" id="mPointsInput" min="0">
+          <button class="promo-create-btn" style="padding:8px 16px;" onclick="saveUserPoints()">💾 Sauver</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-section">CODES DE RÉDUCTION</div>
+    <div id="mCodesSection"><div id="mCodesList"></div></div>
+
+    <div class="modal-section">DERNIÈRES COMMANDES</div>
+    <div id="mOrdersList"></div>
+    <div style="margin-top:20px;">
+      <button class="clear-btn" style="width:100%;" onclick="deleteAccount()">🗑 Supprimer ce compte</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ PEPTOIDS — Couche Supabase (remplace localStorage) ══
+// Ce fichier est inclus dans toutes les pages AVANT le JS principal
+// Il remplace les appels localStorage par des appels Supabase avec cache local
+
+var SUPABASE_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+
+// ── Cache local (évite trop de requêtes) ──
+var _sbCache = {};
+var _sbCacheTime = {};
+var CACHE_TTL = 10000; // 10 secondes
+
+function _cacheGet(key) {
+  if (_sbCache[key] && Date.now() - (_sbCacheTime[key]||0) < CACHE_TTL) return _sbCache[key];
+  return null;
+}
+function _cacheSet(key, val) { _sbCache[key] = val; _sbCacheTime[key] = Date.now(); }
+function _cacheInvalidate(key) { delete _sbCache[key]; delete _sbCacheTime[key]; }
+
+// ── HTTP helpers ──
+var _sbHeaders = {
+  apikey: SUPABASE_KEY,
+  Authorization: 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json'
+};
+
+async function _sbFetch(method, path, body) {
+  var isUpsert = path.includes('on_conflict');
+  var headers = Object.assign({}, _sbHeaders);
+  if (isUpsert) headers['Prefer'] = 'resolution=merge-duplicates,return=minimal';
+  var r = await fetch(SUPABASE_URL + path, {
+    method: method,
+    headers: headers,
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!r.ok) { var t = await r.text(); console.warn('Supabase error:', method, path, t); throw new Error(t); }
+  if (r.status === 204 || r.status === 201) return null;
+  try { return await r.json(); } catch(e) { return null; }
+}
+
+// ── API publique ──
+var SB = {
+  // Orders
+  async getOrders() {
+    var cached = _cacheGet('orders');
+    if (cached) return cached;
+    var rows = await _sbFetch('GET', '/rest/v1/orders?select=*&order=date.desc');
+    // Convert Supabase row → localStorage format
+    var orders = (rows || []).map(function(r) {
+      return { id:r.id, date:r.date, client:r.client, userId:r.user_id, items:r.items, subtotal:r.subtotal, discount:r.discount, shipping:r.shipping, total:r.total, promo:r.promo, promoApplied:r.promo_applied, status:r.status };
+    });
+    _cacheSet('orders', orders);
+    return orders;
+  },
+
+  async saveOrder(order) {
+    _cacheInvalidate('orders');
+    return _sbFetch('POST', '/rest/v1/orders', {
+      id: order.id, date: order.date, client: order.client, user_id: order.userId,
+      items: order.items, subtotal: parseFloat(order.subtotal)||0,
+      discount: parseFloat(order.discount)||0, shipping: parseFloat(order.shipping)||0,
+      total: parseFloat(order.total)||0, promo: order.promo,
+      promo_applied: order.promoApplied, status: order.status || 'Nouvelle'
+    });
+  },
+
+  async updateOrderStatus(id, status) {
+    _cacheInvalidate('orders');
+    return _sbFetch('PATCH', '/rest/v1/orders?id=eq.' + id, { status: status });
+  },
+
+  async deleteOrders() {
+    _cacheInvalidate('orders');
+    return _sbFetch('DELETE', '/rest/v1/orders?id=neq.null');
+  },
+
+  // Users
+  async getUsers() {
+    var cached = _cacheGet('users');
+    if (cached) return cached;
+    var rows = await _sbFetch('GET', '/rest/v1/users?select=*');
+    var users = (rows || []).map(function(r) {
+      return { id:r.id, prenom:r.prenom, nom:r.nom, email:r.email, passHash:r.pass_hash, refCode:r.ref_code, referredBy:r.referred_by, points:r.points||0, cumulPoints:r.cumul_points||0, totalPoints:r.total_points||0, lastOrdersTotal:r.last_orders_total||0, adminCumulPoints:r.admin_cumul_points||0, bonusApplied:r.bonus_applied, promoCodes:r.promo_codes||[], createdAt:r.created_at };
+    });
+    _cacheSet('users', users);
+    return users;
+  },
+
+  async saveUser(user) {
+    _cacheInvalidate('users');
+    return _sbFetch('POST', '/rest/v1/users?on_conflict=id', {
+      id: user.id, prenom: user.prenom, nom: user.nom, email: user.email,
+      pass_hash: user.passHash, ref_code: user.refCode, referred_by: user.referredBy||null,
+      points: user.points||0, cumul_points: user.cumulPoints||0,
+      total_points: user.totalPoints||0, last_orders_total: user.lastOrdersTotal||0,
+      admin_cumul_points: user.adminCumulPoints||0, bonus_applied: user.bonusApplied||false,
+      promo_codes: user.promoCodes||[], created_at: user.createdAt
+    });
+  },
+
+  async saveUsers(users) {
+    _cacheInvalidate('users');
+    for (var u of users) await SB.saveUser(u);
+  },
+
+  async deleteUser(id) {
+    _cacheInvalidate('users');
+    return _sbFetch('DELETE', '/rest/v1/users?id=eq.' + id);
+  },
+
+  // Stock
+  async getStock() {
+    var cached = _cacheGet('stock');
+    if (cached) return cached;
+    var rows = await _sbFetch('GET', '/rest/v1/stock?select=*');
+    var stock = {};
+    (rows || []).forEach(function(r) { stock[r.key] = r.qty; });
+    _cacheSet('stock', stock);
+    return stock;
+  },
+
+  async setStock(key, qty) {
+    _cacheInvalidate('stock');
+    return _sbFetch('POST', '/rest/v1/stock?on_conflict=key', { key: key, qty: qty });
+  },
+
+  async saveStock(stockObj) {
+    _cacheInvalidate('stock');
+    var rows = Object.keys(stockObj).map(function(k) { return { key:k, qty:stockObj[k] }; });
+    if (rows.length) return _sbFetch('POST', '/rest/v1/stock?on_conflict=key', rows);
+  },
+
+  // Promos
+  async getPromos() {
+    var cached = _cacheGet('promos');
+    if (cached) return cached;
+    var rows = await _sbFetch('GET', '/rest/v1/promos?select=*');
+    _cacheSet('promos', rows || []);
+    return rows || [];
+  },
+
+  async savePromo(promo) {
+    _cacheInvalidate('promos');
+    return _sbFetch('POST', '/rest/v1/promos?on_conflict=code', {
+      code:      promo.code,
+      pct:       promo.discount || 0,
+      max_uses:  promo.maxUses || promo.max_uses || null,
+      uses:      promo.uses || 0,
+      active:    promo.active !== false
+    });
+  },
+
+  async deletePromo(code) {
+    _cacheInvalidate('promos');
+    return _sbFetch('DELETE', '/rest/v1/promos?code=eq.' + encodeURIComponent(code));
+  },
+
+  // Fide promos
+  async getFidePromos() {
+    var cached = _cacheGet('fide_promos');
+    if (cached) return cached;
+    var rows = await _sbFetch('GET', '/rest/v1/fide_promos?select=*');
+    _cacheSet('fide_promos', rows || []);
+    return rows || [];
+  },
+
+  async saveFidePromo(p) {
+    _cacheInvalidate('fide_promos');
+    return _sbFetch('POST', '/rest/v1/fide_promos?on_conflict=code', {
+      code: p.code, value: p.value, user_id: p.userId,
+      used: p.used||false, expires_at: p.expiresAt
+    });
+  },
+
+  async markFidePromoUsed(code) {
+    _cacheInvalidate('fide_promos');
+    return _sbFetch('PATCH', '/rest/v1/fide_promos?code=eq.' + encodeURIComponent(code), { used: true, used_at: new Date().toISOString() });
+  },
+
+  async deleteFidePromo(code) {
+    _cacheInvalidate('fide_promos');
+    return _sbFetch('DELETE', '/rest/v1/fide_promos?code=eq.' + encodeURIComponent(code));
+  },
+
+  // Settings
+  async getSetting(key) {
+    try {
+      var rows = await _sbFetch('GET', '/rest/v1/settings?key=eq.' + encodeURIComponent(key) + '&select=value');
+      return rows && rows[0] ? rows[0].value : null;
+    } catch(e) { return null; }
+  },
+
+  async setSetting(key, value) {
+    return _sbFetch('POST', '/rest/v1/settings?on_conflict=key', { key: key, value: value, updated_at: new Date().toISOString() });
+  },
+
+  // Leads
+  async saveLead(email, source) {
+    return _sbFetch('POST', '/rest/v1/leads?on_conflict=email', { email: email, source: source||'shop', created_at: new Date().toISOString() });
+  },
+
+  async getLeads() {
+    return _sbFetch('GET', '/rest/v1/leads?select=*&order=created_at.desc');
+  }
+};
+
+// ══ COMPATIBILITÉ LOCALSTORAGE ══
+// Ces fonctions remplacent les appels localStorage existants dans le code
+// Elles lisent depuis Supabase mais gardent aussi un cache localStorage pour l'offline
+
+var _lsCache = {};
+
+var _origLS = {
+  getItem: localStorage.getItem.bind(localStorage),
+  setItem: localStorage.setItem.bind(localStorage),
+  removeItem: localStorage.removeItem.bind(localStorage)
+};
+
+// Map localStorage keys → Supabase actions
+var LS_MAP = {
+  'peptoids:orders':          { get: async function()  { return JSON.stringify(await SB.getOrders()); },
+                                set: async function(v) { /* handled in confirmOrder */ } },
+  'peptoids:users':           { get: async function()  { return JSON.stringify(await SB.getUsers()); },
+                                set: async function(v) { await SB.saveUsers(JSON.parse(v)); } },
+  'peptoids:stock':           { get: async function()  { return JSON.stringify(await SB.getStock()); },
+                                set: async function(v) { await SB.saveStock(JSON.parse(v)); } },
+  'peptoids:custom_promos':   { get: async function()  { return JSON.stringify(await SB.getPromos()); },
+                                set: async function(v) { /* handled per promo */ } },
+  'peptoids:fide_promos':     { get: async function()  { return JSON.stringify(await SB.getFidePromos()); },
+                                set: async function(v) { /* handled per fide */ } },
+  'peptoids:banner':          { get: async function()  { return JSON.stringify(await SB.getSetting('banner')); },
+                                set: async function(v) { await SB.setSetting('banner', JSON.parse(v)); } },
+  'peptoids:virement':        { get: async function()  { return JSON.stringify(await SB.getSetting('virement')); },
+                                set: async function(v) { await SB.setSetting('virement', JSON.parse(v)); } },
+  'peptoids:prices':          { get: async function()  { return JSON.stringify(await SB.getSetting('prices')); },
+                                set: async function(v) { await SB.setSetting('prices', JSON.parse(v)); } },
+  'peptoids:product_promos':  { get: async function()  { return JSON.stringify(await SB.getSetting('product_promos')); },
+                                set: async function(v) { await SB.setSetting('product_promos', JSON.parse(v)); } },
+  'peptoids:active_promos':   { get: async function()  { return JSON.stringify(await SB.getSetting('active_promos')); },
+                                set: async function(v) { await SB.setSetting('active_promos', JSON.parse(v)); } },
+  'peptoids:custom_products': { get: async function()  { return JSON.stringify(await SB.getSetting('custom_products')); },
+                                set: async function(v) { await SB.setSetting('custom_products', JSON.parse(v)); } }
+};
+
+// Initialisation : charge toutes les données Supabase dans localStorage au chargement
+async function initSupabase() {
+  console.log('[Supabase] Sync...');
+  try {
+    // Charger en parallèle
+    var [orders, users, stock, promos, fide, banner, virement, prices, pp, ap, cp] = await Promise.all([
+      SB.getOrders().catch(function(){return [];}),
+      SB.getUsers().catch(function(){return [];}),
+      SB.getStock().catch(function(){return {};}),
+      SB.getPromos().catch(function(){return [];}),
+      SB.getFidePromos().catch(function(){return [];}),
+      SB.getSetting('banner').catch(function(){return null;}),
+      SB.getSetting('virement').catch(function(){return null;}),
+      SB.getSetting('prices').catch(function(){return null;}),
+      SB.getSetting('product_promos').catch(function(){return null;}),
+      SB.getSetting('active_promos').catch(function(){return null;}),
+      SB.getSetting('custom_products').catch(function(){return null;})
+    ]);
+
+    // Mettre en cache localStorage pour compatibilité
+    _origLS.setItem('peptoids:orders', JSON.stringify(orders));
+    _origLS.setItem('peptoids:users', JSON.stringify(users));
+    var STOCK_DEF = { 'Retatrutide': 10, 'GHK-Cu': 10, 'HGH': 10 };
+    if (!stock || Object.keys(stock).length === 0) {
+      stock = STOCK_DEF;
+      SB.saveStock(stock).catch(function(){});
+    }
+    _origLS.setItem('peptoids:stock', JSON.stringify(stock));
+
+    // Promos → format compatible
+    // Sauvegarder la liste complète des promos (avec usage unique, expiration, etc.)
+    var activePromosList = promos.filter(function(p){ return p.active; });
+    _origLS.setItem('peptoids:custom_promos', JSON.stringify(activePromosList));
+    // Aussi le format map legacy pour compatibilité
+    var promosMap = {};
+    promos.forEach(function(p){ if(p.active) promosMap[p.code] = p.discount/100||p.pct||0; });
+    _origLS.setItem('peptoids:active_promos', JSON.stringify(promosMap));
+
+    // Fide promos
+    var fideArr = fide.map(function(f) {
+      return { code:f.code, value:f.value, userId:f.user_id, used:f.used, expiresAt:f.expires_at };
+    });
+    _origLS.setItem('peptoids:fide_promos', JSON.stringify(fideArr));
+
+    if (banner)   _origLS.setItem('peptoids:banner', JSON.stringify(banner));
+    if (virement) _origLS.setItem('peptoids:virement', JSON.stringify(virement));
+    if (prices !== null) _origLS.setItem('peptoids:prices', JSON.stringify(prices));
+    if (pp !== null)     _origLS.setItem('peptoids:product_promos', JSON.stringify(pp));
+    if (ap !== null)     _origLS.setItem('peptoids:active_promos', JSON.stringify(ap));
+    if (cp !== null)     _origLS.setItem('peptoids:custom_products', JSON.stringify(cp));
+    var vip = await SB.getSetting('vip').catch(function(){return null;});
+    if (vip !== null) _origLS.setItem('peptoids:vip', JSON.stringify(vip));
+
+    console.log('[Supabase] ✅ Sync terminé — ' + orders.length + ' commandes, ' + users.length + ' clients');
+    window._sbReady = true;
+    document.dispatchEvent(new Event('sb:ready'));
+  } catch(e) {
+    console.warn('[Supabase] ⚠️ Erreur sync, mode offline:', e.message);
+    window._sbReady = false;
+    document.dispatchEvent(new Event('sb:ready'));
+  }
+}
+
+initSupabase();
+
+</script>
+<script>
+// Hash SHA-256 du mot de passe admin (le mot de passe en clair n'est jamais dans le code)
+var ADMIN_HASH = '544dc58cfd50c427ec72916efb5bbac90243ff9625a00c1be4653c5a5a3a2ca8';
+var PROMOS_KEY = 'peptoids:custom_promos';
+
+// LOGIN
+document.getElementById('loginBtn').addEventListener('click', tryLogin);
+document.getElementById('pwdInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') tryLogin();
+});
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminScreen').style.display = 'none';
+  document.getElementById('pwdInput').value = '';
+});
+
+async function sha256(str) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+
+// ── Brute force protection ──
+var _loginAttempts = 0;
+var _loginLocked   = false;
+var _loginLockEnd  = 0;
+
+async function tryLogin() {
+  // Vérifier le lockout
+  if (_loginLocked && Date.now() < _loginLockEnd) {
+    var remaining = Math.ceil((_loginLockEnd - Date.now()) / 1000);
+    var err = document.getElementById('loginError');
+    err.textContent = '🔒 Trop de tentatives. Réessayez dans ' + remaining + 's.';
+    err.style.display = 'block';
+    return;
+  }
+  if (Date.now() >= _loginLockEnd) { _loginLocked = false; }
+
+  var val = document.getElementById('pwdInput').value;
+  var hash = await sha256(val);
+  if (hash === ADMIN_HASH) {
+    _loginAttempts = 0;
+    _loginLocked   = false;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminScreen').style.display = 'block';
+    // Attendre la sync Supabase avant de charger
+    var doLoad = function() {
+      loadOrders(); loadPromos(); loadStock();
+      loadProductPromos(); loadPrix(); loadProduits();
+      loadEmails(); loadComptes(); startVisitorTracking();
+      setTimeout(checkStockAlerts, 1200);
+    };
+    if (window._sbReady) { doLoad(); }
+    else { document.addEventListener('sb:ready', doLoad, { once: true }); }
+  } else {
+    _loginAttempts++;
+    // Lockout progressif : 3 essais → 30s, 6 essais → 5min, 10 essais → 30min
+    var lockDuration = 0;
+    if (_loginAttempts >= 10)     lockDuration = 30 * 60 * 1000;
+    else if (_loginAttempts >= 6) lockDuration = 5  * 60 * 1000;
+    else if (_loginAttempts >= 3) lockDuration = 30 * 1000;
+    if (lockDuration > 0) {
+      _loginLocked = true;
+      _loginLockEnd = Date.now() + lockDuration;
+    }
+    var remaining_s = Math.ceil(lockDuration / 1000);
+    var err = document.getElementById('loginError');
+    err.textContent = _loginAttempts >= 3
+      ? '❌ Mot de passe incorrect (' + _loginAttempts + ' essais). Bloqué ' + remaining_s + 's.'
+      : '❌ Mot de passe incorrect. (' + (3 - _loginAttempts) + ' essai(s) restant)';
+    err.style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').style.borderColor = 'rgba(255,60,60,0.5)';
+    setTimeout(function() {
+      if (!_loginLocked) err.style.display = 'none';
+      document.getElementById('pwdInput').style.borderColor = 'rgba(0,200,255,0.18)';
+    }, 2500);
+  }
+}
+
+
+// ══ ALERTES STOCK BAS ══
+var STOCK_ALERT_THRESHOLD = 5;
+
+function checkStockAlerts() {
+  var stock = JSON.parse(localStorage.getItem('peptoids:stock') || '{}');
+  var low = [];
+  PRODUCTS_LIST.forEach(function(p) {
+    var qty = stock[p.key] !== undefined ? stock[p.key] : 10;
+    if (qty <= STOCK_ALERT_THRESHOLD) {
+      low.push({ name: p.name, emoji: p.emoji, qty: qty, key: p.key });
+    }
+  });
+
+  var banner = document.getElementById('stockAlertBanner');
+  var badge  = document.getElementById('stockBadge');
+  var text   = document.getElementById('stockAlertText');
+
+  if (low.length > 0) {
+    var parts = low.map(function(p) {
+      return p.emoji + ' ' + p.name.split('/')[0].trim() + ' : ' + (p.qty <= 0 ? '<strong style="color:#ff4466;">RUPTURE</strong>' : '<strong style="color:#ffaa00;">' + p.qty + ' restants</strong>');
+    });
+    text.innerHTML = parts.join(' &nbsp;·&nbsp; ');
+    banner.style.display = 'flex';
+    badge.style.display  = 'inline-block';
+    badge.textContent    = low.length;
+
+    // Changer couleur badge si rupture totale
+    var hasRupture = low.some(function(p){ return p.qty <= 0; });
+    badge.style.background = hasRupture ? '#ff4466' : '#ffaa00';
+  } else {
+    banner.style.display = 'none';
+    badge.style.display  = 'none';
+  }
+}
+
+
+// ══ GÉNÉRATION LOCALE INTELLIGENTE — BASE PEPTIDES ══
+var PEPTIDES_DB = {
+  // ── GLP-1 / Métabolisme ──
+  'retatrutide':  { cat:'Peptide · Agoniste Triple GLP-1/GIP/Glucagon', purete:'99.8', methode:'HPLC', poids:'4862.5', seq:'Triple agoniste GLP-1/GIP/Glucagon recombinant', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le Retatrutide est un agoniste triple des récepteurs GLP-1, GIP et Glucagon de nouvelle génération, représentant l'avant-garde de la recherche métabolique. Synthétisé par chimie peptidique de phase solide (SPPS), chaque lot est certifié à pureté ≥99.8% par HPLC analytique avec certificat d'analyse individuel. Le lyophilisat est produit sous atmosphère inerte en laboratoire certifié ISO 9001, garantissant une stabilité et une reproductibilité maximales pour les protocoles de recherche." },
+  'semaglutide':  { cat:'Peptide · Agoniste GLP-1', purete:'99.5', methode:'HPLC', poids:'4113.6', seq:'Analogue GLP-1 acylé', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le Semaglutide est un analogue de GLP-1 acylé de deuxième génération, conçu pour une demi-vie prolongée grâce à sa chaîne C18 fatty diacid. Pureté analytique ≥99.5% certifiée par HPLC et spectrométrie de masse. Lyophilisé en conditions stériles avec certificat d'analyse individuel. Produit de référence pour les protocoles de recherche sur le métabolisme glucidique et lipidique." },
+  'tirzepatide':  { cat:'Peptide · Double Agoniste GLP-1/GIP', purete:'99.5', methode:'HPLC', poids:'4813.5', seq:'Double agoniste GLP-1/GIP acylé', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le Tirzepatide est un double agoniste des récepteurs GLP-1 et GIP, peptide de 39 acides aminés avec modification C20 fatty diacid. Synthèse SPPS avec contrôle qualité rigoureux, pureté ≥99.5% par HPLC. Flacon lyophilisé stérile avec CoA individuel. Utilisé dans les protocoles de recherche avancée sur la régulation métabolique et insulinique." },
+  'ozempic':      { cat:'Peptide · Analogue GLP-1', purete:'99.5', methode:'HPLC', poids:'4113.6', seq:'Semaglutide base — analogue GLP-1', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Analogue du GLP-1 de haute pureté, identique au principe actif de référence. Synthèse peptidique contrôlée, pureté ≥99.5% certifiée HPLC avec spectrométrie de masse confirmatoire. Lyophilisé stérile en flacon sous atmosphère inerte. CoA individuel inclus." },
+
+  // ── Croissance / HGH ──
+  'hgh':          { cat:'Hormone · Somatotropine Recombinante rDNA', purete:'99.0', methode:'SDS-PAGE / HPLC', poids:'22124', seq:'191 acides aminés — séquence hGH native', stockage:'-20°C (non reconstitué)', format:'Lyophilisé stérile 10 IU',
+    desc:"L'HGH Somatropin recombinante est produite par expression en E. coli recombinant, avec une séquence primaire de 191 acides aminés identique à la somatotropine humaine endogène. Pureté >99% vérifiée par SDS-PAGE et HPLC analytique. Lyophilisé stérile 10 IU par flacon avec eau bactériostatique de reconstitution incluse. Certificat d'analyse individuel fourni." },
+  'igf-1':        { cat:'Facteur de Croissance · IGF-1 Recombinant', purete:'99.0', methode:'HPLC / MS', poids:'7648.8', seq:'70 acides aminés — IGF-1 humain recombinant', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"L'IGF-1 (Insulin-like Growth Factor 1) recombinant humain est une protéine de 70 acides aminés produite par expression en système procaryote optimisé. Pureté ≥99% par HPLC avec confirmation par spectrométrie de masse. Lyophilisé stérile avec CoA individuel. Utilisé dans les protocoles de recherche sur la signalisation cellulaire et la prolifération." },
+  'ipamorelin':   { cat:'Peptide · Sécrétagogue GH', purete:'99.0', methode:'HPLC', poids:'711.9', seq:'Pentapeptide sécrétagogue GH sélectif', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"L'Ipamorelin est un pentapeptide sécrétagogue sélectif de l'hormone de croissance (GH), agissant comme agoniste du récepteur ghréline. Pureté ≥99% par HPLC analytique, confirmée par spectrométrie de masse. Lyophilisé stérile en flacon avec CoA individuel. Sélectivité élevée pour GH sans stimulation significative du cortisol ou de la prolactine." },
+  'ghrp-6':       { cat:'Peptide · Sécrétagogue GH (GHRP)', purete:'99.0', methode:'HPLC', poids:'873.0', seq:'Hexapeptide His-D-Trp-Ala-Trp-D-Phe-Lys-NH2', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le GHRP-6 est un hexapeptide synthétique sécrétagogue de l'hormone de croissance, agoniste puissant du récepteur GHS-R1a. Synthèse SPPS avec purification par HPLC préparative, pureté ≥99% certifiée. Lyophilisé stérile en flacon avec CoA individuel. Stimule la libération pulse de GH endogène in vitro." },
+  'cjc-1295':     { cat:'Peptide · Analogue GHRH à Longue Durée', purete:'99.0', methode:'HPLC / MS', poids:'3367.9', seq:'Analogue GHRH (1-29) modifié DAC', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le CJC-1295 est un analogue synthétique du GHRH (1-29) avec modification DAC (Drug Affinity Complex) conférant une demi-vie prolongée par liaison covalente à l'albumine sérique. Pureté ≥99% par HPLC avec MS confirmatoire. Lyophilisé stérile avec CoA individuel. Utilisé dans les protocoles de recherche neuroendocrinienne." },
+
+  // ── Régénération / Réparation ──
+  'bpc-157':      { cat:'Peptide · Gastroprotecteur & Régénérant', purete:'99.0', methode:'HPLC', poids:'1419.5', seq:'15 acides aminés — Gly-Glu-Pro-Pro-Pro-Gly-Lys-Pro-Ala-Asp-Asp-Ala-Gly-Leu-Val', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le BPC-157 (Body Protection Compound 157) est un pentadécapeptide dérivé de la protéine de protection gastrique humaine. Synthèse SPPS avec purification HPLC préparative, pureté ≥99% certifiée analytiquement. Lyophilisé stérile en flacon avec CoA individuel. Stabilité thermique remarquable, utilisé dans les protocoles de recherche sur la cicatrisation et la cytoprotection." },
+  'tb-500':       { cat:'Peptide · Thymosin Beta-4 Synthétique', purete:'99.0', methode:'HPLC / MS', poids:'4963.5', seq:'43 acides aminés — fragment actif Thymosin Beta-4', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le TB-500 est un fragment synthétique de la Thymosin Beta-4, peptide de 43 acides aminés impliqué dans la polymérisation de l'actine et les processus de régénération tissulaire. Pureté ≥99% par HPLC avec confirmation MS. Lyophilisé stérile avec CoA individuel. Solubilité aqueuse excellente pour faciliter la reconstitution en milieu tamponné." },
+  'ghk-cu':       { cat:'Peptide · Tripeptide Cuivre Régénérant', purete:'99.5', methode:'HPLC / MS', poids:'403.5', seq:'Gly-His-Lys — complexe Cu(II)', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le GHK-Cu (Glycyl-L-Histidyl-L-Lysine Cuivre) est un tripeptide naturellement présent dans le plasma humain à activité régénérante, anti-inflammatoire et anti-oxydante documentée. Pureté analytique ≥99.5% par HPLC et spectrométrie de masse. Lyophilisé stérile en flacon de 100mg avec CoA individuel. Synthèse peptidique phase solide de haute pureté." },
+  'selank':       { cat:'Peptide · Anxiolytique Nootropique', purete:'99.0', methode:'HPLC', poids:'751.9', seq:'Heptapeptide Thr-Lys-Pro-Arg-Pro-Gly-Pro', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le Selank est un heptapeptide synthétique analogue de la tuftsin, à activité anxiolytique et nootropique documentée en recherche préclinique. Pureté ≥99% par HPLC analytique. Lyophilisé stérile en flacon avec CoA individuel. Propriétés nootropiques et immunomodulatrices étudiées in vitro et in vivo." },
+  'semax':        { cat:'Peptide · Nootropique ACTH-Analogue', purete:'99.0', methode:'HPLC', poids:'813.9', seq:'Heptapeptide Met-Glu-His-Phe-Pro-Gly-Pro', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le Semax est un heptapeptide synthétique analogue de l'ACTH (4-10), à activité nootropique et neuroprotectrice en recherche préclinique. Pureté ≥99% par HPLC. Lyophilisé stérile avec CoA individuel. Propriétés cognitives et BDNF-modulatrices étudiées in vitro." },
+
+  // ── Peau / Anti-âge ──
+  'epithalon':    { cat:'Peptide · Tétrapeptide Télomérase', purete:'99.0', methode:'HPLC', poids:'390.4', seq:'Ala-Glu-Asp-Gly', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"L'Épithalon est un tétrapeptide synthétique (Ala-Glu-Asp-Gly) dérivé de l'épithalamine, étudié pour son interaction avec la télomérase et les mécanismes de sénescence cellulaire. Pureté ≥99% par HPLC analytique avec CoA individuel. Lyophilisé stérile de haute stabilité. Utilisé dans les protocoles de recherche gérontologique et épigénétique." },
+  'collagen':     { cat:'Peptide · Collagène Hydrolysé Type I', purete:'98.0', methode:'HPLC', poids:'variable', seq:'Tripeptide Pro-Hyp-Gly majoritaire', stockage:'+4°C', format:'Poudre lyophilisée',
+    desc:"Peptides de collagène hydrolysé de type I, obtenus par hydrolyse enzymatique contrôlée. Pureté ≥98% analytiquement certifiée. Poudre lyophilisée conditionnée sous atmosphère inerte. Profil acides aminés documenté par HPLC avec CoA individuel. Utilisé dans les protocoles de recherche dermato-cosmétique." },
+
+  // ── Libido / Hormones ──
+  'pt-141':       { cat:'Peptide · Mélanocortine MC4R Agoniste', purete:'99.0', methode:'HPLC / MS', poids:'1025.2', seq:'Bremelanotide — heptapeptide cyclique mélanocortine', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le PT-141 (Bremelanotide) est un heptapeptide cyclique agoniste des récepteurs mélanocortines MC1R et MC4R. Synthèse SPPS avec cyclisation contrôlée, pureté ≥99% par HPLC avec confirmation MS. Lyophilisé stérile en flacon avec CoA individuel. Utilisé dans les protocoles de recherche en neuropharmacologie et physiologie." },
+  'kisspeptin':   { cat:'Peptide · Neuropeptide KNDy', purete:'99.0', methode:'HPLC', poids:'1302.5', seq:'Kisspeptin-10 (Metastin 45-54)', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"La Kisspeptin-10 est un décapeptide neuropeptide endogène, ligand du récepteur KISS1R, impliqué dans la régulation de l'axe hypothalamo-hypophyso-gonadique. Pureté ≥99% par HPLC analytique avec CoA individuel. Lyophilisé stérile. Utilisé dans les protocoles de recherche en neuroendocrinologie reproductive." },
+
+  // ── Cardiovasculaire / Autres ──
+  'ss-31':        { cat:'Peptide · Cardioprotecteur Mitochondrial', purete:'99.0', methode:'HPLC', poids:'639.8', seq:'Tétrapeptide D-Arg-Dmt-Lys-Phe-NH2', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le SS-31 (Elamipretide) est un tétrapeptide aromatique-cationique à pénétration mitochondriale sélective, ciblant la cardiolipine de la membrane interne mitochondriale. Pureté ≥99% par HPLC analytique. Lyophilisé stérile avec CoA individuel. Propriétés antioxydantes mitochondriales documentées in vitro." },
+  'mots-c':       { cat:'Peptide · Peptide Mitochondrial Métabolique', purete:'99.0', methode:'HPLC / MS', poids:'2174.5', seq:'16 acides aminés — peptide mitochondrial MOTS-c', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le MOTS-c est un micropeptide mitochondrial de 16 acides aminés encodé dans le génome mitochondrial, impliqué dans la régulation métabolique et la sensibilité à l'insuline. Pureté ≥99% par HPLC avec MS confirmatoire. Lyophilisé stérile avec CoA individuel. Utilisé dans les protocoles de recherche en métabolisme énergétique cellulaire." },
+  'nad+':         { cat:'Coenzyme · NAD+ Précurseur Cellulaire', purete:'98.0', methode:'HPLC', poids:'663.4', seq:'Nicotinamide adénine dinucléotide forme oxydée', stockage:'+4°C / obscurité', format:'Poudre lyophilisée',
+    desc:"Le NAD+ (Nicotinamide Adénine Dinucléotide) est une coenzyme essentielle impliquée dans plus de 500 réactions enzymatiques cellulaires et la régulation des sirtuines. Pureté ≥98% certifiée par HPLC. Poudre lyophilisée stable conditionnée à l'abri de la lumière avec CoA individuel." },
+
+  // ── Peptides Antimicrobiens / Immunologie ──
+  'thymosin-alpha-1': { cat:'Peptide · Immunomodulateur Thymique', purete:'99.0', methode:'HPLC / MS', poids:'3108.4', seq:'28 acides aminés — Thymosin Alpha-1 humaine', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"La Thymosin Alpha-1 est un peptide thymique de 28 acides aminés à activité immunomodulatrice documentée, agissant sur les lymphocytes T, NK et les cellules dendritiques. Pureté ≥99% par HPLC analytique avec confirmation MS. Lyophilisé stérile avec CoA individuel. Séquence identique à la Thymosin Alpha-1 humaine endogène." },
+  'll-37':        { cat:'Peptide · Cathelicidine Antimicrobienne', purete:'95.0', methode:'HPLC', poids:'4493.3', seq:'37 acides aminés — cathelicidine humaine LL-37', stockage:'-20°C', format:'Lyophilisé stérile',
+    desc:"Le LL-37 est la seule cathelicidine humaine connue, peptide de 37 acides aminés à large spectre antimicrobien et immunomodulateur. Pureté ≥95% par HPLC analytique. Lyophilisé stérile en flacon avec CoA individuel. Activité membranolytique documentée in vitro contre Gram+ et Gram-." },
+};
+
+function normalizeKey(str) {
+  return str.toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-\+]/g, '')
+    .replace(/semaglutide|ozempic/g, function(m){ return m.includes('ozempic') ? 'ozempic' : 'semaglutide'; });
+}
+
+function findPeptideInDB(name) {
+  var key = normalizeKey(name);
+
+  // Correspondance exacte
+  if (PEPTIDES_DB[key]) return PEPTIDES_DB[key];
+
+  // Correspondances partielles / alias
+  var aliases = {
+    'glp-1': 'semaglutide', 'glp1': 'semaglutide',
+    'tirzepa': 'tirzepatide', 'mounjaro': 'tirzepatide',
+    'wegovy': 'semaglutide', 'rybelsus': 'semaglutide',
+    'bpc': 'bpc-157', 'bpc157': 'bpc-157',
+    'tb500': 'tb-500', 'tb 500': 'tb-500',
+    'ghk': 'ghk-cu', 'copper peptide': 'ghk-cu', 'copper': 'ghk-cu',
+    'hgh': 'hgh', 'somatropin': 'hgh', 'somatotropin': 'hgh', 'growth hormone': 'hgh',
+    'igf': 'igf-1', 'igf1': 'igf-1',
+    'ipa': 'ipamorelin',
+    'ghrp': 'ghrp-6', 'ghrp6': 'ghrp-6',
+    'cjc': 'cjc-1295', 'cjc1295': 'cjc-1295',
+    'epithalon': 'epithalon', 'epitalon': 'epithalon',
+    'pt141': 'pt-141', 'bremelanotide': 'pt-141',
+    'kiss': 'kisspeptin', 'kisspeptin10': 'kisspeptin',
+    'thymosin': 'thymosin-alpha-1', 'ta1': 'thymosin-alpha-1',
+    'retat': 'retatrutide',
+    'nad': 'nad+', 'nads': 'nad+',
+    'mots': 'mots-c',
+    'ss31': 'ss-31', 'ss 31': 'ss-31',
+    'selank': 'selank', 'semax': 'semax',
+  };
+
+  for (var alias in aliases) {
+    if (key.indexOf(alias) !== -1 || name.toLowerCase().indexOf(alias) !== -1) {
+      var target = aliases[alias];
+      if (PEPTIDES_DB[target]) return PEPTIDES_DB[target];
+    }
+  }
+
+  // Pas trouvé → générer une fiche générique intelligente
+  return null;
+}
+
+function genererFicheGenerique(nom, cat, dosage) {
+  var nomClean = nom.trim();
+  var isHormone = /hormone|hgh|hcg|testosterone|estrogen/i.test(nomClean);
+  var isPeptide = /peptide|tide|elin|stat|tropin/i.test(nomClean);
+  var dosageText = dosage || '5mg';
+
+  return {
+    cat: cat || (isHormone ? 'Hormone · Recherche' : 'Peptide · Recherche'),
+    purete: '99.0',
+    methode: 'HPLC',
+    stockage: '-20°C',
+    format: 'Lyophilisé stérile',
+    desc: nomClean + " est un " + (isHormone ? "peptide hormonal" : "peptide de recherche") + " de haute pureté certifiée ≥99.0% par chromatographie HPLC analytique. Chaque lot est individuellement analysé et accompagné d'un certificat d'analyse (CoA). Lyophilisé en conditions stériles sous atmosphère inerte en laboratoire certifié ISO. Eau bactériostatique de reconstitution incluse. Destiné exclusivement à la recherche scientifique en laboratoire."
+  };
+}
+
+function genererFicheProduit() {
+  var nom    = document.getElementById('pNom').value.trim();
+  var cat    = document.getElementById('pCategorie').value.trim();
+  var dosage = document.getElementById('pDosage').value.trim();
+  var status = document.getElementById('iaStatus');
+  var btn    = document.getElementById('btnGenIA');
+
+  if (!nom) {
+    status.style.display = 'block';
+    status.style.color   = '#ff4466';
+    status.textContent   = '⚠️ Renseignez le nom du produit en premier.';
+    return;
+  }
+
+  // Animation chargement
+  btn.textContent   = '⟳ Analyse en cours...';
+  btn.style.opacity = '0.6';
+  btn.disabled      = true;
+  status.style.display = 'block';
+  status.style.color   = 'rgba(168,85,247,0.8)';
+  status.textContent   = '✦ Recherche dans la base de peptides...';
+
+  setTimeout(function() {
+
+    var data = findPeptideInDB(nom);
+    var isGeneric = false;
+    if (!data) {
+      data = genererFicheGenerique(nom, cat, dosage);
+      isGeneric = true;
+    }
+
+    var dosageText = dosage || '5mg';
+
+    // Remplir catégorie si vide
+    if (!cat && data.cat) {
+      document.getElementById('pCategorie').value = data.cat;
+    }
+
+    // Description
+    document.getElementById('pDesc').value = data.desc;
+
+    // Composition
+    var composition = [
+      nom + ' \u226599.' + (data.purete ? data.purete.split('.')[1] || '0' : '0') + '% (' + (data.methode || 'HPLC') + ')',
+      data.format || 'Lyophilisat stérile',
+      'Flacon ' + dosageText + ' lyophilisé sous atmosphère inerte',
+      'Production en laboratoire certifié ISO 9001',
+      'Analyse et contrôle qualité par lot',
+      'Eau bactériostatique de reconstitution incluse'
+    ];
+    document.getElementById('pComposition').value = composition.join('\n');
+
+    // Specs
+    var specs = [
+      { icon: '🧪', label: 'Pureté',          val: '\u2265' + data.purete + '% (' + (data.methode || 'HPLC') + ')' },
+      { icon: '📦', label: 'Format',           val: data.format || 'Lyophilisé stérile' },
+      { icon: '⚗️', label: 'Conditionnement', val: 'Flacon ' + dosageText },
+      { icon: '❄️', label: 'Stockage',         val: data.stockage || '-20°C recommandé' },
+      { icon: '📋', label: 'Certificat',       val: 'CoA inclus' },
+      { icon: '🔬', label: 'Usage',            val: 'Recherche uniquement' }
+    ];
+    document.getElementById('pSpecs').value = JSON.stringify(specs, null, 2);
+
+    // Succès
+    status.style.color = isGeneric ? 'rgba(255,200,0,0.8)' : '#00ff88';
+    status.textContent = isGeneric
+      ? '⚡ Fiche générique créée. Vérifiez et complétez les détails spécifiques si besoin.'
+      : '✓ ' + nom + ' reconnu dans la base ! Fiche complète générée. Vérifiez le dosage.';
+
+    btn.textContent   = '✨ Générer la fiche avec IA';
+    btn.style.opacity = '1';
+    btn.disabled      = false;
+
+  }, 600);
+}
+
+
+// TABS
+document.getElementById('tabBtnOrders').addEventListener('click', function() { switchTab('orders'); });
+document.getElementById('tabBtnPromos').addEventListener('click', function() { switchTab('promos'); });
+document.getElementById('tabBtnStock').addEventListener('click', function() { switchTab('stock'); });
+document.getElementById('tabBtnPP').addEventListener('click', function() { switchTab('pp'); });
+document.getElementById('tabBtnPrix').addEventListener('click', function() { switchTab('prix'); });
+document.getElementById('tabBtnProduits').addEventListener('click', function() { switchTab('produits'); });
+document.getElementById('tabBtnEmails').addEventListener('click', function() { switchTab('emails'); });
+document.getElementById('tabBtnComptes').addEventListener('click', function() { switchTab('comptes'); });
+document.getElementById('tabBtnGraphiques').addEventListener('click', function() { switchTab('graphiques'); });
+document.getElementById('tabBtnBanniere').addEventListener('click', function() { switchTab('banniere'); });
+document.getElementById('tabBtnVirement').addEventListener('click', function() { switchTab('virement'); });
+document.getElementById('tabBtnVip').addEventListener('click', function() { switchTab('vip'); });
+document.getElementById('tabBtnMessages').addEventListener('click', function() { switchTab('messages'); });
+document.getElementById('tabBtnAvis').addEventListener('click', function() { switchTab('avis'); });
+document.getElementById('tabBtnSlots').addEventListener('click', function() { switchTab('slots'); loadSlotsAdmin(); });
+
+function switchTab(tab) {
+  var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots'];
+  var btnIds  = ['tabBtnOrders','tabBtnPromos','tabBtnStock','tabBtnPP','tabBtnPrix','tabBtnProduits','tabBtnEmails','tabBtnComptes','tabBtnGraphiques','tabBtnBanniere','tabBtnVirement','tabBtnVip','tabBtnMessages','tabBtnAvis','tabBtnSlots'];
+  var panelIds= ['tabOrders','tabPromos','tabStock','tabProductPromos','tabPrix','tabProduits','tabEmails','tabComptes','tabGraphiques','tabBanniere','tabVirement','tabVip','tabMessages','tabAvis','tabSlots'];
+  tabs.forEach(function(t,i){
+    document.getElementById(btnIds[i]).classList.toggle('active', t===tab);
+    document.getElementById(panelIds[i]).classList.toggle('active', t===tab);
+  });
+  if(tab==='stock') loadStock();
+  if(tab==='pp') loadProductPromos();
+  if(tab==='prix') { loadPrix(); }
+  if(tab==='produits') loadProduits();
+  if(tab==='emails') loadEmails();
+  if(tab==='comptes') loadComptes();
+  if(tab==='graphiques') loadGraphiques();
+  if(tab==='banniere') loadBanniere();
+  if(tab==='virement') loadVirement();
+  if(tab==='vip') loadVip();
+  if(tab==='messages') loadMessages();
+  if(tab==='avis') loadAvisAdmin('all');
+}
+
+// ORDERS
+document.getElementById('refreshBtn').addEventListener('click', loadOrders);
+document.getElementById('clearBtn').addEventListener('click', function() {
+  if (!confirm('Vider toutes les commandes ?')) return;
+  localStorage.setItem('peptoids:orders', JSON.stringify([]));
+  SB.deleteOrders().catch(function(e){console.warn('SB:',e.message);});
+  loadOrders();
+});
+
+function loadOrders() {
+  document.getElementById('loadingEl').style.display = 'block';
+  document.getElementById('ordersTable').style.display = 'none';
+  document.getElementById('emptyOrders').style.display = 'none';
+  var orders = [];
+  try { var s = localStorage.getItem('peptoids:orders'); if (s) orders = JSON.parse(s); } catch(e) {}
+  renderStats(orders);
+  renderOrders(orders);
+}
+
+function renderStats(orders) {
+  var total = orders.length;
+  var newO = orders.filter(function(o) { return o.status === 'Nouvelle'; }).length;
+  var ca = orders.reduce(function(s, o) { return s + parseFloat(o.total || 0); }, 0);
+  var avg = total > 0 ? ca / total : 0;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statNew').textContent = newO;
+  document.getElementById('statCA').textContent = ca.toFixed(2).replace('.', ',') + ' €';
+  document.getElementById('statAvg').textContent = avg.toFixed(2).replace('.', ',') + ' €';
+}
+
+function renderOrders(orders) {
+  document.getElementById('loadingEl').style.display = 'none';
+  if (orders.length === 0) { document.getElementById('emptyOrders').style.display = 'block'; return; }
+  document.getElementById('ordersTable').style.display = 'table';
+  var tbody = document.getElementById('ordersBody');
+  tbody.innerHTML = '';
+  orders.forEach(function(order, idx) {
+    var date = new Date(order.date);
+    var dateStr = date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    var timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    var items = order.items || [];
+    var itemsStr = items.map(function(i) { return i.name.split('/')[0].trim() + ' x' + i.qty; }).join(', ');
+    var c = order.client || {};
+    var tr = document.createElement('tr');
+
+    var idTd = document.createElement('td');
+    idTd.innerHTML = '<div class="order-id">' + order.id + '</div><div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:3px;">' + (order.shipping === '0.00' ? '🎁 Gratuite' : '📦 Mondial Relay') + '</div>';
+
+    var dateTd = document.createElement('td');
+    dateTd.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.7);">' + dateStr + '</div><div class="order-date">' + timeStr + '</div>';
+
+    var clientTd = document.createElement('td');
+    if (c.prenom) {
+      clientTd.innerHTML = '<div style="font-weight:600;color:#fff;">' + c.prenom + ' ' + c.nom + '</div>' +
+        '<div style="color:rgba(0,200,255,0.7);font-size:11px;">' + c.email + '</div>' +
+        '<div style="color:rgba(255,255,255,0.4);font-size:11px;">' + (c.tel || '') + '</div>' +
+        '<div style="color:rgba(255,255,255,0.35);font-size:11px;">' + (c.adresse || '') + ', ' + (c.cp || '') + ' ' + (c.ville || '') + '</div>';
+    } else {
+      clientTd.innerHTML = '<span style="color:rgba(255,255,255,0.2)">—</span>';
+    }
+
+    var itemsTd = document.createElement('td');
+    var discHtml = parseFloat(order.discount) > 0 ? '<div style="font-size:10px;color:#00ff88;margin-top:3px;">Promo ' + (order.promo || '') + ' : -' + parseFloat(order.discount).toFixed(2).replace('.', ',') + ' €</div>' : '';
+    itemsTd.innerHTML = '<div class="order-items">' + itemsStr + '</div>' + discHtml;
+
+    var totalTd = document.createElement('td');
+    totalTd.innerHTML = '<div class="order-total">' + parseFloat(order.total || 0).toFixed(2).replace('.', ',') + ' €</div>';
+
+    var statusTd = document.createElement('td');
+    var sel = document.createElement('select');
+    sel.className = 'status-select';
+    ['Nouvelle', 'Traitée', 'Annulée'].forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s; opt.textContent = s;
+      if (order.status === s) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    (function(i) {
+      sel.addEventListener('change', function() {
+        var orders2 = [];
+        try { orders2 = JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e) {}
+        orders2[i].status = sel.value;
+        localStorage.setItem('peptoids:orders', JSON.stringify(orders2));
+        SB.updateOrderStatus(orderId, newStatus).catch(function(e){console.warn('SB:',e.message);});
+        renderStats(orders2);
+      });
+    })(idx);
+    statusTd.appendChild(sel);
+
+    tr.appendChild(idTd); tr.appendChild(dateTd); tr.appendChild(clientTd);
+    tr.appendChild(itemsTd); tr.appendChild(totalTd); tr.appendChild(statusTd);
+    tbody.appendChild(tr);
+  });
+}
+
+// PROMOS
+document.getElementById('createPromoBtn').addEventListener('click', createPromo);
+
+function getPromos() {
+  try {
+    var s = localStorage.getItem(PROMOS_KEY);
+    var parsed = s ? JSON.parse(s) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch(e) { return []; }
+}
+function savePromos(p) {
+  localStorage.setItem(PROMOS_KEY, JSON.stringify(p));
+  p.forEach(function(promo) { SB.savePromo(promo).catch(function(e){console.warn('SB promo:',e.message);}); });
+}
+
+function syncPromosToShop() {
+  // Legacy map format
+  var shop = { 'LOG5': 0.05, 'WELCOME7': 0.07 };
+  // Full objects list (avec singleUse, expiration, etc.)
+  var fullList = [];
+  getPromos().forEach(function(p) {
+    if (!p.active) return;
+    if (p.maxUses && p.uses >= p.maxUses) return;
+    if (p.expiresAt && new Date() > new Date(p.expiresAt)) return;
+    shop[p.code] = p.discount / 100;
+    fullList.push(p);
+  });
+  localStorage.setItem('peptoids:active_promos', JSON.stringify(shop));
+  localStorage.setItem('peptoids:custom_promos', JSON.stringify(fullList));
+  SB.setSetting('active_promos', shop).catch(function(e){console.warn('SB active_promos:',e.message);});
+}
+
+function loadPromos() {
+  var promos = getPromos();
+  document.getElementById('promoCount').textContent = promos.length + ' code(s)';
+  var grid = document.getElementById('promoGrid');
+  grid.innerHTML = '';
+
+  if (promos.length === 0) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.2);font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;padding:20px;">Aucun code promo créé</div>';
+    return;
+  }
+
+  promos.forEach(function(p, idx) {
+    var card = document.createElement('div');
+    card.className = 'promo-card';
+    var active = p.active && (!p.maxUses || p.uses < p.maxUses);
+    var usesStr = p.maxUses ? (p.uses + '/' + p.maxUses + ' utilisations') : (p.uses + ' utilisation(s)');
+
+    var delBtn = document.createElement('button');
+    delBtn.className = 'promo-del-btn';
+    delBtn.textContent = '✕';
+    (function(i) { delBtn.addEventListener('click', function() { deletePromo(i); }); })(idx);
+
+    var codeEl = document.createElement('div');
+    codeEl.className = 'promo-card-code';
+    codeEl.textContent = p.code;
+
+    var discEl = document.createElement('div');
+    discEl.className = 'promo-card-discount';
+    discEl.textContent = '-' + p.discount + '% de réduction';
+
+    var usesEl = document.createElement('div');
+    usesEl.className = 'promo-card-uses';
+    usesEl.textContent = '📊 ' + usesStr;
+
+    var statusEl = document.createElement('div');
+    statusEl.className = 'promo-status ' + (active ? 'promo-active' : 'promo-inactive');
+    statusEl.textContent = active ? '● ACTIF' : '● INACTIF';
+
+    var toggleBtn = document.createElement('button');
+    toggleBtn.className = 'promo-action-btn';
+    toggleBtn.textContent = p.active ? '⏸ Désactiver' : '▶ Activer';
+    (function(i) { toggleBtn.addEventListener('click', function() { togglePromo(i); }); })(idx);
+
+    card.appendChild(delBtn); card.appendChild(codeEl);
+    card.appendChild(discEl); card.appendChild(usesEl);
+    card.appendChild(statusEl); card.appendChild(toggleBtn);
+    grid.appendChild(card);
+  });
+}
+
+function createPromo() {
+  var code = document.getElementById('newCode').value.trim().toUpperCase();
+  var discount = parseInt(document.getElementById('newDiscount').value);
+  var maxUses = parseInt(document.getElementById('newMaxUses').value) || null;
+  if (!code) { showPromoErr('⚠ Le code ne peut pas être vide.'); return; }
+  if (!discount || discount < 1 || discount > 99) { showPromoErr('⚠ Réduction invalide (1-99%).'); return; }
+  var promos = getPromos();
+  if (promos.some(function(p) { return p.code === code; })) { showPromoErr('⚠ Ce code existe déjà.'); return; }
+  var expiresAtVal = document.getElementById('newExpires') ? document.getElementById('newExpires').value : '';
+  var isSingleUse = document.getElementById('newSingleUse') ? document.getElementById('newSingleUse').checked : false;
+  var fixedAmountVal = document.getElementById('newFixed') ? parseInt(document.getElementById('newFixed').value)||0 : 0;
+  promos.unshift({
+    code: code,
+    discount: discount,
+    fixedAmount: fixedAmountVal,
+    maxUses: maxUses,
+    singleUse: isSingleUse,
+    uses: 0,
+    active: true,
+    expiresAt: expiresAtVal ? new Date(expiresAtVal).toISOString() : null,
+    created: new Date().toISOString(),
+    vip: isSingleUse
+  });
+  savePromos(promos);
+  syncPromosToShop();
+  document.getElementById('newCode').value = '';
+  document.getElementById('newDiscount').value = '';
+  document.getElementById('newMaxUses').value = '';
+  document.getElementById('promoError').style.display = 'none';
+  loadPromos();
+}
+
+function showPromoErr(msg) {
+  var el = document.getElementById('promoError');
+  el.textContent = msg; el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 3000);
+}
+
+function deletePromo(idx) {
+  if (!confirm('Supprimer ce code promo ?')) return;
+  var p = getPromos(); p.splice(idx, 1);
+  savePromos(p); syncPromosToShop(); loadPromos();
+}
+
+function togglePromo(idx) {
+  var p = getPromos(); p[idx].active = !p[idx].active;
+  savePromos(p); syncPromosToShop(); loadPromos();
+}
+
+// ══ MACHINE À SOUS ADMIN ══
+var DEFAULT_PRIZES = [
+  { symbol:'💎', combo:'💎💎💎', label:'JACKPOT', value:50, chance:1  },
+  { symbol:'🧬', combo:'🧬🧬🧬', label:'TRIPLE',  value:20, chance:4  },
+  { symbol:'💊', combo:'💊💊💊', label:'TRIPLE',  value:10, chance:7  },
+  { symbol:'⚗️', combo:'⚗️⚗️⚗️', label:'TRIPLE',  value:5,  chance:10 }
+];
+function getSlotsConfig() {
+  try {
+    var s = localStorage.getItem('peptoids:slots_config');
+    var cfg = s ? JSON.parse(s) : {};
+    if (!cfg.prizes) cfg.prizes = JSON.parse(JSON.stringify(DEFAULT_PRIZES));
+    if (cfg.active === undefined) cfg.active = false;
+    if (cfg.daily === undefined) cfg.daily = true;
+    if (cfg.loginRequired === undefined) cfg.loginRequired = true;
+    return cfg;
+  } catch(e) { return {active:false,daily:true,loginRequired:true,prizes:JSON.parse(JSON.stringify(DEFAULT_PRIZES))}; }
+}
+function saveSlotsConfigData(cfg) {
+  localStorage.setItem('peptoids:slots_config', JSON.stringify(cfg));
+  SB.setSetting('slots_config', cfg).catch(function(){});
+}
+function loadSlotsAdmin() {
+  var cfg = getSlotsConfig();
+  var badge = document.getElementById('slotsStatusBadge');
+  var btn = document.getElementById('slotsToggleBtn');
+  if (badge) {
+    badge.textContent = cfg.active ? '● ACTIVÉE' : '● DÉSACTIVÉE';
+    badge.style.cssText = cfg.active
+      ? 'background:rgba(0,255,136,0.1);color:#00ff88;border:1px solid rgba(0,255,136,0.3);font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:20px;'
+      : 'background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 16px;border-radius:20px;';
+  }
+  if (btn) btn.textContent = cfg.active ? '⏸ Désactiver' : '▶ Activer';
+  var dailySel = document.getElementById('slotsDailyLimit');
+  var loginSel = document.getElementById('slotsLoginRequired');
+  if (dailySel) dailySel.value = cfg.daily === false ? '0' : '1';
+  if (loginSel) loginSel.value = cfg.loginRequired !== false ? '1' : '0';
+  renderSlotsRewardsEditor(cfg.prizes);
+}
+function renderSlotsRewardsEditor(prizes) {
+  var container = document.getElementById('slotsRewardsEditor');
+  if (!container) return;
+  container.innerHTML = '<div style="display:grid;grid-template-columns:60px 1fr 120px 120px;gap:10px;margin-bottom:8px;">' +
+    '<div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">COMBO</div>' +
+    '<div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">LABEL</div>' +
+    '<div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">GAIN (€)</div>' +
+    '<div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">TAUX (%)</div>' +
+  '</div>' +
+  prizes.map(function(p, i) {
+    return '<div style="display:grid;grid-template-columns:60px 1fr 120px 120px;gap:10px;align-items:center;margin-bottom:10px;">' +
+      '<div style="font-size:22px;text-align:center;">' + p.combo + '</div>' +
+      '<input class="promo-input" style="padding:8px 12px;" value="' + p.label + '" id="slotLabel' + i + '">' +
+      '<div style="position:relative;"><input type="number" min="0" max="500" class="promo-input" style="padding:8px 12px;" value="' + p.value + '" id="slotValue' + i + '" oninput="updateLoseChance()"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.3);">€</span></div>' +
+      '<div style="position:relative;"><input type="number" min="0.1" max="99" step="0.1" class="promo-input" style="padding:8px 12px;" value="' + p.chance + '" id="slotChance' + i + '" oninput="updateLoseChance()"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.3);">%</span></div>' +
+    '</div>';
+  }).join('');
+  updateLoseChance();
+}
+function updateLoseChance() {
+  var cfg = getSlotsConfig();
+  var total = 0;
+  cfg.prizes.forEach(function(p, i) {
+    var inp = document.getElementById('slotChance' + i);
+    if (inp) total += parseFloat(inp.value) || 0;
+  });
+  var lose = Math.max(0, 100 - total);
+  var el = document.getElementById('slotsLoseChance');
+  if (el) { el.textContent = lose.toFixed(1) + '%'; el.style.color = lose < 0 ? '#ff4466' : 'rgba(255,255,255,0.3)'; }
+}
+function toggleSlots() {
+  var cfg = getSlotsConfig(); cfg.active = !cfg.active;
+  saveSlotsConfigData(cfg); loadSlotsAdmin();
+}
+function saveSlotsConfig() {
+  var cfg = getSlotsConfig();
+  var dailySel = document.getElementById('slotsDailyLimit');
+  var loginSel = document.getElementById('slotsLoginRequired');
+  cfg.daily = dailySel ? dailySel.value !== '0' : true;
+  cfg.loginRequired = loginSel ? loginSel.value === '1' : true;
+  cfg.prizes.forEach(function(p, i) {
+    var v = document.getElementById('slotValue'+i), c = document.getElementById('slotChance'+i), l = document.getElementById('slotLabel'+i);
+    if (v) p.value = parseFloat(v.value) || p.value;
+    if (c) p.chance = parseFloat(c.value) || p.chance;
+    if (l) p.label = l.value || p.label;
+  });
+  saveSlotsConfigData(cfg);
+  var msg = document.getElementById('slotsSaveMsg');
+  if (msg) { msg.textContent = '✓ Config sauvegardée !'; setTimeout(function(){ msg.textContent=''; }, 2500); }
+}
+
+// Auto-refresh
+setInterval(function() {
+  if (document.getElementById('adminScreen').style.display !== 'none') loadOrders();
+}, 30000);
+
+// ══ STOCK ══
+var STOCK_KEY = 'peptoids:stock';
+var PRODUCTS_LIST = [
+  { key:'Retatrutide', name:'Retatrutide / GLP-1 Triple', emoji:'🔵' },
+  { key:'GHK-Cu',      name:'GHK-Cu / Copper Peptide',    emoji:'🟣' },
+  { key:'HGH',         name:'HGH / Somatropin',            emoji:'🟢' }
+];
+function getStock() {
+  try { var s=localStorage.getItem(STOCK_KEY); return s?JSON.parse(s):{'Retatrutide':10,'GHK-Cu':10,'HGH':10}; } catch(e) { return {'Retatrutide':10,'GHK-Cu':10,'HGH':10}; }
+}
+function loadStock() {
+  var stock=getStock(); var grid=document.getElementById('stockGrid'); grid.innerHTML='';
+  PRODUCTS_LIST.forEach(function(p) {
+    var qty=stock[p.key]!==undefined?stock[p.key]:10;
+    var pct=Math.min(100,Math.round((qty/10)*100));
+    var color=qty<=0?'#ff4466':qty<=3?'#ffaa00':'#00ff88';
+    var label=qty<=0?'❌ Rupture':qty<=3?'⚠️ Stock faible':'✅ En stock';
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;';
+    var header=document.createElement('div');
+    header.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:16px;';
+    header.innerHTML='<span style="font-size:24px;">'+p.emoji+'</span><div><div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+p.key+'</div><div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">'+p.name+'</div></div>';
+    var barWrap=document.createElement('div');
+    barWrap.style.cssText='height:6px;background:rgba(255,255,255,0.07);border-radius:6px;overflow:hidden;margin-bottom:8px;';
+    var bar=document.createElement('div');
+    bar.style.cssText='height:100%;width:'+pct+'%;background:'+color+';border-radius:6px;box-shadow:0 0 8px '+color+';transition:width 0.5s;';
+    barWrap.appendChild(bar);
+    var statusEl=document.createElement('div');
+    statusEl.style.cssText='font-size:11px;color:'+color+';font-family:Orbitron,monospace;letter-spacing:1px;margin-bottom:16px;';
+    statusEl.textContent=label+' — '+qty+' unité(s)';
+    var controls=document.createElement('div');
+    controls.style.cssText='display:flex;align-items:center;gap:8px;';
+    var btnStyle='width:36px;height:36px;border-radius:8px;border:1px solid rgba(0,200,255,0.2);background:rgba(0,200,255,0.06);color:#fff;cursor:pointer;font-size:18px;font-weight:700;';
+    var minusBtn=document.createElement('button'); minusBtn.textContent='−'; minusBtn.style.cssText=btnStyle;
+    var inp=document.createElement('input'); inp.type='number'; inp.value=qty; inp.min=0;
+    inp.style.cssText='flex:1;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.2);border-radius:8px;padding:8px;color:#fff;font-family:Orbitron,monospace;font-size:14px;font-weight:700;text-align:center;outline:none;';
+    var plusBtn=document.createElement('button'); plusBtn.textContent='+'; plusBtn.style.cssText=btnStyle;
+    var saveBtn=document.createElement('button'); saveBtn.textContent='💾'; saveBtn.style.cssText=btnStyle+'font-size:16px;';
+    (function(key,inp,sb){
+      minusBtn.addEventListener('click',function(){inp.value=Math.max(0,parseInt(inp.value||0)-1);});
+      plusBtn.addEventListener('click',function(){inp.value=parseInt(inp.value||0)+1;});
+      saveBtn.addEventListener('click', async function(){
+        var s = getStock(); s[key] = parseInt(inp.value)||0;
+        localStorage.setItem(STOCK_KEY, JSON.stringify(s));
+        try {
+          await SB.setStock(key, s[key]);
+          sb.textContent='✓'; sb.style.color='#00ff88';
+          // Recharger depuis Supabase pour confirmer
+          _cacheInvalidate('stock');
+          var fresh = await SB.getStock();
+          if (fresh && Object.keys(fresh).length > 0) {
+            localStorage.setItem(STOCK_KEY, JSON.stringify(fresh));
+          }
+        } catch(e) {
+          console.warn('SB stock:', e.message);
+          sb.textContent='⚠'; sb.style.color='#ffaa00';
+        }
+        loadStock();
+        setTimeout(function(){ sb.textContent='💾'; sb.style.color=''; }, 1500);
+      });
+      inp.addEventListener('keydown',function(e){if(e.key==='Enter')saveBtn.click();});
+    })(p.key,inp,saveBtn);
+    controls.appendChild(minusBtn); controls.appendChild(inp); controls.appendChild(plusBtn); controls.appendChild(saveBtn);
+    card.appendChild(header); card.appendChild(barWrap); card.appendChild(statusEl); card.appendChild(controls);
+    grid.appendChild(card);
+  });
+}
+
+// ══ PRIX ══
+var PRIX_KEY = 'peptoids:prices';
+var PRIX_DEFAULT = {
+  'Retatrutide': { normal: 49.99, barred: 79.99 },
+  'GHK-Cu':      { normal: 44.99, barred: 64.99 },
+  'HGH':         { normal: 54.99, barred: 74.99 }
+};
+
+function getPrix() {
+  try { var s=localStorage.getItem(PRIX_KEY); return s?JSON.parse(s):JSON.parse(JSON.stringify(PRIX_DEFAULT)); }
+  catch(e) { return JSON.parse(JSON.stringify(PRIX_DEFAULT)); }
+}
+
+function loadPrix() {
+  var prix=getPrix(); var pp=getProductPromos();
+  var grid=document.getElementById('prixGrid'); grid.innerHTML='';
+  PRODUCTS_LIST.forEach(function(p) {
+    var pr=prix[p.key]||{normal:49.99,barred:79.99};
+    var activePP=pp[p.key]&&pp[p.key].active?pp[p.key]:null;
+    var promoPrice=activePP?Math.round(pr.normal*(1-activePP.discount/100)*100)/100:null;
+
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;';
+
+    // Header
+    var header=document.createElement('div');
+    header.style.cssText='display:flex;align-items:center;gap:10px;margin-bottom:20px;';
+    header.innerHTML='<span style="font-size:24px;">'+p.emoji+'</span><div><div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+p.key+'</div><div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">'+p.name+'</div></div>';
+
+    // Current price display
+    var priceDisplay=document.createElement('div');
+    priceDisplay.style.cssText='background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.12);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;';
+    var priceLeft='<div><div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:4px;">PRIX ACTUEL</div>';
+    if(activePP) {
+      priceLeft+='<div style="font-family:Orbitron,monospace;font-size:20px;font-weight:900;color:#00ff88;">'+promoPrice.toFixed(2).replace('.',',')+'€</div>';
+      priceLeft+='<div style="font-size:11px;color:rgba(255,255,255,0.3);text-decoration:line-through;">'+pr.normal.toFixed(2).replace('.',',')+'€</div></div>';
+    } else {
+      priceLeft+='<div style="font-family:Orbitron,monospace;font-size:20px;font-weight:900;color:#00c8ff;">'+pr.normal.toFixed(2).replace('.',',')+'€</div></div>';
+    }
+    var promoTag=activePP?'<div style="background:rgba(0,255,136,0.15);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:4px 10px;font-family:Orbitron,monospace;font-size:10px;color:#00ff88;">'+activePP.label+'</div>':'';
+    priceDisplay.innerHTML=priceLeft+promoTag;
+
+    // Inputs
+    var inputsDiv=document.createElement('div');
+    inputsDiv.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;';
+
+    var normalDiv=document.createElement('div');
+    normalDiv.innerHTML='<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;display:block;margin-bottom:6px;">Prix normal (€)</label>';
+    var normalInp=document.createElement('input');
+    normalInp.type='number'; normalInp.step='0.01'; normalInp.min='0'; normalInp.value=pr.normal;
+    normalInp.id='prix-normal-'+p.key;
+    normalInp.style.cssText='width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.15);border-radius:8px;padding:10px 12px;color:#fff;font-family:Orbitron,monospace;font-size:14px;font-weight:700;outline:none;';
+    normalDiv.appendChild(normalInp);
+
+    var barredDiv=document.createElement('div');
+    barredDiv.innerHTML='<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);text-transform:uppercase;display:block;margin-bottom:6px;">Prix barré (€)</label>';
+    var barredInp=document.createElement('input');
+    barredInp.type='number'; barredInp.step='0.01'; barredInp.min='0'; barredInp.value=pr.barred;
+    barredInp.id='prix-barred-'+p.key;
+    barredInp.style.cssText=normalInp.style.cssText;
+    barredDiv.appendChild(barredInp);
+
+    inputsDiv.appendChild(normalDiv);
+    inputsDiv.appendChild(barredDiv);
+
+    // Promo preview
+    var previewDiv=document.createElement('div');
+    previewDiv.id='prix-preview-'+p.key;
+    previewDiv.style.cssText='font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:14px;min-height:18px;';
+    if(activePP) previewDiv.innerHTML='🏷 Avec promo <b style="color:#00ff88;">'+activePP.label+'</b> : prix affiché = <b style="color:#00ff88;">'+promoPrice.toFixed(2).replace('.',',')+'€</b>';
+
+    // Update preview on input change
+    (function(key,nInp,preview){
+      nInp.addEventListener('input',function(){
+        var pp2=getProductPromos();
+        var ap=pp2[key]&&pp2[key].active?pp2[key]:null;
+        if(ap) {
+          var np=Math.round(parseFloat(nInp.value||0)*(1-ap.discount/100)*100)/100;
+          preview.innerHTML='🏷 Avec promo <b style="color:#00ff88;">'+ap.label+'</b> : prix affiché = <b style="color:#00ff88;">'+np.toFixed(2).replace('.',',')+'€</b>';
+        } else {
+          preview.innerHTML='';
+        }
+      });
+    })(p.key, normalInp, previewDiv);
+
+    // Save button
+    var saveBtn=document.createElement('button');
+    saveBtn.className='promo-create-btn';
+    saveBtn.style.cssText='width:100%;padding:12px;';
+    saveBtn.textContent='💾 Sauvegarder les prix';
+    (function(key,nInp,bInp,btn){
+      btn.addEventListener('click',function(){
+        var normal=parseFloat(nInp.value)||0;
+        var barred=parseFloat(bInp.value)||0;
+        if(normal<=0){alert('Prix invalide');return;}
+        var p2=getPrix();
+        p2[key]={normal:normal,barred:barred};
+        localStorage.setItem(PRIX_KEY,JSON.stringify(p2));
+        SB.setSetting('prices',p2).catch(function(e){console.warn('SB prices:',e.message);});
+        loadPrix();
+        btn.textContent='✓ Sauvegardé !';
+        btn.style.background='rgba(0,255,136,0.8)';
+        setTimeout(function(){btn.textContent='💾 Sauvegarder les prix';btn.style.background='';},2000);
+      });
+    })(p.key, normalInp, barredInp, saveBtn);
+
+    card.appendChild(header);
+    card.appendChild(priceDisplay);
+    card.appendChild(inputsDiv);
+    card.appendChild(previewDiv);
+    card.appendChild(saveBtn);
+    grid.appendChild(card);
+  });
+}
+
+// ══ PRODUCT PROMOS ══
+var PP_KEY='peptoids:product_promos';
+document.getElementById('createPPBtn').addEventListener('click',createProductPromo);
+function getProductPromos(){try{var s=localStorage.getItem(PP_KEY);return s?JSON.parse(s):{}}catch(e){return {};}}
+
+// Construire la liste complète de tous les produits (base + custom + VIP)
+function getAllProductsList() {
+  var list = [
+    { key:'Retatrutide', name:'Retatrutide / GLP-1 Triple', emoji:'🔵' },
+    { key:'GHK-Cu',      name:'GHK-Cu / Copper Peptide',    emoji:'🟣' },
+    { key:'HGH',         name:'HGH / Somatropin',            emoji:'🟢' }
+  ];
+  try {
+    var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+    customs.filter(function(p){ return p.actif; }).forEach(function(p) {
+      list.push({ key: p.id, name: p.nom, emoji: '🧪' });
+    });
+  } catch(e) {}
+  try {
+    var vip = JSON.parse(localStorage.getItem('peptoids:vip') || '{}');
+    (vip.products || []).filter(function(p){ return p.actif !== false; }).forEach(function(p) {
+      list.push({ key: 'vip-'+p.id, name: '👑 '+p.nom, emoji: '🟡' });
+    });
+  } catch(e) {}
+  return list;
+}
+
+// Refresh le select ppProduct avec tous les produits
+function refreshPPSelect() {
+  var sel = document.getElementById('ppProduct');
+  var current = sel.value;
+  sel.innerHTML = '';
+  getAllProductsList().forEach(function(p) {
+    var opt = document.createElement('option');
+    opt.value = p.key; opt.textContent = p.name;
+    if (p.key === current) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function createProductPromo(){
+  refreshPPSelect();
+  var product=document.getElementById('ppProduct').value;
+  var discount=parseInt(document.getElementById('ppDiscount').value);
+  var label=document.getElementById('ppLabel').value.trim()||('PROMO -'+discount+'%');
+  if(!discount||discount<1||discount>99){showPPErr('⚠ Réduction invalide (1-99%).');return;}
+  var pp=getProductPromos(); pp[product]={discount:discount,label:label,active:true};
+  localStorage.setItem(PP_KEY,JSON.stringify(pp));
+  SB.setSetting('product_promos',pp).catch(function(e){console.warn('SB pp:',e.message);});
+  document.getElementById('ppDiscount').value=''; document.getElementById('ppLabel').value='';
+  document.getElementById('ppError').style.display='none'; loadProductPromos();
+}
+function showPPErr(msg){var el=document.getElementById('ppError');el.textContent=msg;el.style.display='block';setTimeout(function(){el.style.display='none';},3000);}
+function loadProductPromos(){
+  refreshPPSelect();
+  var allProds = getAllProductsList();
+  var pp=getProductPromos(); var keys=Object.keys(pp);
+  document.getElementById('ppCount').textContent=keys.length+' promo(s)';
+  var grid=document.getElementById('ppGrid'); grid.innerHTML='';
+  if(keys.length===0){grid.innerHTML='<div style="color:rgba(255,255,255,0.2);font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;padding:20px;">Aucune promo par article</div>';return;}
+  keys.forEach(function(key){
+    var p=pp[key];
+    var prod = allProds.find(function(x){ return x.key===key; }) || { key:key, name:key, emoji:'🧪' };
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;position:relative;';
+    var delBtn=document.createElement('button'); delBtn.className='promo-del-btn'; delBtn.textContent='✕';
+    (function(k){delBtn.addEventListener('click',function(){var x=getProductPromos();delete x[k];localStorage.setItem(PP_KEY,JSON.stringify(x));SB.setSetting('product_promos',x).catch(function(){});loadProductPromos();});})(key);
+    var prodEl=document.createElement('div');
+    prodEl.innerHTML='<span style="font-size:20px;">'+prod.emoji+'</span> <span style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+prod.name+'</span>';
+    var labelEl=document.createElement('div');
+    labelEl.style.cssText='background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.25);border-radius:8px;padding:6px 12px;font-family:Orbitron,monospace;font-size:11px;color:#00c8ff;font-weight:700;text-align:center;';
+    labelEl.textContent=p.label;
+    var discEl=document.createElement('div');
+    discEl.style.cssText='font-family:Orbitron,monospace;font-size:22px;font-weight:900;color:#00ff88;text-align:center;';
+    discEl.textContent='-'+p.discount+'%';
+    var statusEl=document.createElement('div');
+    statusEl.className='promo-status '+(p.active?'promo-active':'promo-inactive');
+    statusEl.textContent=p.active?'● ACTIF sur le site':'● INACTIF';
+    var toggleBtn=document.createElement('button'); toggleBtn.className='promo-action-btn';
+    toggleBtn.textContent=p.active?'⏸ Désactiver':'▶ Activer';
+    (function(k,btn){btn.addEventListener('click',function(){var x=getProductPromos();x[k].active=!x[k].active;localStorage.setItem(PP_KEY,JSON.stringify(x));SB.setSetting('product_promos',x).catch(function(){});loadProductPromos();});})(key,toggleBtn);
+    card.appendChild(delBtn); card.appendChild(prodEl); card.appendChild(labelEl);
+    card.appendChild(discEl); card.appendChild(statusEl); card.appendChild(toggleBtn);
+    grid.appendChild(card);
+  });
+}
+
+// ══ PRODUITS ══
+var PRODUITS_KEY = 'peptoids:custom_products';
+document.getElementById('createProduitBtn').addEventListener('click', createProduit);
+var COULEUR_MAP = {
+  blue:   { r0:0,  g0:200,b0:255, r1:0,  g1:80, b1:200, gR:0,  gG:180,gB:255, a0:0.60,a1:0.75, cap:'#0a1535', capM:'#2a5aaa', capL:'#88bbee', crD:'#001a55', crM:'#1a88ee', crL:'#66ccff', lTop:'#0055bb', lTxt:'#003399' },
+  purple: { r0:190,g0:60, b0:255, r1:60, g1:0,  b1:160, gR:168,gG:85, gB:247, a0:0.60,a1:0.75, cap:'#160830', capM:'#7030a0', capL:'#cc88ff', crD:'#330066', crM:'#aa33ee', crL:'#dd99ff', lTop:'#6600bb', lTxt:'#440088' },
+  green:  { r0:0,  g0:200,b0:100, r1:0,  g1:80, b1:40,  gR:0,  gG:200,gB:100, a0:0.60,a1:0.75, cap:'#051508', capM:'#3a8850', capL:'#88ddaa', crD:'#003318', crM:'#00bb55', crL:'#66ff99', lTop:'#005522', lTxt:'#003311' },
+  clear:  { r0:220,g0:240,b0:255, r1:200,g1:220,b1:255, gR:200,gG:220,gB:255, a0:0.10,a1:0.15, cap:'#0a1535', capM:'#2a5aaa', capL:'#88bbee', crD:'#001a55', crM:'#1a88ee', crL:'#66ccff', lTop:'#0055bb', lTxt:'#003399' },
+  red:    { r0:255,g0:60, b0:60,  r1:180,g1:0,  b1:0,   gR:255,gG:60, gB:60,  a0:0.60,a1:0.75, cap:'#350a0a', capM:'#aa3030', capL:'#ee8888', crD:'#550000', crM:'#ee2222', crL:'#ff9999', lTop:'#bb0000', lTxt:'#880000' },
+  gold:   { r0:255,g0:200,b0:0,   r1:200,g1:120,b1:0,   gR:255,gG:180,gB:0,   a0:0.60,a1:0.75, cap:'#2a1a00', capM:'#aa7700', capL:'#ffcc44', crD:'#443300', crM:'#ddaa00', crL:'#ffee66', lTop:'#886600', lTxt:'#553300' }
+};
+
+document.getElementById('createProduitBtn').addEventListener('click', createProduit);
+
+function getProduits() {
+  try { var s=localStorage.getItem(PRODUITS_KEY); return s?JSON.parse(s):[]; } catch(e) { return []; }
+}
+function saveProduits(p) { localStorage.setItem(PRODUITS_KEY, JSON.stringify(p)); SB.setSetting('custom_products',p).catch(function(e){console.warn('SB produits:',e.message);}); }
+
+function createProduit() {
+  var nom      = document.getElementById('pNom').value.trim();
+  var cat      = document.getElementById('pCategorie').value.trim() || 'Peptide · Recherche';
+  var desc     = document.getElementById('pDesc').value.trim() || 'Produit de haute qualité.';
+  var prix     = parseFloat(document.getElementById('pPrix').value);
+  var prixB    = parseFloat(document.getElementById('pPrixBarre').value) || prix * 1.4;
+  var dosage   = document.getElementById('pDosage').value.trim() || '';
+  var stock    = parseInt(document.getElementById('pStock').value) || 10;
+  var couleur  = document.getElementById('pCouleur').value;
+  var badge    = document.getElementById('pBadge').value;
+  var err      = document.getElementById('produitError');
+
+  if (!nom)        { showProduitErr('⚠ Le nom est obligatoire.'); return; }
+  if (!prix||prix<=0) { showProduitErr('⚠ Prix invalide.'); return; }
+
+  var compositionRaw = document.getElementById('pComposition') ? document.getElementById('pComposition').value.trim() : '';
+  var specsRaw = document.getElementById('pSpecs') ? document.getElementById('pSpecs').value.trim() : '';
+  var composition = [];
+  if (compositionRaw) {
+    composition = compositionRaw.split('\n').map(function(l){ return l.trim(); }).filter(Boolean);
+  }
+  var specs = [];
+  if (specsRaw) {
+    try { specs = JSON.parse(specsRaw); } catch(e) { specs = []; }
+  }
+
+  var produits = getProduits();
+  var id = 'prod_' + Date.now();
+  produits.push({ id:id, nom:nom, categorie:cat, description:desc, composition:composition, specs:specs, prix:prix, prixBarre:Math.round(prixB*100)/100, dosage:dosage, stock:stock, couleur:couleur, badge:badge, actif:true, createdAt:new Date().toISOString() });
+  saveProduits(produits);
+  var stockObj = JSON.parse(localStorage.getItem('peptoids:stock') || '{}');
+  stockObj[id] = stock;
+  localStorage.setItem('peptoids:stock', JSON.stringify(stockObj));
+  SB.saveStock(stockObj).catch(function(e){console.warn('SB stock:',e.message);});
+
+  // Reset form
+  ['pNom','pCategorie','pDesc','pComposition','pSpecs','pPrix','pPrixBarre','pDosage','pStock'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('pBadge').value='';
+  document.getElementById('pCouleur').value='blue';
+  err.style.display='none';
+  loadProduits();
+}
+
+function showProduitErr(msg) {
+  var el=document.getElementById('produitError');
+  el.textContent=msg; el.style.display='block';
+  setTimeout(function(){el.style.display='none';},3000);
+}
+
+function loadProduits() {
+  // Restaurer la clé API sauvegardée
+  try {
+    var savedKey = localStorage.getItem('peptoids:ia_key');
+    var keyInput = document.getElementById('iaApiKey');
+    if (savedKey && keyInput) keyInput.value = savedKey;
+  } catch(e) {}
+  var produits = getProduits();
+  document.getElementById('produitsCount').textContent = produits.length + ' produit(s)';
+  var grid = document.getElementById('produitsGrid');
+  grid.innerHTML = '';
+
+  if (produits.length === 0) {
+    grid.innerHTML = '<div style="color:rgba(255,255,255,0.2);font-family:Orbitron,monospace;font-size:11px;letter-spacing:2px;padding:20px;">Aucun produit créé</div>';
+    return;
+  }
+
+  produits.forEach(function(p, idx) {
+    var c = COULEUR_MAP[p.couleur] || COULEUR_MAP.blue;
+    var emoji = {blue:'🔵',purple:'🟣',green:'🟢',clear:'💧',red:'🔴',gold:'🟡'}[p.couleur]||'🧪';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;position:relative;transition:border-color 0.2s;';
+
+    var delBtn = document.createElement('button'); delBtn.className='promo-del-btn'; delBtn.textContent='✕';
+    (function(i){ delBtn.addEventListener('click',function(){ if(!confirm('Supprimer ce produit ?'))return; var arr=getProduits(); arr.splice(i,1); saveProduits(arr); loadProduits(); }); })(idx);
+
+    var header = document.createElement('div');
+    header.style.cssText='display:flex;align-items:center;gap:8px;';
+    header.innerHTML='<span style="font-size:22px;">'+emoji+'</span><div><div style="font-family:Orbitron,monospace;font-size:13px;font-weight:700;color:#fff;">'+p.nom+'</div><div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">'+p.categorie+'</div></div>';
+
+    var descEl = document.createElement('div');
+    descEl.style.cssText='font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;';
+    descEl.textContent = p.description.length > 80 ? p.description.substr(0,80)+'…' : p.description;
+
+    var infoRow = document.createElement('div');
+    infoRow.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;';
+    var tag = function(txt,col){ return '<span style="background:rgba('+col+',0.1);border:1px solid rgba('+col+',0.3);border-radius:6px;padding:3px 8px;font-size:10px;font-family:Orbitron,monospace;color:rgba('+col+',0.9);letter-spacing:0.5px;">'+txt+'</span>'; };
+    infoRow.innerHTML =
+      tag(p.prix.toFixed(2).replace('.',',')+'€', '0,200,255') +
+      (p.dosage ? tag(p.dosage,'168,85,247') : '') +
+      tag('Stock: '+(p.stock||0),'0,255,136') +
+      (p.badge ? tag(p.badge,'255,180,0') : '');
+
+    var statusEl = document.createElement('div');
+    statusEl.className='promo-status '+(p.actif?'promo-active':'promo-inactive');
+    statusEl.textContent = p.actif ? '● VISIBLE SUR LE SITE' : '● MASQUÉ';
+
+    var toggleBtn = document.createElement('button'); toggleBtn.className='promo-action-btn';
+    toggleBtn.textContent = p.actif ? '⏸ Masquer' : '▶ Afficher';
+    (function(i,btn){ btn.addEventListener('click',function(){ var arr=getProduits(); arr[i].actif=!arr[i].actif; saveProduits(arr); loadProduits(); }); })(idx, toggleBtn);
+
+    card.appendChild(delBtn); card.appendChild(header); card.appendChild(descEl);
+    card.appendChild(infoRow); card.appendChild(statusEl); card.appendChild(toggleBtn);
+    grid.appendChild(card);
+  });
+}
+
+// ══ EMAILS ══
+document.getElementById('exportEmailsBtn').addEventListener('click', exportEmailsCSV);
+document.getElementById('clearEmailsBtn').addEventListener('click', function() {
+  if (!confirm('Vider tous les emails collectés ?')) return;
+  localStorage.setItem('peptoids:leads', JSON.stringify([]));
+  loadEmails();
+});
+
+function loadEmails() {
+  var emails = [];
+  try { emails = JSON.parse(localStorage.getItem('peptoids:leads') || '[]'); } catch(e) {}
+  // Also collect emails from orders
+  var orders = [];
+  try { orders = JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e) {}
+  var orderEmails = orders
+    .filter(function(o){ return o.client && o.client.email; })
+    .map(function(o){ return { email: o.client.email, date: o.date, source: 'Commande #'+o.id.substr(-6) }; });
+
+  // Merge & deduplicate
+  var all = emails.map(function(e){ return { email: e.email||e, date: e.date||'—', source: 'Popup offre' }; });
+  orderEmails.forEach(function(oe){
+    if (!all.find(function(e){ return e.email === oe.email; })) all.push(oe);
+  });
+  all.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+
+  document.getElementById('emailsCount').textContent = all.length + ' email(s)';
+  document.getElementById('emailsLoading').style.display = 'none';
+
+  if (all.length === 0) {
+    document.getElementById('emailsEmpty').style.display = 'block';
+    document.getElementById('emailsTable').style.display = 'none';
+    return;
+  }
+  document.getElementById('emailsEmpty').style.display = 'none';
+  document.getElementById('emailsTable').style.display = 'table';
+
+  var tbody = document.getElementById('emailsBody');
+  tbody.innerHTML = '';
+  all.forEach(function(e, i) {
+    var date = e.date && e.date !== '—' ? new Date(e.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '—';
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="font-family:Orbitron,monospace;font-size:10px;color:rgba(0,200,255,0.5);">'+(i+1)+'</td>' +
+      '<td style="font-size:13px;color:#fff;font-weight:600;">'+e.email+'</td>' +
+      '<td style="font-size:11px;color:rgba(255,255,255,0.4);">'+date+'</td>' +
+      '<td><span style="background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);border-radius:6px;padding:3px 8px;font-family:Orbitron,monospace;font-size:9px;color:rgba(0,200,255,0.7);">'+e.source+'</span></td>';
+    tbody.appendChild(tr);
+  });
+  // Store merged list
+  window._allEmails = all;
+}
+
+function exportEmailsCSV() {
+  var all = window._allEmails || [];
+  if (all.length === 0) { alert('Aucun email à exporter.'); return; }
+  var csv = 'Email,Date,Source\n';
+  all.forEach(function(e){
+    csv += '"'+e.email+'","'+(e.date||'')+'","'+(e.source||'')+'"'+'\n';
+  });
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'peptoids_emails.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ══ VISITEURS EN LIGNE ══
+function startVisitorTracking() {
+  updateVisitorCount();
+  setInterval(updateVisitorCount, 15000);
+}
+
+function updateVisitorCount() {
+  try {
+    var now = Date.now();
+    var sessions = JSON.parse(localStorage.getItem('peptoids:sessions') || '[]');
+    // Keep only sessions active in last 5 min
+    var active = sessions.filter(function(s){ return now - s.last < 5 * 60 * 1000; });
+    document.getElementById('visitorsCount').textContent = active.length;
+  } catch(e) {
+    document.getElementById('visitorsCount').textContent = '0';
+  }
+}
+
+// Auto-refresh every 30s
+setInterval(function() {
+  if (document.getElementById('adminScreen').style.display !== 'none') loadOrders();
+}, 30000);
+
+// ══ COMPTES ══
+var LEVELS_ADMIN = [
+  { name:'Bronze',  min:0,     color:'#cd7f32' },
+  { name:'Argent',  min:1000,  color:'#c0c0c0' },
+  { name:'Or',      min:4000,  color:'#ffd700' },
+  { name:'Platine', min:6000,  color:'#a855f7' },
+  { name:'Diamant', min:10000, color:'#67e8f9' },
+  { name:'Dieu',    min:50000, color:'#ffffff' }
+];
+var currentCompteId = null;
+
+function getLevel(pts) {
+  var lvl = LEVELS_ADMIN[0];
+  for (var i=LEVELS_ADMIN.length-1;i>=0;i--) { if (pts >= LEVELS_ADMIN[i].min) { lvl=LEVELS_ADMIN[i]; break; } }
+  return lvl;
+}
+
+function loadComptes() {
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  var orders = [];
+  try { orders = JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e) {}
+
+  document.getElementById('comptesCount').textContent = users.length + ' compte(s)';
+  document.getElementById('comptesLoading').style.display = 'none';
+
+  if (users.length === 0) {
+    document.getElementById('comptesEmpty').style.display = 'block';
+    document.getElementById('comptesTable').style.display = 'none';
+    return;
+  }
+  document.getElementById('comptesEmpty').style.display = 'none';
+  document.getElementById('comptesTable').style.display = 'table';
+
+  var tbody = document.getElementById('comptesBody');
+  tbody.innerHTML = '';
+
+  users.forEach(function(u) {
+    var myOrders = orders.filter(function(o){ return o.client && o.client.email && o.client.email.toLowerCase() === u.email.toLowerCase(); });
+    var total = myOrders.reduce(function(s,o){ return s+parseFloat(o.total||0); }, 0);
+    var pts = u.cumulPoints || u.totalPoints || u.points || 0;
+    var lvl = getLevel(pts);
+    var date = new Date(u.createdAt).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'});
+
+    var tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.addEventListener('mouseenter', function(){ tr.style.background='rgba(0,200,255,0.04)'; });
+    tr.addEventListener('mouseleave', function(){ tr.style.background=''; });
+
+    tr.innerHTML =
+      '<td><div style="font-weight:600;color:#fff;">' + u.prenom + ' ' + u.nom + '</div>' +
+        '<div style="font-size:11px;color:rgba(0,200,255,0.6);">' + u.email + '</div></td>' +
+      '<td style="font-size:11px;color:rgba(255,255,255,0.5);">' + date + '</td>' +
+      '<td><span style="font-family:Orbitron,monospace;font-size:10px;font-weight:700;color:' + lvl.color + ';">' + lvl.name + '</span></td>' +
+      '<td><span style="font-family:Orbitron,monospace;font-size:12px;color:var(--purple);">' + pts + ' pts</span></td>' +
+      '<td style="font-family:Orbitron,monospace;font-size:12px;">' + myOrders.length + '</td>' +
+      '<td style="font-family:Orbitron,monospace;font-size:12px;color:#fff;">' + total.toFixed(2).replace('.',',') + '€</td>' +
+      '<td><button class="promo-action-btn" style="padding:5px 12px;">👁 Voir</button></td>';
+
+    tr.querySelector('button').addEventListener('click', function(e) {
+      e.stopPropagation();
+      openCompteModal(u.id);
+    });
+    tr.addEventListener('click', function() { openCompteModal(u.id); });
+    tbody.appendChild(tr);
+  });
+}
+
+function openCompteModal(userId) {
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  var orders = [];
+  try { orders = JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e) {}
+  var u = users.find(function(x){ return x.id === userId; });
+  if (!u) return;
+
+  currentCompteId = userId;
+
+  var myOrders = orders.filter(function(o){ return o.client && o.client.email && o.client.email.toLowerCase() === u.email.toLowerCase(); });
+  var total = myOrders.reduce(function(s,o){ return s+parseFloat(o.total||0); }, 0);
+  var filleuls = users.filter(function(x){ return x.referredBy === userId; }).length;
+  var pts = u.cumulPoints || u.totalPoints || u.points || 0;
+  var lvl = getLevel(pts);
+
+  var referrer = u.referredBy ? users.find(function(x){ return x.id === u.referredBy; }) : null;
+
+  document.getElementById('mPrenom').textContent   = u.prenom;
+  document.getElementById('mNom').textContent      = u.nom;
+  document.getElementById('mEmail').textContent    = u.email;
+  document.getElementById('mDate').textContent     = new Date(u.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  document.getElementById('mRefCode').textContent  = u.refCode || '—';
+  document.getElementById('mReferredBy').textContent = referrer ? (referrer.prenom + ' ' + referrer.nom) : 'Aucun';
+  document.getElementById('mLevel').innerHTML      = '<span style="color:' + lvl.color + ';font-weight:700;">' + lvl.name + '</span>';
+  document.getElementById('mOrders').textContent   = myOrders.length;
+  document.getElementById('mTotal').textContent    = total.toFixed(2).replace('.',',') + ' €';
+  document.getElementById('mFilleuls').textContent = filleuls;
+  document.getElementById('mPointsInput').value    = pts;
+
+  // Last orders
+  var ol = document.getElementById('mOrdersList');
+  if (myOrders.length === 0) {
+    ol.innerHTML = '<div style="color:rgba(255,255,255,0.2);font-size:12px;padding:10px 0;">Aucune commande</div>';
+  } else {
+    ol.innerHTML = '';
+    myOrders.slice(0,5).forEach(function(o) {
+      var d = new Date(o.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+      var statusColor = o.status==='Nouvelle'?'rgba(0,200,255,0.8)':o.status==='Annulée'?'#ff4466':'#00ff88';
+      var div = document.createElement('div');
+      div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,200,255,0.06);';
+      div.innerHTML =
+        '<div><div style="font-family:Orbitron,monospace;font-size:9px;color:rgba(0,200,255,0.6);">' + o.id + '</div>' +
+        '<div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">' + d + '</div></div>' +
+        '<div style="display:flex;align-items:center;gap:10px;">' +
+          '<span style="font-family:Orbitron,monospace;font-size:12px;color:#fff;">' + parseFloat(o.total).toFixed(2).replace('.',',') + '€</span>' +
+          '<span style="font-size:9px;color:' + statusColor + ';font-family:Orbitron,monospace;">' + o.status + '</span>' +
+        '</div>';
+      ol.appendChild(div);
+    });
+  }
+
+  renderModalCodes(u);
+  document.getElementById('compteModal').classList.add('open');
+}
+
+function closeCompteModal() {
+  document.getElementById('compteModal').classList.remove('open');
+  currentCompteId = null;
+}
+
+function saveUserPoints() {
+  if (!currentCompteId) return;
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  var idx = users.findIndex(function(u){ return u.id === currentCompteId; });
+  if (idx < 0) return;
+  var newPoints = parseInt(document.getElementById('mPointsInput').value) || 0;
+  users[idx].points = newPoints;
+  // cumulPoints = toujours le max historique → grade préservé
+  users[idx].cumulPoints = Math.max(users[idx].cumulPoints || 0, users[idx].totalPoints || 0, newPoints);
+  users[idx].adminCumulPoints = users[idx].cumulPoints; // marquer que c'est admin qui a crédité
+  users[idx].totalPoints = users[idx].cumulPoints;
+  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  SB.saveUser(users[idx]).catch(function(e){console.warn('SB:',e.message);});
+  // Update level display using cumulPoints
+  var lvl = getLevel(users[idx].cumulPoints);
+  document.getElementById('mLevel').innerHTML = '<span style="color:' + lvl.color + ';font-weight:700;">' + lvl.name + '</span>';
+  document.getElementById('mPointsInput').value = newPoints;
+  var btn = document.querySelector('#compteModal .promo-create-btn');
+  btn.textContent = '✅ Sauvé !'; btn.style.background='rgba(0,255,136,0.8)';
+  setTimeout(function(){ btn.textContent='💾 Sauver'; btn.style.background=''; loadComptes(); }, 1500);
+}
+
+function renderModalCodes(user) {
+  var codes = user.promoCodes || [];
+  var section = document.getElementById('mCodesSection');
+  var list = document.getElementById('mCodesList');
+  section.style.display = 'block';
+  list.innerHTML = '';
+
+  if (codes.length === 0) {
+    list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">Aucun code généré</div>';
+  } else {
+    codes.forEach(function(c, ci) {
+      var div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,200,255,0.06);';
+      var statusColor = c.used ? 'rgba(255,60,60,0.7)' : 'rgba(0,255,136,0.8)';
+      var statusText = c.used ? '✗ Utilisé' : '✓ Actif';
+      div.innerHTML =
+        '<div><div style="font-family:Orbitron,monospace;font-size:11px;color:#00c8ff;">' + c.code + '</div>' +
+        '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">-' + c.value + '€ · ' + statusText + '</div></div>' +
+        '<button onclick="deleteUserCode(\'' + c.code + '\')" style="background:rgba(255,60,60,0.07);border:1px solid rgba(255,60,60,0.2);border-radius:6px;padding:4px 8px;color:rgba(255,100,100,0.6);cursor:pointer;font-size:11px;transition:all 0.2s;">✕</button>';
+      list.appendChild(div);
+    });
+  }
+
+  // Add code form
+  var addRow = document.createElement('div');
+  addRow.style.cssText = 'display:flex;gap:8px;margin-top:12px;align-items:center;';
+  addRow.innerHTML =
+    '<input id="newCodeVal" type="number" min="1" max="100" placeholder="€" style="width:64px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.2);border-radius:8px;padding:8px;color:#fff;font-family:Orbitron,monospace;font-size:13px;font-weight:700;text-align:center;outline:none;">' +
+    '<button onclick="addUserCode()" class="promo-action-btn" style="flex:1;padding:8px 12px;">+ Créer un code</button>';
+  list.appendChild(addRow);
+}
+
+function addUserCode() {
+  if (!currentCompteId) return;
+  var val = parseInt(document.getElementById('newCodeVal').value) || 0;
+  if (val <= 0) { alert('Valeur invalide'); return; }
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  var idx = users.findIndex(function(u){ return u.id === currentCompteId; });
+  if (idx < 0) return;
+  var code = 'FIDE-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-' + Date.now().toString(36).substr(-4).toUpperCase();
+  var expiry = new Date(); expiry.setDate(expiry.getDate() + 30);
+  if (!users[idx].promoCodes) users[idx].promoCodes = [];
+  users[idx].promoCodes.push({ code: code, value: val, used: false, createdAt: new Date().toISOString(), expiresAt: expiry.toISOString() });
+  // Register in fide_promos for shop
+  try {
+    var fc = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
+    fc.push({ code: code, value: val, userId: currentCompteId, used: false, expiresAt: expiry.toISOString() });
+    localStorage.setItem('peptoids:fide_promos', JSON.stringify(fc));
+  } catch(e) {}
+  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  renderModalCodes(users[idx]);
+}
+
+function deleteUserCode(code) {
+  if (!currentCompteId) return;
+  if (!confirm('Supprimer le code ' + code + ' ?')) return;
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  var idx = users.findIndex(function(u){ return u.id === currentCompteId; });
+  if (idx < 0) return;
+  users[idx].promoCodes = (users[idx].promoCodes || []).filter(function(c){ return c.code !== code; });
+  // Remove from fide_promos too
+  try {
+    var fc = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
+    fc = fc.filter(function(c){ return c.code !== code; });
+    localStorage.setItem('peptoids:fide_promos', JSON.stringify(fc));
+  } catch(e) {}
+  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  renderModalCodes(users[idx]);
+}
+
+function deleteAccount() {
+  if (!currentCompteId) return;
+  if (!confirm('Supprimer définitivement ce compte ?')) return;
+  var users = [];
+  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
+  users = users.filter(function(u){ return u.id !== currentCompteId; });
+  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  closeCompteModal();
+  loadComptes();
+}
+
+// ══ VIREMENT ══
+function loadVirement() {
+  var virement = { titulaire:'', banque:'', iban:'', bic:'' };
+  try { var s = localStorage.getItem('peptoids:virement'); if(s) virement = JSON.parse(s); } catch(e) {}
+  document.getElementById('vTitulaire').value = virement.titulaire || '';
+  document.getElementById('vBanque').value    = virement.banque    || '';
+  document.getElementById('vIban').value      = virement.iban      || '';
+  document.getElementById('vBic').value       = virement.bic       || '';
+  updateVirementPreview(virement);
+}
+
+function saveVirement() {
+  var v = {
+    titulaire: document.getElementById('vTitulaire').value.trim(),
+    banque:    document.getElementById('vBanque').value.trim(),
+    iban:      document.getElementById('vIban').value.trim().toUpperCase(),
+    bic:       document.getElementById('vBic').value.trim().toUpperCase()
+  };
+  var msg = document.getElementById('virementAdminMsg');
+  if (!v.titulaire || !v.iban) {
+    msg.textContent = '⚠ Titulaire et IBAN requis.'; msg.style.color='#ff6060'; msg.style.display='block'; return;
+  }
+  localStorage.setItem('peptoids:virement', JSON.stringify(v));
+  SB.setSetting('virement', v).catch(function(e){console.warn('SB:',e.message);});
+  msg.textContent = '✅ Coordonnées sauvegardées !'; msg.style.color='#00ff88'; msg.style.display='block';
+  setTimeout(function(){ msg.style.display='none'; }, 3000);
+  updateVirementPreview(v);
+}
+
+function updateVirementPreview(v) {
+  var el = document.getElementById('vPreviewContent');
+  if (!el) return;
+  if (!v.iban) { el.innerHTML = '<span style="color:rgba(255,255,255,0.3);">Renseignez vos coordonnées →</span>'; return; }
+  el.innerHTML =
+    '<div style="margin-bottom:6px;"><span style="color:rgba(255,255,255,0.4);font-size:10px;">Titulaire</span><br><span style="color:#fff;">' + v.titulaire + '</span></div>' +
+    (v.banque ? '<div style="margin-bottom:6px;"><span style="color:rgba(255,255,255,0.4);font-size:10px;">Banque</span><br><span style="color:#fff;">' + v.banque + '</span></div>' : '') +
+    '<div style="margin-bottom:6px;"><span style="color:rgba(255,255,255,0.4);font-size:10px;">IBAN</span><br><span style="font-family:Orbitron,monospace;color:#00c8ff;font-size:11px;font-weight:700;">' + v.iban + '</span></div>' +
+    (v.bic ? '<div><span style="color:rgba(255,255,255,0.4);font-size:10px;">BIC</span><br><span style="font-family:Orbitron,monospace;color:#00c8ff;font-size:11px;">' + v.bic + '</span></div>' : '');
+}
+
+// ══ VIP ══
+var VIP_KEY_A = 'peptoids:vip';
+
+function getVipData() {
+  try { return JSON.parse(localStorage.getItem(VIP_KEY_A) || '{"codes":[],"products":[]}'); }
+  catch(e) { return { codes:[], products:[] }; }
+}
+function saveVipData(d) {
+  localStorage.setItem(VIP_KEY_A, JSON.stringify(d));
+  SB.setSetting('vip', d).catch(function(e){ console.warn('SB VIP:', e.message); });
+}
+
+async function hashVipCode(code) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code.trim()));
+  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+
+async function addVipCode() {
+  var label = document.getElementById('vipLabel').value.trim();
+  var code  = document.getElementById('vipCode').value.trim();
+  if (!label || !code) { alert('Nom et code requis'); return; }
+  var hash = await hashVipCode(code);
+  var d = getVipData();
+  if (d.codes.find(function(c){ return c.hash === hash; })) { alert('Ce code existe déjà'); return; }
+  d.codes.push({ id: 'vc_'+Date.now(), label: label, hash: hash, active: true, createdAt: new Date().toISOString() });
+  saveVipData(d);
+  document.getElementById('vipLabel').value = '';
+  document.getElementById('vipCode').value = '';
+  loadVip();
+}
+
+function addVipProduct() {
+  var nom    = document.getElementById('vpNom').value.trim();
+  var cat    = document.getElementById('vpCat').value.trim();
+  var desc   = document.getElementById('vpDesc').value.trim();
+  var prix   = parseFloat(document.getElementById('vpPrix').value) || 0;
+  var barre  = parseFloat(document.getElementById('vpBarre').value) || 0;
+  var couleur= document.getElementById('vpCouleur').value;
+  var stock  = parseInt(document.getElementById('vpStock').value) || 10;
+  if (!nom || prix <= 0) { alert('Nom et prix requis'); return; }
+  var d = getVipData();
+  var newP = { id:'vp_'+Date.now(), nom:nom, categorie:cat, description:desc, prix:prix, prixBarre:barre||null, couleur:couleur, stock:stock, actif:true, createdAt:new Date().toISOString() };
+  d.products.push(newP);
+  saveVipData(d);
+  // Init stock in Supabase for this product
+  SB.setStock('vip-' + newP.id, stock).catch(function(e){ console.warn('SB VIP stock:', e.message); });
+  var s = getStock(); s['vip-'+newP.id] = stock;
+  localStorage.setItem('peptoids:stock', JSON.stringify(s));
+  ['vpNom','vpCat','vpDesc','vpPrix','vpBarre','vpStock'].forEach(function(id){ document.getElementById(id).value=''; });
+  loadVip();
+}
+
+function loadVip() {
+  var d = getVipData();
+
+  // Codes list
+  var cList = document.getElementById('vipCodesList');
+  cList.innerHTML = '';
+  if (d.codes.length === 0) {
+    cList.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:12px 0;">Aucun code VIP créé</div>';
+  } else {
+    d.codes.forEach(function(c) {
+      var div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,170,0,0.08);';
+      div.innerHTML =
+        '<div>' +
+          '<div style="font-size:12px;color:#fff;">' + c.label + '</div>' +
+          '<div style="font-size:10px;color:rgba(255,255,255,0.3);">' + new Date(c.createdAt).toLocaleDateString('fr-FR') + '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:6px;align-items:center;">' +
+          '<span style="font-size:10px;color:' + (c.active?'#00ff88':'#ff4466') + ';">' + (c.active?'✓ Actif':'✗ Inactif') + '</span>' +
+          '<button onclick="toggleVipCode(\'' + c.id + '\')" class="promo-action-btn" style="padding:4px 8px;font-size:9px;">' + (c.active?'Désactiver':'Activer') + '</button>' +
+          '<button onclick="deleteVipCode(\'' + c.id + '\')" class="clear-btn" style="padding:4px 8px;font-size:9px;">✕</button>' +
+        '</div>';
+      cList.appendChild(div);
+    });
+  }
+
+  // Products list
+  var pList = document.getElementById('vipProductsList');
+  pList.innerHTML = '';
+  if (d.products.length === 0) {
+    pList.innerHTML = '<div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:12px 0;">Aucun produit VIP ajouté</div>';
+  } else {
+    var COULEUR_EMOJI = { blue:'🔵', purple:'🟣', green:'🟢', clear:'💧', red:'🔴', gold:'🟡' };
+    d.products.forEach(function(p) {
+      var s = getStock(); var qty = s['vip-'+p.id] !== undefined ? s['vip-'+p.id] : (p.stock || 10);
+      var div = document.createElement('div');
+      div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,170,0,0.08);flex-wrap:wrap;gap:8px;';
+      div.innerHTML =
+        '<div style="display:flex;align-items:center;gap:10px;">' +
+          '<span style="font-size:24px;">' + (COULEUR_EMOJI[p.couleur]||'🧪') + '</span>' +
+          '<div>' +
+            '<div style="font-size:12px;color:#fff;font-weight:600;">' + p.nom + '</div>' +
+            '<div style="font-size:10px;color:rgba(255,255,255,0.3);">' + (p.categorie||'') + ' · ' + parseFloat(p.prix).toFixed(2).replace('.',',') + '€</div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">' +
+          '<span style="font-size:10px;color:rgba(255,255,255,0.4);">Stock:</span>' +
+          '<input type="number" min="0" value="'+qty+'" id="vs-'+p.id+'" style="width:54px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,170,0,0.2);border-radius:6px;padding:4px 8px;color:#fff;font-family:Orbitron,monospace;font-size:12px;text-align:center;outline:none;">' +
+          '<button onclick="saveVipStock(\''+p.id+'\')" class="promo-action-btn" style="padding:4px 8px;font-size:9px;">💾</button>' +
+          '<button onclick="toggleVipProduct(\''+p.id+'\')" class="promo-action-btn" style="padding:4px 8px;font-size:9px;">' + (p.actif!==false?'✓ Visible':'✗ Caché') + '</button>' +
+          '<button onclick="deleteVipProduct(\''+p.id+'\')" class="clear-btn" style="padding:4px 8px;font-size:9px;">✕</button>' +
+        '</div>';
+      pList.appendChild(div);
+    });
+  }
+}
+
+function saveVipStock(id) {
+  var inp = document.getElementById('vs-'+id);
+  if (!inp) return;
+  var qty = parseInt(inp.value) || 0;
+  var s = getStock(); s['vip-'+id] = qty;
+  localStorage.setItem(STOCK_KEY, JSON.stringify(s));
+  SB.setStock('vip-'+id, qty).catch(function(e){ console.warn('SB VIP stock:', e.message); });
+  inp.style.borderColor = 'rgba(0,255,136,0.5)';
+  setTimeout(function(){ inp.style.borderColor='rgba(255,170,0,0.2)'; }, 1500);
+}
+
+function toggleVipCode(id) {
+  var d = getVipData();
+  var c = d.codes.find(function(x){ return x.id===id; });
+  if (c) c.active = !c.active;
+  saveVipData(d); loadVip();
+}
+function deleteVipCode(id) {
+  if (!confirm('Supprimer ce code VIP ?')) return;
+  var d = getVipData();
+  d.codes = d.codes.filter(function(c){ return c.id!==id; });
+  saveVipData(d); loadVip();
+}
+function toggleVipProduct(id) {
+  var d = getVipData();
+  var p = d.products.find(function(x){ return x.id===id; });
+  if (p) p.actif = p.actif===false ? true : false;
+  saveVipData(d); loadVip();
+}
+function deleteVipProduct(id) {
+  if (!confirm('Supprimer ce produit VIP ?')) return;
+  var d = getVipData();
+  d.products = d.products.filter(function(p){ return p.id!==id; });
+  saveVipData(d); loadVip();
+}
+
+// ══ MESSAGES CONTACT ══
+var MSGS_KEY = 'peptoids:leads';
+
+function loadMessages() {
+  var msgs = [];
+  try { msgs = JSON.parse(localStorage.getItem(MSGS_KEY) || '[]'); } catch(e) {}
+  // Filter only messages from contact form (have 'message' field)
+  var contact = msgs.filter(function(m){ return m.message; });
+  // Sort newest first
+  contact.sort(function(a,b){ return new Date(b.date||0) - new Date(a.date||0); });
+
+  document.getElementById('msgCount').textContent = contact.length + ' message(s)';
+  var list = document.getElementById('msgList');
+  var empty = document.getElementById('msgEmpty');
+  list.innerHTML = '';
+
+  if (contact.length === 0) { empty.style.display='block'; list.style.display='none'; return; }
+  empty.style.display = 'none'; list.style.display = 'flex';
+
+  var SUJET_LABELS = {
+    commande:'Question commande', produit:'Info produit', livraison:'Problème livraison',
+    compte:'Compte / fidélité', retour:'Réclamation', autre:'Autre'
+  };
+
+  contact.forEach(function(m, i) {
+    var d = m.date ? new Date(m.date).toLocaleString('fr-FR') : '—';
+    var sujetLabel = SUJET_LABELS[m.sujet] || m.sujet || '—';
+    var isNew = !m.read;
+
+    var card = document.createElement('div');
+    card.style.cssText = 'background:var(--card);border:1px solid '+(isNew?'rgba(0,200,255,0.3)':'var(--border)')+';border-radius:14px;padding:20px 24px;position:relative;';
+
+    if (isNew) {
+      card.innerHTML += '<div style="position:absolute;top:14px;right:14px;background:rgba(0,200,255,0.15);border:1px solid rgba(0,200,255,0.3);border-radius:20px;padding:2px 10px;font-family:Orbitron,monospace;font-size:8px;letter-spacing:1px;color:#00c8ff;">NOUVEAU</div>';
+    }
+
+    card.innerHTML +=
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;">' +
+        '<div style="font-size:13px;font-weight:600;color:#fff;">'+(m.prenom||'')+' '+(m.nom||'')+'</div>' +
+        '<div style="font-size:11px;color:rgba(0,200,255,0.7);background:rgba(0,200,255,0.07);border:1px solid rgba(0,200,255,0.15);border-radius:6px;padding:2px 8px;">'+(m.email||'')+'</div>' +
+        '<div style="font-size:11px;color:rgba(255,170,0,0.7);background:rgba(255,170,0,0.07);border:1px solid rgba(255,170,0,0.15);border-radius:6px;padding:2px 8px;">'+sujetLabel+'</div>' +
+      '</div>' +
+      (m.commande ? '<div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px;">Commande : <span style="color:rgba(255,255,255,0.6);">'+m.commande+'</span></div>' : '') +
+      '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;background:rgba(0,0,0,0.2);border-radius:8px;padding:12px 14px;margin-bottom:12px;">'+
+        (m.message||'').replace(/\n/g,'<br>')+
+      '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">' +
+        '<span style="font-size:11px;color:rgba(255,255,255,0.25);">'+d+'</span>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<a href="mailto:'+(m.email||'')+'?subject=Re: '+sujetLabel+'" style="background:linear-gradient(90deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));border:1px solid rgba(0,200,255,0.25);border-radius:8px;padding:6px 14px;font-family:Orbitron,monospace;font-size:9px;color:#fff;text-decoration:none;letter-spacing:1px;cursor:pointer;">✉ RÉPONDRE</a>' +
+          '<button onclick="deleteMessage('+i+')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:8px;padding:6px 10px;color:rgba(255,80,80,0.7);font-size:11px;cursor:pointer;">✕</button>' +
+        '</div>' +
+      '</div>';
+
+    // Mark as read
+    if (isNew) {
+      try {
+        var all = JSON.parse(localStorage.getItem(MSGS_KEY)||'[]');
+        var idx = all.findIndex(function(x){ return x.email===m.email && x.date===m.date; });
+        if (idx >= 0) { all[idx].read = true; localStorage.setItem(MSGS_KEY, JSON.stringify(all)); }
+      } catch(e) {}
+    }
+
+    list.appendChild(card);
+  });
+}
+
+function deleteMessage(idx) {
+  if (!confirm('Supprimer ce message ?')) return;
+  try {
+    var msgs = JSON.parse(localStorage.getItem(MSGS_KEY)||'[]');
+    var contact = msgs.filter(function(m){ return m.message; });
+    contact.sort(function(a,b){ return new Date(b.date||0) - new Date(a.date||0); });
+    var toDelete = contact[idx];
+    msgs = msgs.filter(function(m){ return !(m.email===toDelete.email && m.date===toDelete.date); });
+    localStorage.setItem(MSGS_KEY, JSON.stringify(msgs));
+  } catch(e) {}
+  loadMessages();
+}
+
+function clearMessages() {
+  if (!confirm('Supprimer tous les messages de contact ?')) return;
+  try {
+    var msgs = JSON.parse(localStorage.getItem(MSGS_KEY)||'[]');
+    msgs = msgs.filter(function(m){ return !m.message; }); // keep email leads
+    localStorage.setItem(MSGS_KEY, JSON.stringify(msgs));
+  } catch(e) {}
+  loadMessages();
+}
+
+function exportMessages() {
+  try {
+    var msgs = JSON.parse(localStorage.getItem(MSGS_KEY)||'[]');
+    var contact = msgs.filter(function(m){ return m.message; });
+    if (contact.length === 0) { alert('Aucun message à exporter.'); return; }
+    var csv = 'Date,Prénom,Nom,Email,Sujet,Commande,Message\n';
+    contact.forEach(function(m){
+      var row = [m.date||'', m.prenom||'', m.nom||'', m.email||'', m.sujet||'', m.commande||'', (m.message||'').replace(/"/g,"'").replace(/\n/g,' ')];
+      csv += row.map(function(v){ return '"'+v+'"'; }).join(',') + '\n';
+    });
+    var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href=url; a.download='messages-contact.csv'; a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) { alert('Erreur export: '+e.message); }
+}
+
+// Badge notification nouveaux messages
+function checkNewMessages() {
+  try {
+    var msgs = JSON.parse(localStorage.getItem(MSGS_KEY)||'[]');
+    var unread = msgs.filter(function(m){ return m.message && !m.read; }).length;
+    var btn = document.getElementById('tabBtnMessages');
+    if (btn && unread > 0) {
+      btn.textContent = '📩 Messages (' + unread + ')';
+      btn.style.color = '#00c8ff';
+    } else if (btn) {
+      btn.textContent = '📩 Messages';
+      btn.style.color = '';
+    }
+  } catch(e) {}
+}
+setInterval(checkNewMessages, 3000);
+checkNewMessages();
+
+// Close modal on overlay click
+document.getElementById('compteModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCompteModal();
+});
+
+// ══ AVIS CLIENTS ══
+var AVIS_KEY_A = 'peptoids:avis';
+var avisFilter = 'all';
+
+function getAvis(){ try{return JSON.parse(localStorage.getItem(AVIS_KEY_A)||'[]');}catch(e){return[];} }
+function saveAvisAdmin(arr){
+  localStorage.setItem(AVIS_KEY_A, JSON.stringify(arr));
+  SB.setSetting('avis', arr).catch(function(){});
+}
+
+function filterAvis(f){
+  avisFilter=f;
+  ['All','Pending','Approved','Rejected'].forEach(function(n){
+    var btn=document.getElementById('avisFilter'+n);
+    if(btn) btn.style.background=(f===n.toLowerCase())?'rgba(0,200,255,0.15)':'';
+  });
+  loadAvisAdmin(f);
+}
+
+function loadAvisAdmin(f){
+  avisFilter=f||avisFilter;
+  var all=getAvis();
+  all.sort(function(a,b){return new Date(b.date||0)-new Date(a.date||0);});
+  var filtered=all.filter(function(a){
+    if(avisFilter==='pending')  return !a.approuve&&!a.rejete;
+    if(avisFilter==='approved') return a.approuve===true;
+    if(avisFilter==='rejected') return a.rejete===true;
+    return true;
+  });
+  var pending=all.filter(function(a){return !a.approuve&&!a.rejete;}).length;
+  document.getElementById('avisCount').textContent=all.length+' avis · '+pending+' en attente';
+  var btn=document.getElementById('tabBtnAvis');
+  if(btn){btn.textContent=pending>0?'⭐ Avis ('+pending+')':'⭐ Avis';btn.style.color=pending>0?'#ffd700':'';}
+  var list=document.getElementById('avisList'),empty=document.getElementById('avisEmpty');
+  list.innerHTML='';
+  if(filtered.length===0){empty.style.display='block';list.style.display='none';return;}
+  empty.style.display='none';list.style.display='flex';
+  var SC=['','#ff4466','#ff8800','#ffcc00','#88cc00','#00c8ff'];
+  filtered.forEach(function(a){
+    var n=Math.min(5,Math.max(1,a.note||5));
+    var stars='★'.repeat(n)+'☆'.repeat(5-n);
+    var status=a.approuve?'Approuvé':a.rejete?'Rejeté':'En attente';
+    var sc2=a.approuve?'#00ff88':a.rejete?'#ff4466':'#ffaa00';
+    var borderC=(!a.approuve&&!a.rejete)?'rgba(255,170,0,0.25)':a.approuve?'rgba(0,255,136,0.15)':'rgba(255,60,60,0.15)';
+    var d=a.date?new Date(a.date).toLocaleString('fr-FR'):'—';
+    var card=document.createElement('div');
+    card.style.cssText='background:var(--card);border:1px solid '+borderC+';border-radius:14px;padding:20px 24px;';
+    card.innerHTML=
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">'+
+        '<div style="display:flex;align-items:center;gap:10px;">'+
+          '<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));display:flex;align-items:center;justify-content:center;font-family:Orbitron,monospace;font-size:11px;font-weight:700;color:#fff;">'+(a.prenom||'?').charAt(0).toUpperCase()+(a.nom||'?').charAt(0).toUpperCase()+'</div>'+
+          '<div><div style="font-size:13px;font-weight:600;color:#fff;">'+(a.prenom||'')+' '+(a.nom||'')+'</div>'+
+          '<div style="font-size:10px;color:rgba(0,200,255,0.6);">'+(a.produit||'Tous produits')+'</div></div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;">'+
+          '<span style="color:'+SC[n]+';font-size:14px;letter-spacing:2px;">'+stars+'</span>'+
+          '<span style="font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,0.3);color:'+sc2+';">'+status+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;background:rgba(0,0,0,0.2);border-radius:8px;padding:12px 14px;margin-bottom:10px;font-style:italic;">"'+(a.texte||'')+'"</div>'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">'+
+        '<span style="font-size:11px;color:rgba(255,255,255,0.2);">'+d+(a.cmds?' · '+a.cmds+' commandes':'')+'</span>'+
+        '<div style="display:flex;gap:6px;">'+
+          (!a.approuve?'<button onclick="avisApprove(\''+a.id+'\')" style="background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);border-radius:8px;padding:6px 14px;color:#00ff88;font-family:Orbitron,monospace;font-size:9px;cursor:pointer;letter-spacing:1px;">✓ APPROUVER</button>':'')+
+          (!a.rejete?'<button onclick="avisReject(\''+a.id+'\')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:8px;padding:6px 14px;color:rgba(255,80,80,0.7);font-family:Orbitron,monospace;font-size:9px;cursor:pointer;letter-spacing:1px;">✕ REJETER</button>':'')+
+          (a.approuve?'<button onclick="avisReject(\''+a.id+'\')" style="background:rgba(255,60,60,0.05);border:1px solid rgba(255,60,60,0.1);border-radius:8px;padding:5px 10px;color:rgba(255,80,80,0.5);font-size:11px;cursor:pointer;">Retirer</button>':'')+
+          '<button onclick="avisDelete(\''+a.id+'\')" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:5px 10px;color:rgba(255,255,255,0.25);font-size:11px;cursor:pointer;">🗑</button>'+
+        '</div>'+
+      '</div>';
+    list.appendChild(card);
+  });
+}
+
+function avisApprove(id){var all=getAvis();var a=all.find(function(x){return x.id===id;});if(a){a.approuve=true;a.rejete=false;}saveAvisAdmin(all);loadAvisAdmin();}
+function avisReject(id){var all=getAvis();var a=all.find(function(x){return x.id===id;});if(a){a.rejete=true;a.approuve=false;}saveAvisAdmin(all);loadAvisAdmin();}
+function avisDelete(id){if(!confirm('Supprimer cet avis ?'))return;saveAvisAdmin(getAvis().filter(function(x){return x.id!==id;}));loadAvisAdmin();}
+function clearAvis(){if(!confirm('Supprimer tous les avis ?'))return;saveAvisAdmin([]);loadAvisAdmin();}
+
+function checkNewAvis(){try{var p=getAvis().filter(function(a){return !a.approuve&&!a.rejete;}).length;var btn=document.getElementById('tabBtnAvis');if(btn){btn.textContent=p>0?'⭐ Avis ('+p+')':'⭐ Avis';btn.style.color=p>0?'#ffd700'+'':'';};}catch(e){}}
+setInterval(checkNewAvis,4000);checkNewAvis();
+
+var BANNER_KEY_A = 'peptoids:banner';
+var selectedBannerColor = 'cyan';
+var BANNER_COLORS = {
+  cyan:   'linear-gradient(90deg,#00c8ff,#0080ff)',
+  orange: 'linear-gradient(90deg,#ff8c00,#ff4500)',
+  violet: 'linear-gradient(90deg,#a855f7,#7c3aed)',
+  green:  'linear-gradient(90deg,#00ff88,#00cc44)',
+  gold:   'linear-gradient(90deg,#ffd700,#ff8c00)'
+};
+
+function selectBannerColor(color) {
+  selectedBannerColor = color;
+  document.getElementById('bColor').value = color;
+  document.querySelectorAll('#bColorPicker div').forEach(function(d) {
+    d.style.border = d.getAttribute('data-color') === color ? '2px solid #fff' : '2px solid transparent';
+    d.style.transform = d.getAttribute('data-color') === color ? 'scale(1.15)' : 'scale(1)';
+  });
+  updateBannerPreview();
+}
+
+function updateBannerPreview() {
+  var text    = document.getElementById('bText').value  || 'OFFRE SPÉCIALE';
+  var emoji   = document.getElementById('bEmoji').value || '🔥';
+  var code    = document.getElementById('bCode').value.toUpperCase();
+  var color   = document.getElementById('bColor').value || 'cyan';
+  document.getElementById('bannerPreview').style.background = BANNER_COLORS[color] || BANNER_COLORS.cyan;
+  document.getElementById('previewEmoji').textContent = emoji;
+  document.getElementById('previewText').textContent  = text;
+  var previewCode = document.getElementById('previewCode');
+  if (code) { previewCode.textContent = code; previewCode.style.display = 'inline-block'; }
+  else { previewCode.style.display = 'none'; }
+}
+
+['bText','bEmoji','bCode'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateBannerPreview);
+});
+
+
+// ══ COMING SOON TOGGLE ══
+function getComingSoonState() {
+  try { return JSON.parse(localStorage.getItem('peptoids:coming_soon') || 'false'); } catch(e){ return false; }
+}
+function setComingSoonState(active) {
+  localStorage.setItem('peptoids:coming_soon', JSON.stringify(active));
+  // Sync Supabase
+  SB.setSetting('coming_soon', active).catch(function(){});
+}
+function updateCsToggleUI(active) {
+  var knob = document.getElementById('csToggleKnob');
+  var wrap = document.getElementById('csToggleWrap');
+  var label = document.getElementById('csStatusLabel');
+  if (!knob) return;
+  if (active) {
+    knob.style.transform = 'translateX(24px)';
+    knob.style.background = '#a855f7';
+    wrap.style.background = 'rgba(168,85,247,0.2)';
+    wrap.style.borderColor = 'rgba(168,85,247,0.5)';
+    label.textContent = 'ACTIF';
+    label.style.color = '#a855f7';
+  } else {
+    knob.style.transform = 'translateX(0)';
+    knob.style.background = '#555';
+    wrap.style.background = 'rgba(255,255,255,0.08)';
+    wrap.style.borderColor = 'rgba(255,255,255,0.15)';
+    label.textContent = 'INACTIF';
+    label.style.color = 'rgba(255,255,255,0.3)';
+  }
+}
+function toggleComingSoon() {
+  var current = getComingSoonState();
+  var next = !current;
+  setComingSoonState(next);
+  updateCsToggleUI(next);
+  var msg = document.getElementById('csMsg');
+  msg.style.display = 'block';
+  if (next) {
+    msg.innerHTML = '✓ Mode Coming Soon <strong>activé</strong>. Les visiteurs voient coming-soon.html. Toi seul accèdes au site via <code style="color:#00c8ff;">index.html?admin=1</code>.';
+    msg.style.color = '#a855f7';
+  } else {
+    msg.innerHTML = '✓ Mode Coming Soon <strong>désactivé</strong>. Le site est accessible normalement.';
+    msg.style.color = '#00ff88';
+  }
+  setTimeout(function(){ msg.style.display='none'; }, 4000);
+}
+
+function saveBanner(active) {
+  var text  = document.getElementById('bText').value.trim();
+  var emoji = document.getElementById('bEmoji').value.trim() || '🔥';
+  var code  = document.getElementById('bCode').value.trim().toUpperCase();
+  var color = document.getElementById('bColor').value || 'cyan';
+  var msg   = document.getElementById('banniereMsg');
+
+  if (active && !text) { msg.textContent = '⚠ Le texte est requis.'; msg.style.color='#ff6060'; msg.style.display='block'; return; }
+
+  var banner = { active: active, text: text, emoji: emoji, code: code, color: color, id: 'b_' + Date.now() };
+  if (!active) {
+    var existing = null;
+    try { existing = JSON.parse(localStorage.getItem(BANNER_KEY_A)); } catch(e) {}
+    if (existing) { existing.active = false; banner = existing; }
+  }
+  localStorage.setItem(BANNER_KEY_A, JSON.stringify(banner));
+  SB.setSetting('banner', banner).catch(function(e){console.warn('SB:',e.message);});
+  msg.textContent = active ? '✅ Bannière activée sur la boutique !' : '⏹ Bannière désactivée.';
+  msg.style.color = active ? '#00ff88' : 'rgba(255,255,255,0.5)';
+  msg.style.display = 'block';
+  setTimeout(function(){ msg.style.display='none'; }, 3000);
+  loadBanniere();
+}
+
+function loadBanniere() {
+  try {
+    var b = JSON.parse(localStorage.getItem(BANNER_KEY_A) || 'null');
+    var statut = document.getElementById('banniereStatut');
+    if (!b || !b.active) {
+      statut.innerHTML = '<span style="color:rgba(255,60,60,0.7);">● Désactivée</span>';
+    } else {
+      statut.innerHTML = '<span style="color:#00ff88;">● Active</span>' +
+        '<div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,0.4);">' + (b.emoji||'') + ' ' + (b.text||'') + (b.code ? ' · Code : <strong style="color:#00c8ff;">' + b.code + '</strong>' : '') + '</div>';
+      // Prefill form
+      document.getElementById('bText').value  = b.text  || '';
+      document.getElementById('bEmoji').value = b.emoji || '';
+      document.getElementById('bCode').value  = b.code  || '';
+      selectBannerColor(b.color || 'cyan');
+    }
+    updateBannerPreview();
+  } catch(e) {}
+}
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+var caChartInst = null;
+var prodChartInst = null;
+
+document.getElementById('graphPeriod').addEventListener('change', loadGraphiques);
+
+function loadGraphiques() {
+  var orders = [];
+  try { orders = JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e) {}
+  var days = parseInt(document.getElementById('graphPeriod').value) || 30;
+  var now = Date.now();
+  var cutoff = now - days * 86400000;
+  var filtered = orders.filter(function(o){ return new Date(o.date).getTime() >= cutoff; });
+
+  buildCAChart(filtered, days);
+  buildProduitsChart(filtered);
+}
+
+function buildCAChart(orders, days) {
+  // Build labels and data
+  var labels = [], dataMap = {};
+  var now = new Date();
+  var groupBy = days <= 30 ? 'day' : 'week';
+
+  for (var i = days - 1; i >= 0; i--) {
+    var d = new Date(now); d.setDate(d.getDate() - i);
+    var key;
+    if (groupBy === 'day') {
+      key = d.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit' });
+    } else {
+      var weekNum = Math.ceil((i+1) / 7);
+      key = 'S' + (Math.ceil(days/7) - weekNum + 1);
+    }
+    if (!dataMap[key]) { dataMap[key] = 0; labels.indexOf(key) === -1 && labels.push(key); }
+  }
+
+  // Only keep unique labels in order
+  var uniqueLabels = [];
+  labels.forEach(function(l){ if (uniqueLabels.indexOf(l) === -1) uniqueLabels.push(l); });
+
+  orders.forEach(function(o) {
+    var d = new Date(o.date);
+    var key;
+    if (groupBy === 'day') {
+      key = d.toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit' });
+    } else {
+      var diffDays = Math.floor((Date.now() - d.getTime()) / 86400000);
+      key = 'S' + (Math.ceil((diffDays+1) / 7));
+    }
+    if (dataMap[key] !== undefined) dataMap[key] += parseFloat(o.total || 0);
+  });
+
+  var values = uniqueLabels.map(function(l){ return dataMap[l] || 0; });
+  var maxVal = Math.max.apply(null, values) || 100;
+
+  if (caChartInst) { caChartInst.destroy(); caChartInst = null; }
+  var ctx = document.getElementById('caChart').getContext('2d');
+
+  // Gradient
+  var grad = ctx.createLinearGradient(0, 0, 0, 200);
+  grad.addColorStop(0, 'rgba(0,200,255,0.35)');
+  grad.addColorStop(1, 'rgba(0,200,255,0.02)');
+
+  caChartInst = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: uniqueLabels,
+      datasets: [{
+        label: 'CA (€)',
+        data: values,
+        borderColor: '#00c8ff',
+        backgroundColor: grad,
+        borderWidth: 2,
+        pointBackgroundColor: '#00c8ff',
+        pointRadius: 3,
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        backgroundColor: 'rgba(6,14,38,0.95)',
+        borderColor: 'rgba(0,200,255,0.3)', borderWidth: 1,
+        titleColor: '#00c8ff', bodyColor: '#fff',
+        callbacks: { label: function(c){ return ' ' + c.parsed.y.toFixed(2).replace('.',',') + ' €'; } }
+      }},
+      scales: {
+        x: { ticks: { color:'rgba(255,255,255,0.4)', font:{ size:10 } }, grid: { color:'rgba(0,200,255,0.05)' } },
+        y: { ticks: { color:'rgba(255,255,255,0.4)', font:{ size:10 }, callback: function(v){ return v + '€'; } }, grid: { color:'rgba(0,200,255,0.07)' }, min: 0 }
+      }
+    }
+  });
+}
+
+function buildProduitsChart(orders) {
+  var prodMap = {};
+  orders.forEach(function(o) {
+    if (!o.items) return;
+    o.items.forEach(function(item) {
+      var name = (item.name || item.key || '?').split('/')[0].trim();
+      prodMap[name] = (prodMap[name] || 0) + (item.qty || 1);
+    });
+  });
+
+  var sorted = Object.keys(prodMap).sort(function(a,b){ return prodMap[b]-prodMap[a]; }).slice(0, 6);
+  if (sorted.length === 0) { sorted = ['Aucune vente']; prodMap['Aucune vente'] = 1; }
+
+  var colors = ['#00c8ff','#a855f7','#00ff88','#ffd700','#ff6b6b','#67e8f9'];
+  var values = sorted.map(function(k){ return prodMap[k]; });
+
+  if (prodChartInst) { prodChartInst.destroy(); prodChartInst = null; }
+  var ctx2 = document.getElementById('produitsChart').getContext('2d');
+
+  prodChartInst = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: sorted,
+      datasets: [{ data: values, backgroundColor: colors, borderColor: 'rgba(1,6,16,0.8)', borderWidth: 3, hoverOffset: 8 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(6,14,38,0.95)',
+          borderColor: 'rgba(168,85,247,0.3)', borderWidth: 1,
+          titleColor: '#a855f7', bodyColor: '#fff',
+          callbacks: { label: function(c){ return ' ' + c.parsed + ' unité(s) vendues'; } }
+        }
+      }
+    }
+  });
+
+  // Custom legend
+  var legend = document.getElementById('produitsLegend');
+  legend.innerHTML = '';
+  sorted.forEach(function(name, i) {
+    var total = values[i];
+    var pct = Math.round(total / values.reduce(function(a,b){return a+b;},0) * 100);
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:12px;';
+    div.innerHTML =
+      '<div style="width:10px;height:10px;border-radius:50%;background:' + colors[i] + ';flex-shrink:0;box-shadow:0 0 6px ' + colors[i] + '66;"></div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:12px;color:rgba(255,255,255,0.85);">' + name + '</div>' +
+        '<div style="font-size:10px;color:rgba(255,255,255,0.35);">' + total + ' unité(s) · ' + pct + '%</div>' +
+      '</div>';
+    legend.appendChild(div);
+  });
+}
+</script>
+
+<!-- ══ NOTIFICATION NOUVELLE COMMANDE ══ -->
+<style>
+#orderNotif {
+  position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+  background: var(--card); border: 1px solid rgba(0,255,136,0.4);
+  border-radius: 16px; padding: 18px 20px 18px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  min-width: 300px; max-width: 360px;
+  box-shadow: 0 0 40px rgba(0,255,136,0.15), 0 20px 60px rgba(0,0,0,0.6);
+  transform: translateX(420px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+  pointer-events: none;
+}
+#orderNotif.show {
+  transform: translateX(0); opacity: 1; pointer-events: auto;
+}
+#orderNotif.hide {
+  transform: translateX(420px); opacity: 0; pointer-events: none;
+}
+.notif-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(0,255,136,0.2), rgba(0,200,100,0.1));
+  border: 1px solid rgba(0,255,136,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  animation: iconPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.2s both;
+}
+@keyframes iconPop { from{transform:scale(0)} to{transform:scale(1)} }
+.notif-body { flex: 1; min-width: 0; }
+.notif-title {
+  font-family: Orbitron, monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; color: #00ff88; margin-bottom: 5px;
+}
+.notif-id { font-size: 11px; color: rgba(0,200,255,0.8); font-family: Orbitron, monospace; margin-bottom: 3px; }
+.notif-client { font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+.notif-total {
+  font-family: Orbitron, monospace; font-size: 16px; font-weight: 900;
+  color: #fff; margin-top: 4px;
+}
+.notif-close {
+  position: absolute; top: 10px; right: 12px;
+  background: none; border: none; color: rgba(255,255,255,0.25);
+  cursor: pointer; font-size: 16px; line-height: 1;
+  transition: color 0.2s; padding: 0;
+}
+.notif-close:hover { color: rgba(255,255,255,0.7); }
+.notif-bar {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, #00ff88, #00c8ff);
+  border-radius: 0 0 16px 16px;
+  animation: notifTimer linear forwards;
+}
+@keyframes notifTimer { from{width:100%} to{width:0%} }
+</style>
+
+<div id="orderNotif">
+  <div class="notif-icon">💰</div>
+  <div class="notif-body">
+    <div class="notif-title">🎉 NOUVELLE COMMANDE</div>
+    <div class="notif-id"    id="notifId">—</div>
+    <div class="notif-client" id="notifClient">—</div>
+    <div class="notif-total"  id="notifTotal">—</div>
+  </div>
+  <button class="notif-close" onclick="dismissNotif()">×</button>
+  <div class="notif-bar" id="notifBar"></div>
+</div>
+
+<script>
+// ── Son caisse enregistreuse (Web Audio API) ──
+function playCashSound() {
+  try {
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function beep(freq, start, dur, vol, type) {
+      var osc  = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = type || 'square';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+      gain.gain.setValueAtTime(vol, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + dur + 0.05);
+    }
+
+    // Ding-ding caisse
+    beep(1200, 0.00, 0.08, 0.4, 'sine');
+    beep(1600, 0.09, 0.07, 0.3, 'sine');
+    beep(2000, 0.17, 0.10, 0.4, 'sine');
+    beep(1600, 0.28, 0.06, 0.25, 'sine');
+
+    // Petit "clic" mécanique
+    var buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / data.length);
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    var g2 = ctx.createGain(); g2.gain.value = 0.15;
+    src.connect(g2); g2.connect(ctx.destination);
+    src.start(ctx.currentTime + 0.01);
+
+    setTimeout(function(){ ctx.close(); }, 1000);
+  } catch(e) {}
+}
+
+// ── Détection nouvelles commandes ──
+var lastOrderCount  = null;
+var lastOrderIds    = null;
+var notifTimeout    = null;
+
+function checkNewOrders() {
+  if (document.getElementById('adminScreen').style.display === 'none') return;
+  try {
+    var orders = JSON.parse(localStorage.getItem('peptoids:orders') || '[]');
+    var ids = orders.map(function(o){ return o.id; }).join(',');
+
+    if (lastOrderIds === null) {
+      // Première fois — on mémorise juste le state
+      lastOrderIds   = ids;
+      lastOrderCount = orders.length;
+      return;
+    }
+
+    if (ids !== lastOrderIds && orders.length > lastOrderCount) {
+      // Nouvelle commande détectée !
+      var newest = orders[0];
+      showOrderNotif(newest);
+      playCashSound();
+      lastOrderIds   = ids;
+      lastOrderCount = orders.length;
+    }
+  } catch(e) {}
+}
+
+function showOrderNotif(order) {
+  var notif = document.getElementById('orderNotif');
+  document.getElementById('notifId').textContent     = order.id;
+  document.getElementById('notifClient').textContent = order.client
+    ? (order.client.prenom || '') + ' ' + (order.client.nom || '') + ' · ' + (order.client.email || '')
+    : '—';
+  document.getElementById('notifTotal').textContent  = parseFloat(order.total).toFixed(2).replace('.',',') + ' €';
+
+  // Reset animation
+  notif.classList.remove('show','hide');
+  void notif.offsetWidth; // reflow
+  notif.classList.add('show');
+
+  // Barre de timer — 6s
+  var bar = document.getElementById('notifBar');
+  bar.style.animation = 'none';
+  void bar.offsetWidth;
+  bar.style.animation = 'notifTimer 6s linear forwards';
+
+  // Auto-dismiss après 6s
+  if (notifTimeout) clearTimeout(notifTimeout);
+  notifTimeout = setTimeout(dismissNotif, 6000);
+}
+
+function dismissNotif() {
+  if (notifTimeout) clearTimeout(notifTimeout);
+  var notif = document.getElementById('orderNotif');
+  notif.classList.remove('show');
+  notif.classList.add('hide');
+}
+
+// Vérification toutes les 3 secondes
+setInterval(checkNewOrders, 3000);
+// Init immédiate pour mémoriser l'état actuel
+checkNewOrders();
+</script>
+
+<script id="page-transition-js">
+(function(){
+  var ov = document.getElementById('pt-overlay');
+
+  // Fade in on load
+  window.addEventListener('load', function(){
+    ov.classList.remove('in');
+  });
+
+  // Intercept all internal links
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    // Skip: anchors, external, tel, mailto, javascript
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('tel') || href.startsWith('mailto') || href.startsWith('javascript')) return;
+    e.preventDefault();
+    ov.classList.add('in');
+    setTimeout(function(){ window.location.href = href; }, 420);
+  });
+
+  // Show overlay immediately when navigating away
+  window.addEventListener('beforeunload', function(){
+    ov.classList.add('in');
+  });
+})();
+</script>
+</body>
+</html>

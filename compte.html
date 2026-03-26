@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Compte — PEPTOIDS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPgogIDxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0ibCIgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiNhODU1ZjciLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzYzAwYTAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KICA8cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsKSIvPgogIDxyZWN0IHg9IjExIiB5PSI3IiB3aWR0aD0iMTAiIGhlaWdodD0iNyIgcng9IjIiIGZpbGw9IiMyYTA4NDAiIHN0cm9rZT0icmdiYSgxNjgsODUsMjQ3LDAuNCkiIHN0cm9rZS13aWR0aD0iMC41Ii8+CiAgPHRleHQgeD0iMTYiIHk9IjEyLjUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiIGZvbnQtc2l6ZT0iNS41IiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuNykiPlA8L3RleHQ+Cjwvc3ZnPg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--cyan:#00c8ff;--purple:#a855f7;--green:#00ff88;--darker:#010610;--card:rgba(6,14,38,0.95);--border:rgba(0,200,255,0.13);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--darker);color:#fff;font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);background-size:42px 42px;pointer-events:none;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(1,6,16,0.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,200,255,0.08);}
+.nav-logo{font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.nav-back{font-size:12px;letter-spacing:2px;color:rgba(255,255,255,0.4);text-decoration:none;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;transition:all 0.2s;}
+.nav-back:hover{color:#fff;border-color:rgba(0,200,255,0.3);}
+
+.page-wrap{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:90px 40px 80px;}
+
+/* ── AUTH FORMS ── */
+#authSection{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 64px);}
+.auth-box{width:100%;max-width:420px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:40px;}
+.auth-box h2{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:3px;color:#fff;margin-bottom:8px;text-align:center;}
+.auth-box p{font-size:13px;color:rgba(255,255,255,0.35);text-align:center;margin-bottom:28px;}
+.auth-tabs{display:flex;background:rgba(255,255,255,0.04);border-radius:10px;padding:3px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:9px;border:none;background:transparent;border-radius:8px;font-family:'Exo 2',sans-serif;font-size:12px;letter-spacing:1px;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;}
+.auth-tab.active{background:rgba(0,200,255,0.12);color:var(--cyan);border:1px solid rgba(0,200,255,0.2);}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:11px;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:7px;text-transform:uppercase;}
+.form-group input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 14px;color:#fff;font-family:'Exo 2',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.form-group input:focus{border-color:rgba(0,200,255,0.4);}
+.btn-primary{width:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:12px;padding:14px;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;margin-top:8px;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,200,255,0.3);}
+.auth-msg{font-size:12px;text-align:center;margin-top:14px;min-height:18px;}
+.auth-msg.error{color:#ff4466;}
+.auth-msg.success{color:var(--green);}
+
+/* ── DASHBOARD ── */
+#dashSection{display:none;}
+.dash-header{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px 32px;margin-bottom:20px;}
+.avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#000;flex-shrink:0;}
+.dash-info h2{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:4px;}
+.dash-info p{font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:1px;}
+.badge-grade{display:inline-block;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;padding:3px 10px;border-radius:20px;margin-top:6px;}
+.btn-logout{margin-left:auto;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:9px 18px;font-family:'Exo 2',sans-serif;font-size:12px;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{border-color:rgba(255,68,102,0.4);color:#ff4466;}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;}
+.dash-card h3{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;text-transform:uppercase;}
+.stat-big{font-family:'Orbitron',monospace;font-size:32px;font-weight:900;background:linear-gradient(90deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px;}
+
+/* Grade progress */
+.grade-bar{height:6px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;margin:14px 0 8px;}
+.grade-fill{height:100%;border-radius:6px;transition:width 0.8s ease;}
+.grade-next{font-size:11px;color:rgba(255,255,255,0.25);}
+
+/* Parrainage */
+.referral-box{display:flex;gap:10px;margin-top:12px;}
+.referral-code{flex:1;background:rgba(0,200,255,0.06);border:1px solid rgba(0,200,255,0.2);border-radius:10px;padding:10px 14px;font-family:'Orbitron',monospace;font-size:13px;color:var(--cyan);letter-spacing:2px;}
+.btn-copy{background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--cyan);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-copy:hover{background:rgba(0,200,255,0.2);}
+
+/* Commandes */
+.orders-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;}
+.orders-section h3{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;}
+.order-item{border:1px solid rgba(0,200,255,0.08);border-radius:12px;padding:16px 20px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.order-id{font-family:'Orbitron',monospace;font-size:11px;color:var(--cyan);font-weight:700;}
+.order-date{font-size:12px;color:rgba(255,255,255,0.3);}
+.order-total{font-family:'Orbitron',monospace;font-size:14px;font-weight:700;color:#fff;margin-left:auto;}
+.order-status{font-size:11px;letter-spacing:1px;padding:3px 10px;border-radius:20px;background:rgba(0,200,255,0.1);color:var(--cyan);border:1px solid rgba(0,200,255,0.2);}
+.order-status.ok{background:rgba(0,255,136,0.1);color:var(--green);border-color:rgba(0,255,136,0.2);}
+.order-status.pending{background:rgba(255,170,0,0.1);color:#ffaa00;border-color:rgba(255,170,0,0.2);}
+.empty-orders{text-align:center;padding:32px;color:rgba(255,255,255,0.2);font-size:13px;}
+
+/* VIP promo code */
+.promo-section{background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(0,200,255,0.04));border:1px solid rgba(168,85,247,0.2);border-radius:16px;padding:24px;margin-bottom:20px;}
+.promo-section h3{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(168,85,247,0.8);margin-bottom:16px;}
+.promo-list{display:flex;flex-wrap:wrap;gap:10px;}
+.promo-chip{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.25);border-radius:10px;padding:8px 16px;font-family:'Orbitron',monospace;font-size:11px;color:var(--purple);letter-spacing:2px;cursor:pointer;transition:all 0.2s;}
+.promo-chip:hover{background:rgba(168,85,247,0.25);}
+
+/* Points converter */
+.points-convert-card{background:linear-gradient(135deg,rgba(0,255,136,0.06),rgba(0,200,255,0.04));border:1px solid rgba(0,255,136,0.2);border-radius:16px;padding:24px;margin-bottom:20px;}
+.points-convert-card h3{font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(0,255,136,0.8);margin-bottom:14px;}
+.pts-convert-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.pts-convert-info{flex:1;min-width:180px;}
+.pts-convert-info .big{font-family:'Orbitron',monospace;font-size:26px;font-weight:900;color:var(--green);}
+.pts-convert-info .sub{font-size:12px;color:rgba(255,255,255,0.35);margin-top:2px;}
+.pts-convert-visual{display:flex;align-items:center;gap:10px;font-size:13px;color:rgba(255,255,255,0.4);}
+.pts-arrow{font-size:20px;color:rgba(0,255,136,0.5);}
+.btn-convert{background:linear-gradient(90deg,var(--green),#00c8ff);border:none;border-radius:12px;padding:12px 24px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-convert:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,0.3);}
+.btn-convert:disabled{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.2);cursor:not-allowed;transform:none;box-shadow:none;}
+.pts-progress-bar{height:5px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;margin:10px 0 6px;}
+.pts-progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),#00c8ff);transition:width 0.8s ease;}
+.pts-progress-label{font-size:11px;color:rgba(255,255,255,0.25);}
+.convert-result{margin-top:14px;padding:12px 16px;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.25);border-radius:10px;display:none;}
+.convert-result .code{font-family:'Orbitron',monospace;font-size:15px;color:var(--green);letter-spacing:2px;}
+.convert-result .label{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;}
+.convert-history{margin-top:14px;}
+.convert-history-title{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.2);margin-bottom:8px;}
+.convert-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,0.07);border:1px solid rgba(0,255,136,0.15);border-radius:8px;padding:7px 13px;font-family:'Orbitron',monospace;font-size:11px;color:var(--green);letter-spacing:1px;cursor:pointer;margin:0 6px 6px 0;transition:background 0.2s;}
+.convert-chip:hover{background:rgba(0,255,136,0.15);}
+.convert-chip.used{color:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.07);cursor:default;}
+.convert-chip.used:hover{background:rgba(0,255,136,0.07);}
+
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .page-wrap{padding:80px 20px 60px;}
+  .dash-grid{grid-template-columns:1fr;}
+  .dash-header{flex-direction:column;text-align:center;}
+  .btn-logout{margin-left:0;}
+}
+</style>
+
+<style id="page-transition-css">
+#pt-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #010610;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+#pt-overlay.in { opacity: 1; pointer-events: all; }
+#pt-scan {
+  position: absolute;
+  top: -2px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c8ff 30%, #a855f7 70%, transparent);
+  box-shadow: 0 0 20px 4px rgba(0,200,255,0.6);
+  opacity: 0;
+}
+#pt-overlay.in #pt-scan {
+  opacity: 1;
+  animation: ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;
+}
+@keyframes ptScan {
+  0%   { top: 0%; opacity: 1; }
+  100% { top: 100%; opacity: 0.3; }
+}
+#pt-logo {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: clamp(20px,4vw,40px); letter-spacing: 8px;
+  background: linear-gradient(90deg, #00c8ff, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; opacity: 0;
+}
+#pt-overlay.in #pt-logo {
+  animation: ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes ptLogoIn {
+  0%   { opacity:0; transform: translate(-50%,-50%) scale(0.7); }
+  60%  { opacity:1; transform: translate(-50%,-50%) scale(1.05); }
+  100% { opacity:0.5; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes fadeInPage {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+body { animation: fadeInPage 0.45s ease forwards; }
+</style>
+</head>
+<body>
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <a href="index.html" class="nav-back">← Accueil</a>
+</nav><script>
+(function(){
+  try {
+    var cfg = JSON.parse(localStorage.getItem("peptoids:slots_config")||"{}}");
+    if (cfg.active !== true) return;
+    var nav = document.querySelector("nav");
+    if (!nav) return;
+    var style = document.createElement("style");
+    style.textContent = "@keyframes slotsPulse{0%,100%{color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.4);}50%{color:#ff8c00;text-shadow:0 0 16px rgba(255,140,0,0.7);}}";
+    document.head.appendChild(style);
+    var a = document.createElement("a");
+    a.href = "slots.html"; a.textContent = "🎰 Lucky";
+    a.style.cssText = "font-size:12px;letter-spacing:1px;color:#ffd700;text-decoration:none;padding:7px 14px;border:1px solid rgba(255,215,0,0.25);border-radius:8px;animation:slotsPulse 2s ease infinite;";
+    nav.appendChild(a);
+  } catch(e){}
+})();
+</script>
+
+<div class="page-wrap">
+
+  <!-- AUTH -->
+  <div id="authSection">
+    <div class="auth-box">
+      <div style="font-size:32px;text-align:center;margin-bottom:16px;">⚗️</div>
+      <h2>ESPACE CLIENT</h2>
+      <p>Accédez à vos commandes, points fidélité et avantages exclusifs</p>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">CONNEXION</button>
+        <button class="auth-tab" onclick="switchTab('register')">INSCRIPTION</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginForm">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="votre@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="loginPwd" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button class="btn-primary" onclick="doLogin()">SE CONNECTER</button>
+        <div class="auth-msg" id="loginMsg"></div>
+      </div>
+
+      <!-- REGISTER -->
+      <div id="registerForm" style="display:none;">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="regPrenom" placeholder="Jean" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="regNom" placeholder="Dupont" autocomplete="family-name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="votre@email.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label>Mot de passe</label>
+          <input type="password" id="regPwd" placeholder="8 caractères minimum" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label>Code de parrainage (optionnel)</label>
+          <input type="text" id="regRef" placeholder="CODE-XXXX">
+        </div>
+        <button class="btn-primary" onclick="doRegister()">CRÉER MON COMPTE</button>
+        <div class="auth-msg" id="registerMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashSection">
+
+    <!-- Header -->
+    <div class="dash-header">
+      <div class="avatar" id="userAvatar">?</div>
+      <div class="dash-info">
+        <h2 id="userName">—</h2>
+        <p id="userEmail">—</p>
+        <span class="badge-grade" id="userGrade">Bronze</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>Points fidélité</h3>
+        <div class="stat-big" id="userPoints">0</div>
+        <div class="stat-label">points cumulés</div>
+        <div class="grade-bar"><div class="grade-fill" id="gradeBar" style="width:0%;background:linear-gradient(90deg,#cd7f32,#e8a060);"></div></div>
+        <div class="grade-next" id="gradeNext"></div>
+      </div>
+      <div class="dash-card">
+        <h3>Commandes</h3>
+        <div class="stat-big" id="userOrderCount">0</div>
+        <div class="stat-label">commandes passées</div>
+        <div style="margin-top:16px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.3);">Total dépensé</div>
+          <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#fff;margin-top:4px;" id="userTotal">0,00€</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Code parrainage enrichi -->
+    <div class="dash-card" style="margin-bottom:20px;">
+      <h3>Mon code de parrainage</h3>
+      <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:12px;">
+        Partagez ce code — votre filleul reçoit un <strong style="color:var(--cyan);">code promo -10%</strong> automatiquement. Tous les <strong style="color:var(--green);">10 filleuls</strong> vous recevez un <strong style="color:var(--green);">coupon -20€</strong>.
+      </p>
+      <div class="referral-box">
+        <div class="referral-code" id="referralCode">—</div>
+        <button class="btn-copy" onclick="copyReferral()">📋 Copier</button>
+        <button class="btn-copy" onclick="shareReferral()" style="background:rgba(168,85,247,0.1);border-color:rgba(168,85,247,0.3);color:var(--purple);">🔗 Partager</button>
+      </div>
+      <!-- Stats parrainage -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;" id="referralStats">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:var(--cyan);" id="refCount">0</div>
+          <div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);margin-top:3px;">FILLEULS</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:#00ff88;" id="refOrders">0</div>
+          <div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);margin-top:3px;">COMMANDES FILLEULS</div>
+        </div>
+      </div>
+      <!-- Barre progression coupon -->
+      <div style="margin-top:16px;background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.15);border-radius:12px;padding:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:1px;">PROCHAIN COUPON -20€</div>
+          <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--green);" id="refNextCoupon">0 / 10 filleuls</div>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;">
+          <div id="refProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--green),#00c8ff);border-radius:6px;transition:width 0.8s ease;"></div>
+        </div>
+        <div id="refCouponsList" style="margin-top:10px;display:none;"></div>
+      </div>
+      <!-- Liste filleuls -->
+      <div id="referralList" style="margin-top:14px;display:none;">
+        <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.25);margin-bottom:8px;">MES FILLEULS</div>
+        <div id="referralListItems"></div>
+      </div>
+    </div>
+
+    <!-- Convertir points en code promo -->
+    <div class="points-convert-card" id="pointsConvertCard">
+      <h3>⚡ CONVERTIR MES POINTS</h3>
+      <div class="pts-convert-row">
+        <div class="pts-convert-info">
+          <div class="big" id="convertPtsDisplay">0</div>
+          <div class="sub">points disponibles</div>
+          <div class="pts-progress-bar"><div class="pts-progress-fill" id="convertBar" style="width:0%"></div></div>
+          <div class="pts-progress-label" id="convertProgressLabel">0 / 2000 pts pour un code -10€</div>
+        </div>
+        <div class="pts-convert-visual">
+          <div style="text-align:center;">
+            <div style="font-family:'Orbitron',monospace;font-size:13px;color:rgba(255,255,255,0.5);">2 000 pts</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">à dépenser</div>
+          </div>
+          <span class="pts-arrow">→</span>
+          <div style="text-align:center;">
+            <div style="font-family:'Orbitron',monospace;font-size:16px;font-weight:900;color:var(--green);">-10€</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px;">code promo</div>
+          </div>
+        </div>
+        <button class="btn-convert" id="btnConvert" onclick="convertPoints()" disabled>GÉNÉRER LE CODE</button>
+      </div>
+      <div class="convert-result" id="convertResult">
+        <div style="font-size:11px;letter-spacing:2px;color:rgba(0,255,136,0.6);margin-bottom:6px;">✦ CODE GÉNÉRÉ</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div class="code" id="convertResultCode">—</div>
+          <button onclick="copyConvertedCode()" style="background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.25);border-radius:8px;padding:6px 14px;font-size:11px;color:var(--green);cursor:pointer;transition:all 0.2s;" id="btnCopyConverted">📋 Copier</button>
+        </div>
+        <div class="label" id="convertResultLabel">Valable 90 jours · usage unique</div>
+      </div>
+      <!-- Historique des codes convertis -->
+      <div class="convert-history" id="convertHistory" style="display:none;">
+        <div class="convert-history-title">MES CODES FIDÉLITÉ</div>
+        <div id="convertHistoryList"></div>
+      </div>
+    </div>
+
+    <!-- Codes promo fidélité -->
+    <div class="promo-section" id="promoSection" style="display:none;">
+      <h3>✦ VOS AVANTAGES FIDÉLITÉ</h3>
+      <div class="promo-list" id="promoList"></div>
+    </div>
+
+    <!-- Historique commandes -->
+    <div class="orders-section">
+      <h3>Historique des commandes</h3>
+      <div id="ordersList"><div class="empty-orders">Aucune commande pour le moment</div></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══ CONFIG ══
+var SUPABASE_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+var SBH = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' };
+
+// ── Supabase helpers ──
+async function _sbFetch(method, path, body) {
+  var isUpsert = path.includes('on_conflict');
+  var headers = Object.assign({}, SBH);
+  if (isUpsert) headers['Prefer'] = 'resolution=merge-duplicates,return=minimal';
+  var r = await fetch(SUPABASE_URL + path, {
+    method: method, headers: headers,
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!r.ok) { var t = await r.text(); console.warn('SB error:', method, path, t); throw new Error(t); }
+  if (r.status === 204 || r.status === 201) return null;
+  try { return await r.json(); } catch(e) { return null; }
+}
+
+var SB = {
+  async getUsers() {
+    var rows = await _sbFetch('GET', '/rest/v1/users?select=*');
+    return (rows || []).map(function(r) {
+      return { id:r.id, prenom:r.prenom, nom:r.nom, email:r.email,
+        pwd: r.pass_hash, refCode:r.ref_code, referredBy:r.referred_by||null,
+        points:r.points||0, referralCount:r.referral_count||0, createdAt:r.created_at };
+    });
+  },
+  async saveUser(user) {
+    return _sbFetch('POST', '/rest/v1/users?on_conflict=id', {
+      id:            user.id,
+      prenom:        user.prenom,
+      nom:           user.nom,
+      email:         user.email,
+      pass_hash:     user.pwd,
+      ref_code:      user.refCode   || null,
+      referred_by:   user.referredBy || null,
+      points:        user.points    || 0,
+      cumul_points:  0,
+      total_points:  0,
+      last_orders_total: 0,
+      bonus_applied: false,
+      promo_codes:   [],
+      created_at:    user.createdAt
+    });
+  },
+  async getUserByEmail(email) {
+    var rows = await _sbFetch('GET', '/rest/v1/users?email=eq.' + encodeURIComponent(email) + '&select=*');
+    if (!rows || rows.length === 0) return null;
+    var r = rows[0];
+    return { id:r.id, prenom:r.prenom, nom:r.nom, email:r.email,
+      pwd:r.pass_hash, refCode:r.ref_code, referredBy:r.referred_by||null,
+      points:r.points||0, referralCount:r.referral_count||0, createdAt:r.created_at };
+  }
+};
+
+// ══ GRADES ══
+var GRADES = [
+  { name:'Bronze',  min:0,     color:'#cd7f32', next:1000 },
+  { name:'Argent',  min:1000,  color:'#c0c0c0', next:4000 },
+  { name:'Or',      min:4000,  color:'#ffd700', next:6000 },
+  { name:'Platine', min:6000,  color:'#a855f7', next:10000 },
+  { name:'Diamant', min:10000, color:'#67e8f9', next:50000 },
+  { name:'Dieu',    min:50000, color:'#ffffff', next:null }
+];
+
+function getGrade(pts) {
+  for (var i = GRADES.length-1; i >= 0; i--) {
+    if (pts >= GRADES[i].min) return GRADES[i];
+  }
+  return GRADES[0];
+}
+
+// ══ STORAGE ══
+function getUsers()   { try { return JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e){ return []; } }
+function saveUsers(u) {
+  localStorage.setItem('peptoids:users', JSON.stringify(u));
+  u.forEach(function(user) { SB.saveUser(user).catch(function(e){console.warn('SB user:',e.message);}); });
+}
+function getSession() { try { return JSON.parse(localStorage.getItem('peptoids:account_session') || 'null'); } catch(e){ return null; } }
+function saveSession(s){ localStorage.setItem('peptoids:account_session', JSON.stringify(s)); }
+function clearSession(){ localStorage.removeItem('peptoids:account_session'); }
+function getOrders()  { try { return JSON.parse(localStorage.getItem('peptoids:orders') || '[]'); } catch(e){ return []; } }
+function getFidePromos() { try { return JSON.parse(localStorage.getItem('peptoids:fide_promos') || '{}'); } catch(e){ return {}; } }
+
+// ══ AUTH ══
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(function(t){ t.classList.remove('active'); });
+  event.target.classList.add('active');
+  document.getElementById('loginForm').style.display    = tab === 'login'    ? '' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? '' : 'none';
+}
+
+// ── Rate limiting login ──
+var _loginCount = 0;
+var _loginBlockEnd = 0;
+
+function doLogin() {
+  // Vérifier blocage
+  if (_loginBlockEnd > 0 && Date.now() < _loginBlockEnd) {
+    var sec = Math.ceil((_loginBlockEnd - Date.now()) / 1000);
+    var msg = document.getElementById('loginMsg');
+    msg.className='auth-msg error';
+    msg.textContent = '🔒 Trop de tentatives. Réessayez dans ' + sec + 's.';
+    return;
+  }
+  var email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  var pwd   = document.getElementById('loginPwd').value;
+  var msg   = document.getElementById('loginMsg');
+
+  if (!email || !pwd) { msg.className='auth-msg error'; msg.textContent='Remplissez tous les champs.'; return; }
+
+  var users = getUsers();
+  var user  = users.find(function(u){ return u.email === email && u.pwd === btoa(pwd); });
+  if (!user) {
+    // Chercher dans Supabase
+    SB.getUserByEmail(email).then(function(sbUser) {
+      if (sbUser && sbUser.pwd === btoa(pwd)) {
+        // Synchroniser localement
+        var localUsers = getUsers();
+        if (!localUsers.find(function(u){ return u.id === sbUser.id; })) {
+          localUsers.push(sbUser);
+          localStorage.setItem('peptoids:users', JSON.stringify(localUsers));
+        }
+        _loginCount = 0; _loginBlockEnd = 0;
+        saveSession({ id: sbUser.id, email: sbUser.email, prenom: sbUser.prenom });
+        var msg2 = document.getElementById('loginMsg');
+        msg2.className='auth-msg success'; msg2.textContent='Connexion réussie !';
+        setTimeout(showDash, 600);
+      } else {
+        _loginCount++;
+        if (_loginCount >= 5) { _loginBlockEnd = Date.now() + 5 * 60 * 1000; _loginCount = 0; }
+        var msg3 = document.getElementById('loginMsg');
+        msg3.className='auth-msg error';
+        msg3.textContent = 'Email ou mot de passe incorrect.' + (_loginCount >= 3 ? ' (' + (5 - _loginCount) + ' essai(s) restant)' : '');
+      }
+    }).catch(function() {
+      _loginCount++;
+      var msg4 = document.getElementById('loginMsg');
+      msg4.className='auth-msg error'; msg4.textContent='Email ou mot de passe incorrect.';
+    });
+    return;
+  }
+  _loginCount = 0;
+  _loginBlockEnd = 0;
+
+  saveSession({ id: user.id, email: user.email, prenom: user.prenom });
+  msg.className='auth-msg success'; msg.textContent='Connexion réussie !';
+  setTimeout(showDash, 600);
+}
+
+function doRegister() {
+  var prenom = document.getElementById('regPrenom').value.trim().replace(/[<>&"']/g, '');
+  var nom    = document.getElementById('regNom').value.trim().replace(/[<>&"']/g, '');
+  var email  = document.getElementById('regEmail').value.trim().toLowerCase();
+  var pwd    = document.getElementById('regPwd').value;
+  var ref    = document.getElementById('regRef').value.trim().toUpperCase();
+  var msg    = document.getElementById('registerMsg');
+
+  if (!prenom || !nom || !email || !pwd) { msg.className='auth-msg error'; msg.textContent='Remplissez tous les champs obligatoires.'; return; }
+  if (pwd.length < 8) { msg.className='auth-msg error'; msg.textContent='Mot de passe : 8 caractères minimum.'; return; }
+
+  // Rate limiting inscription (3 max / heure)
+  try {
+    var _regTs = JSON.parse(localStorage.getItem('peptoids:reg_ts') || '[]');
+    _regTs = _regTs.filter(function(t){ return Date.now() - t < 3600000; });
+    if (_regTs.length >= 3) {
+      msg.className='auth-msg error';
+      msg.textContent = 'Trop de demandes. Réessayez dans 1h.';
+      return;
+    }
+  } catch(e) {}
+
+  var users = getUsers();
+  if (users.find(function(u){ return u.email === email; })) {
+    msg.className='auth-msg error'; msg.textContent='Cet email est déjà utilisé.'; return;
+  }
+
+  var id = 'USR-' + Date.now();
+  var refCode = 'REF-' + id.slice(-6).toUpperCase();
+  var pts = 0;
+  var parrain = null;
+  var referredBy = null;
+
+  // Parrainage automatisé
+  if (ref) {
+    parrain = users.find(function(u){ return u.refCode === ref; });
+    if (parrain) {
+      parrain.referralCount = (parrain.referralCount || 0) + 1;
+      referredBy = parrain.id;
+      pts = 50; // bonus filleul inscription
+      // Tous les 10 filleuls → coupon -20€
+      if (parrain.referralCount % 10 === 0) {
+        var couponCode = 'PARRAIN-' + parrain.referralCount + '-' + parrain.refCode.slice(-4);
+        var coupon = {
+          code: couponCode, discount: 0, fixedAmount: 20,
+          discountType: 'fixed', singleUse: true, maxUses: 1, uses: 0,
+          active: true, source: 'parrainage_coupon', userId: parrain.id,
+          expiresAt: new Date(Date.now() + 90*24*60*60*1000).toISOString(),
+          created: new Date().toISOString()
+        };
+        try {
+          var cpArr = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+          cpArr.push(coupon);
+          localStorage.setItem('peptoids:custom_promos', JSON.stringify(cpArr));
+          _sbFetch('POST', '/rest/v1/promos?on_conflict=code', coupon).catch(function(){});
+        } catch(e){}
+      }
+
+      // Générer code promo -10% pour le filleul (usage unique)
+      var filleulPromoCode = 'BIENV-' + refCode.slice(-6);
+      var filleulPromo = {
+        code: filleulPromoCode,
+        discount: 10,
+        singleUse: true,
+        maxUses: 1,
+        uses: 0,
+        active: true,
+        source: 'parrainage',
+        userId: id,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 jours
+        created: new Date().toISOString()
+      };
+      // Stocker le code promo filleul
+      try {
+        var existingPromos = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+        if (Array.isArray(existingPromos)) {
+          existingPromos.push(filleulPromo);
+        } else {
+          existingPromos = [filleulPromo];
+        }
+        localStorage.setItem('peptoids:custom_promos', JSON.stringify(existingPromos));
+        // Sync SB
+        _sbFetch('POST', '/rest/v1/promos?on_conflict=code', Object.assign({}, filleulPromo)).catch(function(e){console.warn('SB parrainage promo:',e.message);});
+      } catch(e) {}
+      // Sync Supabase
+      fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
+        method: 'POST',
+        headers: SBH,
+        body: JSON.stringify(filleulPromo)
+      }).catch(function(e){ console.warn('SB parrainage promo:', e.message); });
+    }
+  }
+
+  var newUser = {
+    id: id, prenom: prenom, nom: nom, email: email,
+    pwd: btoa(pwd), points: pts, refCode: refCode,
+    referredBy: referredBy,
+    referralCount: 0,
+    createdAt: new Date().toISOString()
+  };
+  users.push(newUser);
+  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  saveSession({ id: id, email: email, prenom: prenom });
+
+  // Sync Supabase — on attend la confirmation avant de continuer
+  var msg2 = document.getElementById('registerMsg');
+  msg2.className='auth-msg success'; msg2.textContent='Création en cours…';
+
+  SB.saveUser(newUser).then(function() {
+    var successMsg = 'Compte créé ! Bienvenue ' + prenom + ' 🎉';
+    if (parrain) successMsg += ' Code promo -10% : BIENV-' + refCode.slice(-6) + ' (valable 30 jours)';
+    msg2.textContent = successMsg;
+    setTimeout(showDash, 900);
+  }).catch(function(e) {
+    console.warn('SB saveUser:', e.message);
+    // On continue quand même en local
+    var successMsg = 'Compte créé ! Bienvenue ' + prenom + ' 🎉';
+    msg2.textContent = successMsg;
+    setTimeout(showDash, 900);
+  });
+}
+
+function doLogout() {
+  clearSession();
+  document.getElementById('dashSection').style.display = 'none';
+  document.getElementById('authSection').style.display = 'flex';
+}
+
+// ══ DASHBOARD ══
+function showDash() {
+  var session = getSession();
+  if (!session) return;
+
+  var users = getUsers();
+  var user  = users.find(function(u){ return u.id === session.id; });
+  if (!user) { clearSession(); return; }
+
+  document.getElementById('authSection').style.display = 'none';
+  document.getElementById('dashSection').style.display = 'block';
+
+  // Avatar & infos
+  document.getElementById('userAvatar').textContent  = user.prenom ? user.prenom[0].toUpperCase() : '?';
+  document.getElementById('userName').textContent    = (user.prenom || '') + ' ' + (user.nom || '');
+  document.getElementById('userEmail').textContent   = user.email;
+  document.getElementById('referralCode').textContent = user.refCode || '—';
+
+  // Points & grade
+  var pts   = user.points || 0;
+  var grade = getGrade(pts);
+  var nextG = GRADES.find(function(g){ return g.min > pts; });
+
+  document.getElementById('userPoints').textContent = pts.toLocaleString('fr-FR');
+  var gradeEl = document.getElementById('userGrade');
+  gradeEl.textContent = grade.name;
+  gradeEl.style.cssText = 'background:' + grade.color + '22;color:' + grade.color + ';border:1px solid ' + grade.color + '44;padding:3px 10px;border-radius:20px;font-family:Orbitron,monospace;font-size:9px;font-weight:700;letter-spacing:2px;display:inline-block;margin-top:6px;';
+
+  // Carte conversion points
+  updateConvertCard(pts);
+  renderConvertHistory(user.id);
+
+  // Barre grade
+  if (nextG) {
+    var pct = Math.min(100, Math.round((pts - grade.min) / (nextG.min - grade.min) * 100));
+    document.getElementById('gradeBar').style.cssText = 'height:100%;border-radius:6px;width:'+pct+'%;background:linear-gradient(90deg,'+grade.color+','+grade.color+'99);transition:width 0.8s ease;';
+    document.getElementById('gradeNext').textContent = pct + '% vers ' + nextG.name + ' (' + nextG.min.toLocaleString('fr-FR') + ' pts)';
+  } else {
+    document.getElementById('gradeBar').style.cssText = 'height:100%;border-radius:6px;width:100%;background:linear-gradient(90deg,#ffffff,#aaa);';
+    document.getElementById('gradeNext').textContent = '🏆 Grade maximum atteint !';
+  }
+
+  // Commandes
+  var orders = getOrders().filter(function(o){ return o.userId === user.id; });
+  document.getElementById('userOrderCount').textContent = orders.length;
+  var totalSpent = orders.reduce(function(s,o){ return s + parseFloat(o.total||0); }, 0);
+  document.getElementById('userTotal').textContent = totalSpent.toFixed(2).replace('.',',') + '€';
+
+  // Liste commandes
+  var list = document.getElementById('ordersList');
+  if (orders.length === 0) {
+    list.innerHTML = '<div class="empty-orders">Aucune commande pour le moment</div>';
+  } else {
+    list.innerHTML = orders.slice(0,10).map(function(o){
+      var st = o.status || 'Nouvelle';
+      var stCls = st === 'Livrée' ? 'ok' : st === 'Expédiée' ? 'ok' : 'pending';
+      var date = o.date ? new Date(o.date).toLocaleDateString('fr-FR') : '—';
+      var items = (o.items||[]).map(function(i){ return i.qty+'x '+i.key; }).join(', ');
+      return '<div class="order-item">' +
+        '<div><div class="order-id">'+o.id+'</div><div class="order-date">'+date+' · '+items+'</div></div>' +
+        '<div class="order-total">'+parseFloat(o.total||0).toFixed(2).replace('.',',')+'€</div>' +
+        '<span class="order-status '+stCls+'">'+st+'</span>' +
+        '</div>';
+    }).join('');
+  }
+
+
+  // ── Stats parrainage ──
+  try {
+    var allUsers = getUsers();
+    var filleuls = allUsers.filter(function(u){ return u.referredBy === user.id; });
+    var allOrders = getOrders();
+    var filleulOrders = allOrders.filter(function(o){
+      return filleuls.some(function(f){ return f.id === o.userId; });
+    });
+
+    document.getElementById('refCount').textContent  = filleuls.length;
+    document.getElementById('refOrders').textContent = filleulOrders.length;
+
+    // Barre de progression vers le prochain coupon
+    var totalRef = filleuls.length;
+    var nextMilestone = Math.ceil((totalRef + 0.5) / 10) * 10;
+    var progressInCycle = totalRef % 10;
+    var pct = Math.round(progressInCycle / 10 * 100);
+    var nextLabel = document.getElementById('refNextCoupon');
+    var progressBar = document.getElementById('refProgressBar');
+    if (nextLabel) nextLabel.textContent = progressInCycle + ' / 10 filleuls';
+    if (progressBar) progressBar.style.width = pct + '%';
+
+    // Coupons parrainage déjà gagnés
+    try {
+      var allPromos = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+      var myCoupons = allPromos.filter(function(p){ return p.source === 'parrainage_coupon' && p.userId === user.id; });
+      var couponsEl = document.getElementById('refCouponsList');
+      if (couponsEl && myCoupons.length > 0) {
+        couponsEl.style.display = '';
+        couponsEl.innerHTML = '<div style="font-size:10px;letter-spacing:1px;color:rgba(0,255,136,0.5);margin-bottom:6px;">COUPONS GAGNÉS</div>' +
+          myCoupons.map(function(c){
+            var used = c.uses >= (c.maxUses||1);
+            return '<div onclick="' + (used?'':"window._copyCode('" + c.code + "')") + '" style="display:inline-flex;align-items:center;gap:8px;background:rgba(0,255,136,' + (used?'0.04':'0.08') + ');border:1px solid rgba(0,255,136,' + (used?'0.08':'0.2') + ');border-radius:8px;padding:6px 12px;margin:0 6px 6px 0;cursor:' + (used?'default':'pointer') + ';font-family:Orbitron,monospace;font-size:10px;color:' + (used?'rgba(255,255,255,0.2)':'#00ff88') + ';letter-spacing:1px;">' +
+              c.code + ' <span style="opacity:0.6;">-20€</span>' + (used?' <span style="font-size:9px;">[UTILISÉ]</span>':'') +
+            '</div>';
+          }).join('');
+      }
+    } catch(e){}
+
+    // Afficher la liste si des filleuls
+    if (filleuls.length > 0) {
+      var listEl = document.getElementById('referralList');
+      var itemsEl = document.getElementById('referralListItems');
+      if (listEl && itemsEl) {
+        listEl.style.display = '';
+        itemsEl.innerHTML = filleuls.map(function(f){
+          var fOrders = allOrders.filter(function(o){ return o.userId === f.id; });
+          var fTotal  = fOrders.reduce(function(s,o){ return s + parseFloat(o.total||0); }, 0);
+          return '<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(0,200,255,0.04);border:1px solid rgba(0,200,255,0.08);border-radius:8px;margin-bottom:6px;">' +
+            '<div>' +
+              '<div style="font-size:12px;color:#fff;">' + (f.prenom||'') + ' ' + (f.nom||'') + '</div>' +
+              '<div style="font-size:11px;color:rgba(255,255,255,0.3);">' + fOrders.length + ' commande(s) · ' + fTotal.toFixed(2).replace('.',',') + '€</div>' +
+            '</div>' +
+            '<span style="font-family:Orbitron,monospace;font-size:10px;color:#00ff88;letter-spacing:1px;">filleul ✓</span>' +
+          '</div>';
+        }).join('');
+      }
+    }
+
+    // Afficher le code promo filleul si présent dans custom_promos
+    try {
+      var customPromos = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+      if (Array.isArray(customPromos)) {
+        var myPromo = customPromos.find(function(p){ return p.source === 'parrainage' && p.userId === user.id && p.active && p.uses < (p.maxUses||1); });
+        if (myPromo) {
+          var promoSect = document.getElementById('promoSection');
+          var promoList = document.getElementById('promoList');
+          if (promoSect && promoList) {
+            promoSect.style.display = '';
+            var expiry = myPromo.expiresAt ? ' · exp. ' + new Date(myPromo.expiresAt).toLocaleDateString('fr-FR') : '';
+            var promoHtml = '<div class="promo-chip" onclick="window._copyCode(\'' + myPromo.code + '\')" title="Code parrainage filleul">' + myPromo.code + ' — -' + myPromo.discount + '%' + expiry + '</div>';
+            promoList.innerHTML = promoHtml + promoList.innerHTML;
+          }
+        }
+      }
+    } catch(e) {}
+  } catch(e) {}
+
+  // Promos fidélité
+  var fidePromos = getFidePromos()[user.id] || [];
+  if (fidePromos.length > 0) {
+    document.getElementById('promoSection').style.display = '';
+    document.getElementById('promoList').innerHTML = fidePromos.map(function(p){
+      return '<div class="promo-chip" onclick="copyCode(\''+p.code+'\')">'+p.code+' — '+p.label+'</div>';
+    }).join('');
+  }
+}
+
+function copyReferral() {
+  var code = document.getElementById('referralCode').textContent;
+  if (code === '—') return;
+  navigator.clipboard.writeText(code).catch(function(){
+    var ta = document.createElement('textarea'); ta.value = code;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  var btn = event.target;
+  btn.textContent = '✓ Copié !';
+  setTimeout(function(){ btn.textContent = '📋 Copier'; }, 2000);
+}
+
+function shareReferral() {
+  var code = document.getElementById('referralCode').textContent;
+  if (code === '—') return;
+  var session = getSession();
+  var users = getUsers();
+  var user = users.find(function(u){ return u.id === session.id; });
+  var prenom = user ? user.prenom : '';
+  var msg = 'Rejoins PEPTOIDS et obtiens -10% sur ta première commande avec mon code de parrainage : ' + code + '\nhttps://peptoids.fr';
+  if (navigator.share) {
+    navigator.share({ title: 'PEPTOIDS — Code parrainage', text: msg }).catch(function(){});
+  } else {
+    navigator.clipboard.writeText(msg).catch(function(){
+      var ta = document.createElement('textarea'); ta.value = msg;
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    });
+    var btn = event.target;
+    btn.textContent = '✓ Copié !';
+    setTimeout(function(){ btn.textContent = '🔗 Partager'; }, 2000);
+  }
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).catch(function(){
+    var ta = document.createElement('textarea'); ta.value = code;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  event.target.textContent = '✓ Copié !';
+  setTimeout(function(){ event.target.textContent = code + ' — ' + event.target.textContent.split('—')[1]; }, 2000);
+}
+window._copyCode = copyCode;
+
+
+// ══ CONVERSION POINTS → CODE PROMO ══
+var CONVERT_COST = 2000;
+var CONVERT_VALUE = 10; // euros
+var CONVERT_VALIDITY_DAYS = 90;
+
+function getFideConvertedCodes(userId) {
+  try {
+    var all = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
+    return all[userId] || [];
+  } catch(e) { return []; }
+}
+
+function saveFideConvertedCode(userId, entry) {
+  try {
+    var all = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
+    if (!all[userId]) all[userId] = [];
+    all[userId].push(entry);
+    localStorage.setItem('peptoids:fide_converted', JSON.stringify(all));
+  } catch(e) {}
+}
+
+function updateConvertCard(pts) {
+  var displayEl = document.getElementById('convertPtsDisplay');
+  var barEl      = document.getElementById('convertBar');
+  var labelEl    = document.getElementById('convertProgressLabel');
+  var btnEl      = document.getElementById('btnConvert');
+  if (!displayEl) return;
+
+  displayEl.textContent = pts.toLocaleString('fr-FR');
+  var pct = Math.min(100, Math.round(pts / CONVERT_COST * 100));
+  barEl.style.width = pct + '%';
+
+  if (pts >= CONVERT_COST) {
+    var times = Math.floor(pts / CONVERT_COST);
+    labelEl.textContent = times + ' code(s) disponible(s) à générer';
+    labelEl.style.color = 'rgba(0,255,136,0.7)';
+    btnEl.disabled = false;
+  } else {
+    var remaining = CONVERT_COST - pts;
+    labelEl.textContent = remaining.toLocaleString('fr-FR') + ' pts manquants pour un code -' + CONVERT_VALUE + '€';
+    labelEl.style.color = '';
+    btnEl.disabled = true;
+  }
+}
+
+function renderConvertHistory(userId) {
+  var codes = getFideConvertedCodes(userId);
+  if (codes.length === 0) return;
+  var histEl = document.getElementById('convertHistory');
+  var listEl = document.getElementById('convertHistoryList');
+  if (!histEl || !listEl) return;
+  histEl.style.display = '';
+  listEl.innerHTML = codes.slice().reverse().map(function(c) {
+    var exp = c.expiresAt ? ' · exp. ' + new Date(c.expiresAt).toLocaleDateString('fr-FR') : '';
+    var usedCls = c.used ? ' used' : '';
+    var usedTag = c.used ? ' <span style="font-size:9px;opacity:0.5;">[UTILISÉ]</span>' : ' <span style="font-size:9px;color:rgba(0,255,136,0.5);">-' + CONVERT_VALUE + '€</span>';
+    return '<span class="convert-chip' + usedCls + '" onclick="' + (c.used ? '' : 'window._copyCode(\''+c.code+'\')') + '" title="' + exp + '">' + c.code + usedTag + '</span>';
+  }).join('');
+}
+
+function convertPoints() {
+  var session = getSession();
+  if (!session) return;
+  var users = getUsers();
+  var userIdx = users.findIndex(function(u){ return u.id === session.id; });
+  if (userIdx === -1) return;
+  var user = users[userIdx];
+  var pts = user.points || 0;
+  if (pts < CONVERT_COST) return;
+
+  // Déduire les points
+  user.points = pts - CONVERT_COST;
+  users[userIdx] = user;
+  saveUsers(users);
+
+  // Générer code unique
+  var suffix = Math.random().toString(36).substr(2,6).toUpperCase();
+  var code = 'FIDE-' + suffix;
+  var expiresAt = new Date(Date.now() + CONVERT_VALIDITY_DAYS * 24 * 60 * 60 * 1000).toISOString();
+
+  var entry = {
+    code: code,
+    discount: CONVERT_VALUE,
+    discountType: 'fixed',
+    singleUse: true,
+    maxUses: 1,
+    uses: 0,
+    active: true,
+    source: 'fidelite',
+    userId: user.id,
+    expiresAt: expiresAt,
+    created: new Date().toISOString(),
+    used: false
+  };
+
+  // Sauvegarder dans custom_promos (pour le checkout)
+  try {
+    var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+    if (!Array.isArray(cp)) cp = [];
+    cp.push(entry);
+    localStorage.setItem('peptoids:custom_promos', JSON.stringify(cp));
+    fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
+      method: 'POST',
+      headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
+      body: JSON.stringify(entry)
+    }).catch(function(e){ console.warn('SB fide promo:', e.message); });
+  } catch(e) {}
+
+  // Sync Supabase
+  fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
+    method: 'POST',
+    headers: SBH,
+    body: JSON.stringify(entry)
+  }).catch(function(e){ console.warn('SB fide promo:', e.message); });
+
+  // Sauvegarder dans l'historique fidélité
+  saveFideConvertedCode(user.id, entry);
+
+  // Afficher le résultat
+  var resultEl = document.getElementById('convertResult');
+  var codeEl   = document.getElementById('convertResultCode');
+  var labelEl2 = document.getElementById('convertResultLabel');
+  if (resultEl && codeEl) {
+    codeEl.textContent = code;
+    labelEl2.textContent = 'Valable ' + CONVERT_VALIDITY_DAYS + ' jours · usage unique · -' + CONVERT_VALUE + '€ sur votre prochaine commande';
+    resultEl.style.display = '';
+    resultEl.style.animation = 'none';
+    setTimeout(function(){ resultEl.style.animation = ''; }, 10);
+  }
+
+  // Mettre à jour la carte
+  updateConvertCard(user.points);
+  renderConvertHistory(user.id);
+
+  // Rafraîchir le compteur points dans le dashboard
+  document.getElementById('userPoints').textContent = user.points.toLocaleString('fr-FR');
+
+  // Rafraîchir grade si besoin
+  var newGrade = getGrade(user.points);
+  var gradeEl = document.getElementById('userGrade');
+  if (gradeEl) {
+    gradeEl.textContent = newGrade.name;
+    gradeEl.style.cssText = 'background:'+newGrade.color+'22;color:'+newGrade.color+';border:1px solid '+newGrade.color+'44;padding:3px 10px;border-radius:20px;font-family:Orbitron,monospace;font-size:9px;font-weight:700;letter-spacing:2px;display:inline-block;margin-top:6px;';
+  }
+}
+
+function copyConvertedCode() {
+  var code = document.getElementById('convertResultCode').textContent;
+  if (!code || code === '—') return;
+  navigator.clipboard.writeText(code).catch(function(){
+    var ta = document.createElement('textarea'); ta.value = code;
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  var btn = document.getElementById('btnCopyConverted');
+  btn.textContent = '✓ Copié !';
+  setTimeout(function(){ btn.textContent = '📋 Copier'; }, 2000);
+}
+
+
+(function(){
+  // Vérifier si paramètre ?add= (ajout panier depuis produit)
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('add')) {
+    window.location.href = 'index.html?add=' + params.get('add');
+    return;
+  }
+
+  var session = getSession();
+  if (session) {
+    showDash();
+  }
+})();
+</script>
+<script id="page-transition-js">
+(function(){
+  var ov = document.getElementById('pt-overlay');
+  if (!ov) return;
+  window.addEventListener('load', function(){ ov.classList.remove('in'); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('tel') || href.startsWith('mailto') || href.startsWith('javascript')) return;
+    e.preventDefault();
+    ov.classList.add('in');
+    setTimeout(function(){ window.location.href = href; }, 460);
+  });
+  window.addEventListener('beforeunload', function(){ ov.classList.add('in'); });
+})();
+</script>
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>

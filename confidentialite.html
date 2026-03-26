@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politique de Confidentialité — PEPTOIDS</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzAxMDYxMCIvPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJsaXEiIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0icmdiYSgxNjgsODUsMjQ3LDAuOSkiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSJyZ2JhKDYwLDAsMTYwLDEpIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB4PSIxMSIgeT0iMTQiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxNCIgcng9IjIiIGZpbGw9InJnYmEoOCwxNCwzNCwwLjk1KSIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC4zKSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMS41IiB5PSIxOSIgd2lkdGg9IjkiIGhlaWdodD0iOSIgZmlsbD0idXJsKCNsaXEpIi8+CiAgPHJlY3QgeD0iMTEiIHk9IjciIHdpZHRoPSIxMCIgaGVpZ2h0PSI3IiByeD0iMiIgZmlsbD0iIzJhMDg0MCIgc3Ryb2tlPSJyZ2JhKDE2OCw4NSwyNDcsMC40KSIgc3Ryb2tlLXdpZHRoPSIwLjUiLz4KICA8cmVjdCB4PSIxMCw1IiB5PSIxMy41IiB3aWR0aD0iMTEiIGhlaWdodD0iMS41IiByeD0iMC41IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMTgwLDgwLDI1NSwwLjgpIiBzdHJva2Utd2lkdGg9IjAuOCIvPgogIDx0ZXh0IHg9IjE2IiB5PSIxMi41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjUuNSIgZm9udC13ZWlnaHQ9IjkwMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjcpIj5QPC90ZXh0Pgo8L3N2Zz4=">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan: #00c8ff;
+  --purple: #a855f7;
+  --dark: #020818;
+  --darker: #010610;
+  --card: rgba(6,14,38,0.95);
+  --border: rgba(0,200,255,0.13);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--darker);
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+body::before {
+  content:'';
+  position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);
+  background-size:42px 42px;
+  pointer-events:none;
+}
+
+/* NAV */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:64px;
+  background:rgba(1,6,16,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(0,200,255,0.08);
+}
+.nav-logo {
+  font-family:'Orbitron',monospace;font-weight:900;font-size:22px;letter-spacing:4px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;
+}
+.nav-back {
+  font-family:'Exo 2',sans-serif;font-size:12px;letter-spacing:2px;
+  color:rgba(255,255,255,0.4);text-decoration:none;
+  border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 16px;
+  transition:all 0.2s;
+}
+.nav-back:hover { color:#fff;border-color:rgba(0,200,255,0.3); }
+
+/* HERO */
+.hero {
+  position:relative;z-index:1;
+  padding:120px 40px 60px;
+  max-width:800px;margin:0 auto;
+  text-align:center;
+}
+.hero-tag {
+  display:inline-block;font-family:'Orbitron',monospace;font-size:9px;
+  letter-spacing:4px;color:rgba(0,200,255,0.6);
+  border:1px solid rgba(0,200,255,0.15);border-radius:20px;
+  padding:6px 16px;margin-bottom:20px;
+}
+.hero-title {
+  font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(22px,4vw,36px);
+  letter-spacing:3px;line-height:1.2;margin-bottom:16px;
+}
+.hero-title span {
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-date {
+  font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:2px;
+}
+
+/* CONTENT */
+.content {
+  position:relative;z-index:1;
+  max-width:800px;margin:0 auto;padding:0 40px 80px;
+}
+
+.section {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px;
+  margin-bottom:20px;
+}
+.section-num {
+  font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;
+  color:rgba(0,200,255,0.5);margin-bottom:8px;
+}
+.section-title {
+  font-family:'Orbitron',monospace;font-size:14px;font-weight:700;
+  color:#fff;letter-spacing:2px;margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(0,200,255,0.1);
+}
+.section p {
+  font-size:13px;line-height:1.8;color:rgba(255,255,255,0.55);margin-bottom:12px;
+}
+.section p:last-child { margin-bottom:0; }
+.section ul {
+  list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;
+}
+.section ul li {
+  font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;
+  padding-left:16px;position:relative;
+}
+.section ul li::before {
+  content:'—';position:absolute;left:0;color:rgba(0,200,255,0.4);
+}
+.highlight {
+  display:inline-block;
+  background:rgba(0,200,255,0.07);
+  border:1px solid rgba(0,200,255,0.15);
+  border-radius:6px;padding:2px 8px;
+  color:rgba(0,200,255,0.8);font-family:'Orbitron',monospace;font-size:11px;
+}
+.contact-box {
+  background:rgba(0,200,255,0.05);
+  border:1px solid rgba(0,200,255,0.18);
+  border-radius:10px;padding:20px;margin-top:16px;
+}
+.contact-box p { color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8; }
+
+/* FOOTER */
+.page-footer {
+  position:relative;z-index:1;
+  border-top:1px solid rgba(0,200,255,0.08);
+  padding:24px 40px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.page-footer span {
+  font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;
+}
+
+@media(max-width:600px){
+  nav{padding:0 20px;}
+  .hero{padding:100px 20px 40px;}
+  .content{padding:0 20px 60px;}
+  .section{padding:22px;}
+  .page-footer{padding:20px;}
+}
+</style>
+
+<style id="page-transition-css">
+#pt-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #010610;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+#pt-overlay.in { opacity: 1; pointer-events: all; }
+#pt-scan {
+  position: absolute;
+  top: -2px; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00c8ff 30%, #a855f7 70%, transparent);
+  box-shadow: 0 0 20px 4px rgba(0,200,255,0.6);
+  opacity: 0;
+}
+#pt-overlay.in #pt-scan {
+  opacity: 1;
+  animation: ptScan 0.45s cubic-bezier(0.4,0,0.6,1) forwards;
+}
+@keyframes ptScan {
+  0%   { top: 0%; opacity: 1; }
+  100% { top: 100%; opacity: 0.3; }
+}
+#pt-logo {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Orbitron', monospace; font-weight: 900;
+  font-size: clamp(20px,4vw,40px); letter-spacing: 8px;
+  background: linear-gradient(90deg, #00c8ff, #a855f7);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; opacity: 0;
+}
+#pt-overlay.in #pt-logo {
+  animation: ptLogoIn 0.45s 0.05s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes ptLogoIn {
+  0%   { opacity:0; transform: translate(-50%,-50%) scale(0.7); }
+  60%  { opacity:1; transform: translate(-50%,-50%) scale(1.05); }
+  100% { opacity:0.5; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes fadeInPage {
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+body { animation: fadeInPage 0.45s ease forwards; }
+</style>
+</head>
+<body>
+<div id="pt-overlay"><div id="pt-scan"></div><div id="pt-logo">PEPTOIDS</div></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">PEPTOIDS</a>
+  <a href="index.html" class="nav-back">← Retour</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">✦ Légal ✦</div>
+  <h1 class="hero-title">Politique de<br><span>Confidentialité</span></h1>
+  <div class="hero-date">Dernière mise à jour : Mars 2026</div>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <div class="section-num">01</div>
+    <div class="section-title">INTRODUCTION</div>
+    <p>PEPTOIDS s'engage à protéger et respecter votre vie privée. La présente politique de confidentialité décrit comment nous collectons, utilisons et protégeons vos données personnelles lorsque vous utilisez notre site internet <span class="highlight">peptoids.fr</span>.</p>
+    <p>En utilisant notre site, vous acceptez les pratiques décrites dans cette politique. Nous vous recommandons de la lire attentivement.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">02</div>
+    <div class="section-title">DONNÉES COLLECTÉES</div>
+    <p>Dans le cadre de votre utilisation de notre site et de vos commandes, nous sommes susceptibles de collecter les données suivantes :</p>
+    <ul>
+      <li>Nom et prénom</li>
+      <li>Adresse email</li>
+      <li>Adresse postale de livraison</li>
+      <li>Numéro de téléphone (si fourni)</li>
+      <li>Historique des commandes</li>
+      <li>Données de navigation (cookies, adresse IP)</li>
+    </ul>
+    <p>Ces données sont collectées uniquement lorsque vous passez une commande, créez un compte ou nous contactez directement.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">03</div>
+    <div class="section-title">FINALITÉS DU TRAITEMENT</div>
+    <p>Vos données personnelles sont utilisées exclusivement pour :</p>
+    <ul>
+      <li>Traiter et expédier vos commandes</li>
+      <li>Gérer votre compte client et votre programme de fidélité</li>
+      <li>Vous envoyer des confirmations et mises à jour de commande</li>
+      <li>Répondre à vos demandes de support</li>
+      <li>Améliorer notre service et l'expérience utilisateur</li>
+      <li>Respecter nos obligations légales</li>
+    </ul>
+    <p>Nous ne vendons jamais vos données à des tiers. Vos informations restent strictement confidentielles.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">04</div>
+    <div class="section-title">BASE LÉGALE DU TRAITEMENT</div>
+    <p>Conformément au Règlement Général sur la Protection des Données (RGPD — Règlement UE 2016/679), le traitement de vos données repose sur les bases légales suivantes :</p>
+    <ul>
+      <li><strong style="color:rgba(255,255,255,0.8);">Exécution du contrat</strong> — traitement de votre commande et livraison</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Consentement</strong> — pour l'envoi de communications commerciales</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Obligation légale</strong> — conservation des données comptables et fiscales</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Intérêt légitime</strong> — amélioration de nos services et prévention de la fraude</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-num">05</div>
+    <div class="section-title">CONSERVATION DES DONNÉES</div>
+    <p>Vos données personnelles sont conservées pour les durées suivantes :</p>
+    <ul>
+      <li>Données de commande — 10 ans (obligation comptable)</li>
+      <li>Données de compte client — jusqu'à suppression de votre compte</li>
+      <li>Données de navigation — 13 mois maximum</li>
+      <li>Données de contact — 3 ans à compter du dernier contact</li>
+    </ul>
+    <p>À l'issue de ces délais, vos données sont supprimées ou anonymisées de manière sécurisée.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">06</div>
+    <div class="section-title">PARTAGE DES DONNÉES</div>
+    <p>Vos données peuvent être partagées avec les tiers suivants, dans le strict cadre de l'exécution de nos services :</p>
+    <ul>
+      <li><strong style="color:rgba(255,255,255,0.8);">Mondial Relay</strong> — pour la livraison de vos commandes</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Supabase</strong> — hébergement sécurisé de la base de données (serveurs UE)</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Netlify</strong> — hébergement du site web</li>
+    </ul>
+    <p>Tous nos prestataires sont soumis à des obligations contractuelles strictes de confidentialité et de sécurité des données. Aucune donnée n'est transférée en dehors de l'Union Européenne sans garanties appropriées.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">07</div>
+    <div class="section-title">COOKIES</div>
+    <p>Notre site utilise des cookies et technologies similaires pour :</p>
+    <ul>
+      <li>Maintenir votre session de connexion</li>
+      <li>Mémoriser votre panier et vos préférences</li>
+      <li>Analyser l'utilisation du site (statistiques anonymes)</li>
+    </ul>
+    <p>Vous pouvez configurer votre navigateur pour refuser les cookies. Cela peut toutefois affecter certaines fonctionnalités du site. Les données stockées localement (localStorage) restent sur votre appareil et ne sont pas transmises à des tiers.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">08</div>
+    <div class="section-title">VOS DROITS RGPD</div>
+    <p>Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :</p>
+    <ul>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit d'accès</strong> — obtenir une copie de vos données</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit de rectification</strong> — corriger des données inexactes</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit à l'effacement</strong> — supprimer vos données ("droit à l'oubli")</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit d'opposition</strong> — s'opposer au traitement de vos données</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit à la portabilité</strong> — recevoir vos données dans un format structuré</li>
+      <li><strong style="color:rgba(255,255,255,0.8);">Droit à la limitation</strong> — limiter le traitement de vos données</li>
+    </ul>
+    <p>Pour exercer ces droits, contactez-nous à l'adresse ci-dessous. Nous répondrons à votre demande dans un délai maximum de 30 jours.</p>
+    <p>Vous avez également le droit d'introduire une réclamation auprès de la <strong style="color:rgba(255,255,255,0.8);">CNIL</strong> (Commission Nationale de l'Informatique et des Libertés) — <span class="highlight">cnil.fr</span></p>
+  </div>
+
+  <div class="section">
+    <div class="section-num">09</div>
+    <div class="section-title">SÉCURITÉ</div>
+    <p>Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre toute perte, accès non autorisé, divulgation, altération ou destruction.</p>
+    <ul>
+      <li>Connexion sécurisée HTTPS / SSL 256-bit</li>
+      <li>Mots de passe stockés sous forme de hash (SHA-256)</li>
+      <li>Accès aux données restreint au personnel autorisé</li>
+      <li>Base de données hébergée sur infrastructure sécurisée Supabase</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-num">10</div>
+    <div class="section-title">CONTACT</div>
+    <p>Pour toute question relative à cette politique ou pour exercer vos droits, vous pouvez nous contacter :</p>
+    <div class="contact-box">
+      <p><strong style="color:rgba(255,255,255,0.8);">PEPTOIDS</strong><br>
+      Email : <span class="highlight"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="385b57564c595b4c78485d484c57515c4b165e4a">[email&#160;protected]</a></span><br>
+      Site : <span class="highlight">peptoids.fr</span></p>
+    </div>
+    <p style="margin-top:16px;">En cas de modification substantielle de cette politique, nous vous en informerons par email ou par une notice visible sur le site.</p>
+  </div>
+
+</div>
+
+<footer class="page-footer">
+  <span>© 2026 PEPTOIDS — Tous droits réservés</span>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <a href="cgv.html">CGV</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</footer>
+
+<script id="page-transition-js">
+(function(){
+  var ov = document.getElementById('pt-overlay');
+  if (!ov) return;
+  window.addEventListener('load', function(){ ov.classList.remove('in'); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('tel') || href.startsWith('mailto') || href.startsWith('javascript')) return;
+    e.preventDefault();
+    ov.classList.add('in');
+    setTimeout(function(){ window.location.href = href; }, 460);
+  });
+  window.addEventListener('beforeunload', function(){ ov.classList.add('in'); });
+})();
+</script>
+
+<!-- ── BANDEAU COOKIE RGPD ── -->
+<div id="cookie-banner" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(2,8,24,0.97);border-top:1px solid rgba(0,200,255,0.25);backdrop-filter:blur(16px);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;font-family:'Exo 2',sans-serif;box-shadow:0 -4px 40px rgba(0,200,255,0.08);transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.22,1,0.36,1);">
+  <div style="flex:1;min-width:240px;">
+    <p style="font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;color:#00c8ff;margin-bottom:6px;text-transform:uppercase;">Cookies &amp; Données</p>
+    <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.55;max-width:640px;">
+      Ce site utilise le stockage local (localStorage) pour gérer votre panier, session et préférences, ainsi que Supabase pour les données partagées.
+      Consultez notre <a href="confidentialite.html" style="color:#a855f7;text-decoration:none;border-bottom:1px solid rgba(168,85,247,0.4);">politique de confidentialité</a>.
+    </p>
+  </div>
+  <div style="display:flex;gap:10px;flex-shrink:0;">
+    <button onclick="setCookieConsent('refused')" style="padding:9px 20px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-family:'Exo 2',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='rgba(168,85,247,0.5)';this.style.color='rgba(255,255,255,0.8)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.55)'">Refuser</button>
+    <button onclick="setCookieConsent('accepted')" style="padding:9px 22px;border-radius:6px;border:1px solid rgba(0,200,255,0.4);background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15));color:#fff;font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.3),rgba(168,85,247,0.3))'" onmouseout="this.style.background='linear-gradient(135deg,rgba(0,200,255,0.15),rgba(168,85,247,0.15))'">Accepter</button>
+  </div>
+</div>
+<script>
+(function(){
+  function setCookieConsent(choice){
+    localStorage.setItem('peptoids:cookie_consent', JSON.stringify({choice:choice, date:new Date().toISOString()}));
+    var b=document.getElementById('cookie-banner');
+    b.style.transform='translateY(100%)';
+    setTimeout(function(){b.style.display='none';},400);
+  }
+  window.setCookieConsent=setCookieConsent;
+  var stored=localStorage.getItem('peptoids:cookie_consent');
+  if(!stored){
+    setTimeout(function(){
+      var b=document.getElementById('cookie-banner');
+      b.style.transform='translateY(0)';
+    },600);
+  }
+})();
+</script>
+<!-- ── FIN BANDEAU COOKIE ── -->
+</body>
+</html>
