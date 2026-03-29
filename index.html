@@ -390,6 +390,45 @@ nav {
 .fide-how-icon{font-size:32px;margin-bottom:12px;}
 .fide-how-title{font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:2px;color:#fff;margin-bottom:8px;}
 .fide-how-desc{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.6;}
+/* ── BUNDLE BUILDER ── */
+.bundle-section{width:100%;position:relative;z-index:1;padding:80px 40px;}
+.bundle-inner{max-width:1100px;margin:0 auto;}
+.bundle-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px;}
+.bundle-products{display:flex;flex-direction:column;gap:12px;}
+.bundle-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all 0.2s;position:relative;user-select:none;}
+.bundle-card:hover{border-color:rgba(0,200,255,0.3);transform:translateX(4px);}
+.bundle-card.selected{border-color:rgba(0,200,255,0.5);background:rgba(0,200,255,0.06);}
+.bundle-card.selected::after{content:'✓';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-family:'Orbitron',monospace;font-size:13px;font-weight:900;color:var(--cyan);}
+.bundle-card-emoji{font-size:28px;flex-shrink:0;}
+.bundle-card-info{flex:1;}
+.bundle-card-name{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#fff;letter-spacing:1px;}
+.bundle-card-price{font-size:12px;color:rgba(255,255,255,0.35);margin-top:3px;}
+.bundle-card-qty{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bundle-qty-btn{width:26px;height:26px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.bundle-qty-btn:hover{border-color:rgba(0,200,255,0.4);color:var(--cyan);}
+.bundle-qty-num{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:#fff;min-width:20px;text-align:center;}
+/* Récapitulatif */
+.bundle-summary{background:linear-gradient(135deg,rgba(0,200,255,0.05),rgba(168,85,247,0.05));border:1px solid rgba(0,200,255,0.15);border-radius:20px;padding:28px;position:sticky;top:80px;}
+.bundle-summary-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:20px;}
+.bundle-summary-items{min-height:80px;margin-bottom:20px;}
+.bundle-summary-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;}
+.bundle-summary-item:last-child{border-bottom:none;}
+.bundle-empty{font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding:20px 0;font-style:italic;}
+.bundle-discount-badge{background:linear-gradient(90deg,rgba(0,255,136,0.12),rgba(0,200,255,0.08));border:1px solid rgba(0,255,136,0.25);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:none;}
+.bundle-discount-label{font-size:10px;letter-spacing:2px;color:rgba(0,255,136,0.7);margin-bottom:4px;}
+.bundle-discount-value{font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:#00ff88;}
+.bundle-totals{border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;margin-bottom:20px;}
+.bundle-total-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:rgba(255,255,255,0.5);}
+.bundle-total-row.final{color:#fff;font-family:'Orbitron',monospace;font-size:16px;font-weight:900;margin-top:8px;}
+.bundle-total-row.saving{color:#00ff88;font-size:12px;}
+.bundle-add-btn{width:100%;padding:16px;background:linear-gradient(90deg,var(--cyan),var(--purple));border:none;border-radius:14px;font-family:'Orbitron',monospace;font-size:11px;font-weight:900;letter-spacing:2px;color:#000;cursor:pointer;transition:all 0.2s;}
+.bundle-add-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,200,255,0.35);}
+.bundle-add-btn:disabled{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.2);cursor:not-allowed;transform:none;}
+@media(max-width:768px){
+  .bundle-section{padding:60px 20px;}
+  .bundle-grid{grid-template-columns:1fr;}
+  .bundle-summary{position:static;}
+}
 /* ── NEWSLETTER ── */
 .newsletter-section {
   position:relative; z-index:1;
@@ -1156,6 +1195,46 @@ footer {
   </div>
 
 
+</section>
+
+<!-- ══ BUNDLE BUILDER ══ -->
+<section class="bundle-section" id="bundles">
+  <div class="bundle-inner">
+    <div class="section-header">
+      <div class="section-tag">✦ Bundle Builder ✦</div>
+      <h2 class="section-title">Composez votre <span class="grad">pack sur mesure</span></h2>
+      <p class="section-subtitle">Sélectionnez vos produits — plus vous en ajoutez, plus vous économisez</p>
+    </div>
+
+    <!-- Paliers de réduction -->
+    <div id="bundleDiscountTiers" style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:8px;"></div>
+
+    <div class="bundle-grid">
+      <!-- Liste produits -->
+      <div>
+        <div style="font-family:'Orbitron',monospace;font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.3);margin-bottom:14px;">CHOISISSEZ VOS PRODUITS</div>
+        <div class="bundle-products" id="bundleProductsList"></div>
+      </div>
+
+      <!-- Récapitulatif -->
+      <div class="bundle-summary">
+        <div class="bundle-summary-title">VOTRE BUNDLE</div>
+        <div class="bundle-summary-items" id="bundleSummaryItems">
+          <div class="bundle-empty">Sélectionnez au moins 2 produits</div>
+        </div>
+        <div class="bundle-discount-badge" id="bundleDiscountBadge">
+          <div class="bundle-discount-label">RÉDUCTION APPLIQUÉE</div>
+          <div class="bundle-discount-value" id="bundleDiscountVal">-0%</div>
+        </div>
+        <div class="bundle-totals">
+          <div class="bundle-total-row"><span>Sous-total</span><span id="bundleSubtotal">0,00€</span></div>
+          <div class="bundle-total-row saving" id="bundleSavingRow" style="display:none;"><span>🎁 Économie bundle</span><span id="bundleSaving">-0,00€</span></div>
+          <div class="bundle-total-row final"><span>TOTAL</span><span id="bundleTotal">0,00€</span></div>
+        </div>
+        <button class="bundle-add-btn" id="bundleAddBtn" onclick="addBundleToCart()" disabled>AJOUTER AU PANIER →</button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ══ SECTION VIP ══ -->
@@ -3488,6 +3567,183 @@ function renderVipProducts() {
   }, { once: true });
 })();
 var BANNER_KEY = 'peptoids:banner';
+
+// ══ BUNDLE BUILDER ══
+var bundleSelection = {}; // { key: qty }
+
+var BUNDLE_DEFAULT_TIERS = [
+  { min: 2, pct: 10 },
+  { min: 3, pct: 15 },
+  { min: 4, pct: 20 }
+];
+
+function getBundleTiers() {
+  try {
+    var cfg = JSON.parse(localStorage.getItem('peptoids:bundle_config') || '{}');
+    return cfg.tiers || BUNDLE_DEFAULT_TIERS;
+  } catch(e) { return BUNDLE_DEFAULT_TIERS; }
+}
+
+function getBundleDiscount(totalQty) {
+  var tiers = getBundleTiers();
+  var applicable = tiers.filter(function(t){ return totalQty >= t.min; });
+  if (!applicable.length) return 0;
+  return applicable[applicable.length - 1].pct;
+}
+
+function initBundleBuilder() {
+  // Construire la liste des produits
+  var allProds = [];
+  Object.keys(PRODUCTS).forEach(function(key) {
+    allProds.push({ key: key, name: PRODUCTS[key].name, emoji: PRODUCTS[key].emoji || '🧪', price: getEffectivePrice(key).price });
+  });
+  try {
+    var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+    customs.filter(function(p){ return p.actif; }).forEach(function(p){
+      allProds.push({ key: p.id, name: p.nom, emoji: '🧪', price: p.prix });
+      if (!PRODUCTS[p.id]) PRODUCTS[p.id] = { name: p.nom, color: 'rgba(255,170,0,0.15)', emoji: '🧪', price: p.prix };
+    });
+  } catch(e){}
+
+  // Paliers
+  var tiersEl = document.getElementById('bundleDiscountTiers');
+  if (tiersEl) {
+    var tiers = getBundleTiers();
+    tiersEl.innerHTML = tiers.map(function(t){
+      return '<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.18);border-radius:10px;padding:8px 18px;text-align:center;">' +
+        '<div style="font-family:Orbitron,monospace;font-size:14px;font-weight:900;color:#00ff88;">-' + t.pct + '%</div>' +
+        '<div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-top:2px;">dès ' + t.min + ' produits</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Liste produits
+  var listEl = document.getElementById('bundleProductsList');
+  if (!listEl) return;
+  listEl.innerHTML = allProds.map(function(p) {
+    return '<div class="bundle-card" id="bcard-' + p.key + '" onclick="bundleToggle(\'' + p.key + '\')">' +
+      '<div class="bundle-card-emoji">' + p.emoji + '</div>' +
+      '<div class="bundle-card-info">' +
+        '<div class="bundle-card-name">' + p.name.split('/')[0].trim() + '</div>' +
+        '<div class="bundle-card-price">' + p.price.toFixed(2).replace('.',',') + '€ / unité</div>' +
+      '</div>' +
+      '<div class="bundle-card-qty" id="bqty-' + p.key + '" style="display:none;" onclick="event.stopPropagation();">' +
+        '<button class="bundle-qty-btn" onclick="bundleQty(\'' + p.key + '\',-1)">−</button>' +
+        '<div class="bundle-qty-num" id="bqnum-' + p.key + '">1</div>' +
+        '<button class="bundle-qty-btn" onclick="bundleQty(\'' + p.key + '\',1)">+</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  updateBundleSummary();
+}
+
+function bundleToggle(key) {
+  if (bundleSelection[key]) {
+    delete bundleSelection[key];
+    document.getElementById('bcard-' + key).classList.remove('selected');
+    document.getElementById('bqty-' + key).style.display = 'none';
+  } else {
+    bundleSelection[key] = 1;
+    document.getElementById('bcard-' + key).classList.add('selected');
+    document.getElementById('bqty-' + key).style.display = 'flex';
+    document.getElementById('bqnum-' + key).textContent = '1';
+  }
+  updateBundleSummary();
+}
+
+function bundleQty(key, delta) {
+  if (!bundleSelection[key]) return;
+  bundleSelection[key] = Math.max(1, bundleSelection[key] + delta);
+  document.getElementById('bqnum-' + key).textContent = bundleSelection[key];
+  updateBundleSummary();
+}
+
+function updateBundleSummary() {
+  var keys = Object.keys(bundleSelection);
+  var totalQty = keys.reduce(function(s, k){ return s + bundleSelection[k]; }, 0);
+  var subtotal = keys.reduce(function(s, k){ return s + (getEffectivePrice(k).price * bundleSelection[k]); }, 0);
+  var pct = getBundleDiscount(totalQty);
+  var saving = subtotal * pct / 100;
+  var total = subtotal - saving;
+
+  // Items
+  var itemsEl = document.getElementById('bundleSummaryItems');
+  if (keys.length === 0) {
+    itemsEl.innerHTML = '<div class="bundle-empty">Sélectionnez au moins 2 produits</div>';
+  } else {
+    itemsEl.innerHTML = keys.map(function(k){
+      var p = PRODUCTS[k]; if (!p) return '';
+      var price = getEffectivePrice(k).price;
+      var qty = bundleSelection[k];
+      return '<div class="bundle-summary-item">' +
+        '<span>' + (p.emoji||'🧪') + ' ' + p.name.split('/')[0].trim() + (qty > 1 ? ' ×' + qty : '') + '</span>' +
+        '<span style="font-family:Orbitron,monospace;font-size:12px;">' + (price*qty).toFixed(2).replace('.',',') + '€</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Badge réduction
+  var badge = document.getElementById('bundleDiscountBadge');
+  var discEl = document.getElementById('bundleDiscountVal');
+  if (pct > 0) { badge.style.display = ''; discEl.textContent = '-' + pct + '%'; }
+  else { badge.style.display = 'none'; }
+
+  // Totaux
+  document.getElementById('bundleSubtotal').textContent = subtotal.toFixed(2).replace('.',',') + '€';
+  var savRow = document.getElementById('bundleSavingRow');
+  if (saving > 0) { savRow.style.display = ''; document.getElementById('bundleSaving').textContent = '-' + saving.toFixed(2).replace('.',',') + '€'; }
+  else { savRow.style.display = 'none'; }
+  document.getElementById('bundleTotal').textContent = total.toFixed(2).replace('.',',') + '€';
+
+  // Bouton
+  var btn = document.getElementById('bundleAddBtn');
+  btn.disabled = totalQty < 2;
+  btn.textContent = totalQty >= 2 ? 'AJOUTER AU PANIER → (-' + pct + '%)' : 'SÉLECTIONNEZ 2 PRODUITS MIN.';
+}
+
+function addBundleToCart() {
+  var keys = Object.keys(bundleSelection);
+  if (keys.length === 0) return;
+  var totalQty = keys.reduce(function(s,k){ return s + bundleSelection[k]; }, 0);
+  var pct = getBundleDiscount(totalQty);
+
+  keys.forEach(function(key) {
+    var qty = bundleSelection[key];
+    var p = PRODUCTS[key]; if (!p) return;
+    if (cartItems[key]) { cartItems[key].qty += qty; }
+    else {
+      cartItems[key] = { name: p.name, color: p.color||'rgba(255,170,0,0.15)', emoji: p.emoji||'🧪', qty: qty,
+        get price(){ return getEffectivePrice(key).price; }
+      };
+    }
+  });
+
+  // Appliquer la réduction bundle comme promo fixe
+  if (pct > 0) {
+    promoDiscount = pct / 100;
+    promoApplied = 'BUNDLE-' + pct;
+    promoFixed = 0;
+  }
+
+  updateCart(); saveCart();
+  showToast('🎁 Bundle ajouté ! -' + pct + '% appliqué');
+  openCart();
+
+  // Reset sélection
+  Object.keys(bundleSelection).forEach(function(k){
+    var card = document.getElementById('bcard-' + k);
+    var qty  = document.getElementById('bqty-' + k);
+    if (card) card.classList.remove('selected');
+    if (qty)  qty.style.display = 'none';
+  });
+  bundleSelection = {};
+  updateBundleSummary();
+}
+
+// Init après chargement SB
+document.addEventListener('sb:ready', function(){ initBundleBuilder(); });
+setTimeout(function(){ if (document.getElementById('bundleProductsList') && !document.getElementById('bundleProductsList').innerHTML) initBundleBuilder(); }, 1500);
 
 // ══ AVIS DYNAMIQUES ══
 (function() {
