@@ -207,7 +207,6 @@ body::before {
       <button class="tab-btn" id="tabBtnMessages">📩 Messages</button>
       <button class="tab-btn" id="tabBtnAvis">⭐ Avis</button>
       <button class="tab-btn" id="tabBtnSlots">🎰 Machine à Sous</button>
-      <button class="tab-btn" id="tabBtnBundle">📦 Bundle Builder</button>
     </div>
 
     <!-- ORDERS -->
@@ -708,29 +707,6 @@ body::before {
       </div>
       <button onclick="saveSlotsConfig()" class="promo-create-btn" style="width:100%;padding:14px;font-size:12px;">💾 SAUVEGARDER TOUTE LA CONFIG</button>
       <div id="slotsSaveMsg" style="font-size:12px;color:var(--green);margin-top:10px;min-height:18px;text-align:center;"></div>
-    </div>
-
-    <!-- ══ BUNDLE BUILDER ══ -->
-    <div class="tab-panel" id="tabBundle">
-      <div class="section-head"><h2>📦 BUNDLE BUILDER</h2><span>Configurez les paliers de réduction affichés sur le site</span></div>
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:16px;">
-        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:6px;">PALIERS DE RÉDUCTION</div>
-        <div style="font-size:12px;color:rgba(255,255,255,0.25);margin-bottom:20px;">Définissez la réduction selon le nombre de produits sélectionnés dans le bundle.</div>
-        <div style="display:grid;grid-template-columns:160px 160px 36px;gap:10px;margin-bottom:10px;">
-          <div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">PRODUITS MIN.</div>
-          <div style="font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.25);">RÉDUCTION (%)</div>
-          <div></div>
-        </div>
-        <div id="bundleTiersEditor"></div>
-        <button onclick="addBundleTier()" class="promo-action-btn" style="margin-top:8px;">+ Ajouter un palier</button>
-        <button onclick="saveBundleConfig()" class="promo-create-btn" style="width:100%;padding:14px;font-size:12px;margin-top:16px;">💾 SAUVEGARDER</button>
-        <div id="bundleSaveMsg" style="font-size:12px;color:var(--green);margin-top:10px;min-height:18px;text-align:center;"></div>
-      </div>
-      <!-- Aperçu -->
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
-        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:14px;">APERÇU CLIENT</div>
-        <div id="bundleTiersPreview" style="display:flex;gap:12px;flex-wrap:wrap;"></div>
-      </div>
     </div>
 
     <div class="tab-panel" id="tabAvis">
@@ -1453,12 +1429,11 @@ document.getElementById('tabBtnVip').addEventListener('click', function() { swit
 document.getElementById('tabBtnMessages').addEventListener('click', function() { switchTab('messages'); });
 document.getElementById('tabBtnAvis').addEventListener('click', function() { switchTab('avis'); });
 document.getElementById('tabBtnSlots').addEventListener('click', function() { switchTab('slots'); loadSlotsAdmin(); });
-document.getElementById('tabBtnBundle').addEventListener('click', function() { switchTab('bundle'); loadBundleAdmin(); });
 
 function switchTab(tab) {
-  var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots','bundle'];
-  var btnIds  = ['tabBtnOrders','tabBtnPromos','tabBtnStock','tabBtnPP','tabBtnPrix','tabBtnProduits','tabBtnEmails','tabBtnComptes','tabBtnGraphiques','tabBtnBanniere','tabBtnVirement','tabBtnVip','tabBtnMessages','tabBtnAvis','tabBtnSlots','tabBtnBundle'];
-  var panelIds= ['tabOrders','tabPromos','tabStock','tabProductPromos','tabPrix','tabProduits','tabEmails','tabComptes','tabGraphiques','tabBanniere','tabVirement','tabVip','tabMessages','tabAvis','tabSlots','tabBundle'];
+  var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots'];
+  var btnIds  = ['tabBtnOrders','tabBtnPromos','tabBtnStock','tabBtnPP','tabBtnPrix','tabBtnProduits','tabBtnEmails','tabBtnComptes','tabBtnGraphiques','tabBtnBanniere','tabBtnVirement','tabBtnVip','tabBtnMessages','tabBtnAvis','tabBtnSlots'];
+  var panelIds= ['tabOrders','tabPromos','tabStock','tabProductPromos','tabPrix','tabProduits','tabEmails','tabComptes','tabGraphiques','tabBanniere','tabVirement','tabVip','tabMessages','tabAvis','tabSlots'];
   tabs.forEach(function(t,i){
     document.getElementById(btnIds[i]).classList.toggle('active', t===tab);
     document.getElementById(panelIds[i]).classList.toggle('active', t===tab);
@@ -1791,73 +1766,6 @@ function saveSlotsConfig() {
   saveSlotsConfigData(cfg);
   var msg = document.getElementById('slotsSaveMsg');
   if (msg) { msg.textContent = '✓ Config sauvegardée !'; setTimeout(function(){ msg.textContent=''; }, 2500); }
-}
-
-// ══ BUNDLE BUILDER ADMIN ══
-var _bundleTiers = [{min:2,pct:10},{min:3,pct:15},{min:4,pct:20}];
-
-function loadBundleAdmin() {
-  try {
-    var cfg = JSON.parse(localStorage.getItem('peptoids:bundle_config') || '{}');
-    _bundleTiers = cfg.tiers || [{min:2,pct:10},{min:3,pct:15},{min:4,pct:20}];
-  } catch(e){}
-  renderBundleTiersEditor();
-}
-
-function renderBundleTiersEditor() {
-  var el = document.getElementById('bundleTiersEditor');
-  if (!el) return;
-  el.innerHTML = _bundleTiers.map(function(t, i){
-    return '<div style="display:grid;grid-template-columns:160px 160px 36px;gap:10px;align-items:center;margin-bottom:10px;">' +
-      '<div style="position:relative;"><input type="number" min="2" max="20" class="promo-input" style="padding:8px 12px;" value="'+t.min+'" id="bMin'+i+'" oninput="updateBundlePreview()"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.3);">produits</span></div>' +
-      '<div style="position:relative;"><input type="number" min="1" max="80" class="promo-input" style="padding:8px 12px;" value="'+t.pct+'" id="bPct'+i+'" oninput="updateBundlePreview()"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,0.3);">%</span></div>' +
-      '<button onclick="removeBundleTier('+i+')" style="background:transparent;border:1px solid rgba(255,68,102,0.3);border-radius:6px;color:#ff4466;cursor:pointer;padding:6px 10px;font-size:12px;">✕</button>' +
-    '</div>';
-  }).join('');
-  updateBundlePreview();
-}
-
-function addBundleTier() {
-  var last = _bundleTiers[_bundleTiers.length-1] || {min:1,pct:0};
-  _bundleTiers.push({min: last.min+1, pct: Math.min(80, last.pct+5)});
-  renderBundleTiersEditor();
-}
-
-function removeBundleTier(i) {
-  if (_bundleTiers.length <= 1) return;
-  _bundleTiers.splice(i, 1);
-  renderBundleTiersEditor();
-}
-
-function updateBundlePreview() {
-  var preview = document.getElementById('bundleTiersPreview');
-  if (!preview) return;
-  var tiers = [];
-  for (var i=0; i<_bundleTiers.length; i++) {
-    var m = document.getElementById('bMin'+i), p = document.getElementById('bPct'+i);
-    if (m && p) tiers.push({min: parseInt(m.value)||2, pct: parseInt(p.value)||5});
-  }
-  preview.innerHTML = tiers.map(function(t){
-    return '<div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.18);border-radius:10px;padding:10px 18px;text-align:center;">' +
-      '<div style="font-family:Orbitron,monospace;font-size:16px;font-weight:900;color:#00ff88;">-'+t.pct+'%</div>' +
-      '<div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-top:2px;">dès '+t.min+' produits</div>' +
-    '</div>';
-  }).join('');
-}
-
-function saveBundleConfig() {
-  var tiers = [];
-  for (var i=0; i<_bundleTiers.length; i++) {
-    var m = document.getElementById('bMin'+i), p = document.getElementById('bPct'+i);
-    if (m && p) tiers.push({min: parseInt(m.value)||2, pct: parseInt(p.value)||5});
-  }
-  tiers.sort(function(a,b){ return a.min-b.min; });
-  var cfg = {tiers: tiers};
-  localStorage.setItem('peptoids:bundle_config', JSON.stringify(cfg));
-  SB.setSetting('bundle_config', cfg).catch(function(e){ console.warn('SB bundle:', e.message); });
-  _bundleTiers = tiers;
-  var msg = document.getElementById('bundleSaveMsg');
-  if (msg) { msg.textContent = '✓ Paliers sauvegardés et actifs sur le site !'; setTimeout(function(){ msg.textContent=''; }, 2500); }
 }
 
 // Auto-refresh
