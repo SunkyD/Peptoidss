@@ -2126,19 +2126,32 @@ window.applyPromo = function() {
     var fideCodes = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
     var fide = fideCodes.find(function(c){ return c.code === code && !c.used; });
     if (fide) {
-      // Check expiry
       if (fide.expiresAt && new Date() > new Date(fide.expiresAt)) {
-        msg.textContent = '✗ Ce code fidélité a expiré.';
-        msg.style.color = '#ff6060';
-        return;
+        msg.textContent = '✗ Ce code fidélité a expiré.'; msg.style.color = '#ff6060'; return;
       }
-      promoDiscount = 0;
-      promoFixed = fide.value;
-      promoApplied = code;
+      promoDiscount = 0; promoFixed = fide.value; promoApplied = code;
       msg.textContent = '✓ Code fidélité "' + code + '" appliqué — -' + fide.value + '€ de réduction !';
-      msg.style.color = '#00ff88';
-      updateCart();
-      return;
+      msg.style.color = '#00ff88'; updateCart(); return;
+    }
+  } catch(e) {}
+
+  // ── Codes convertis depuis points (fide_converted) ──
+  try {
+    var session = JSON.parse(localStorage.getItem('peptoids:account_session') || 'null');
+    if (session) {
+      var allConverted = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
+      var userConverted = allConverted[session.id] || [];
+      var fideConv = userConverted.find(function(c){ return c.code === code && !c.used; });
+      if (fideConv) {
+        if (fideConv.expiresAt && new Date() > new Date(fideConv.expiresAt)) {
+          msg.textContent = '✗ Ce code a expiré.'; msg.style.color = '#ff6060'; return;
+        }
+        promoDiscount = 0;
+        promoFixed = fideConv.fixedAmount || fideConv.discount || fideConv.value || 10;
+        promoApplied = code;
+        msg.textContent = '✓ Code "' + code + '" appliqué — -' + promoFixed + '€ de réduction !';
+        msg.style.color = '#00ff88'; updateCart(); return;
+      }
     }
   } catch(e) {}
 
