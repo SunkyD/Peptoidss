@@ -949,24 +949,18 @@ function convertPoints() {
     used: false
   };
 
-  // Sauvegarder dans custom_promos (pour le checkout)
+  // Sauvegarder dans custom_promos local (pour le checkout)
   try {
     var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
     if (!Array.isArray(cp)) cp = [];
     cp.push(entry);
     localStorage.setItem('peptoids:custom_promos', JSON.stringify(cp));
-    fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
-      method: 'POST',
-      headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
-      body: JSON.stringify(entry)
-    }).catch(function(e){ console.warn('SB fide promo:', e.message); });
   } catch(e) {}
-
-  // Sync Supabase
+  // Sync Supabase — colonnes existantes seulement
   fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
     method: 'POST',
-    headers: SBH,
-    body: JSON.stringify(entry)
+    headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
+    body: JSON.stringify({ code: code, pct: 0, max_uses: 1, uses: 0, active: true })
   }).catch(function(e){ console.warn('SB fide promo:', e.message); });
 
   // Sauvegarder dans l'historique fidélité

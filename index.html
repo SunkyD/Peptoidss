@@ -1612,10 +1612,25 @@ async function initSupabase() {
     } catch(e2) {}
     _origLS.setItem('peptoids:stock', JSON.stringify(stock));
 
-    // Promos → format compatible
-    var promosMap = {};
-    promos.forEach(function(p){ if(p.active) promosMap[p.code] = p.pct; });
-    _origLS.setItem('peptoids:custom_promos', JSON.stringify(promosMap));
+    // Promos → fusionner avec les codes locaux (FIDE, parrainage etc.) sans les écraser
+    try {
+      var existingLocal = JSON.parse(_origLS.getItem('peptoids:custom_promos') || '[]');
+      // Si c'est déjà un tableau (codes locaux enrichis), on garde
+      if (Array.isArray(existingLocal)) {
+        // Ajouter les codes SB qui ne sont pas déjà dans la liste locale
+        promos.forEach(function(p) {
+          if (p.active && !existingLocal.find(function(e){ return e.code === p.code; })) {
+            existingLocal.push({ code: p.code, discount: p.pct || 0, active: true, uses: p.uses || 0, maxUses: p.max_uses || null });
+          }
+        });
+        _origLS.setItem('peptoids:custom_promos', JSON.stringify(existingLocal));
+      } else {
+        // Ancien format objet — convertir + fusionner
+        var merged = [];
+        promos.forEach(function(p){ if(p.active) merged.push({ code: p.code, discount: p.pct || 0, active: true, uses: p.uses || 0, maxUses: p.max_uses || null }); });
+        _origLS.setItem('peptoids:custom_promos', JSON.stringify(merged));
+      }
+    } catch(e) {}
 
     // Fide promos
     var fideArr = fide.map(function(f) {
