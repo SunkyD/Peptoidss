@@ -2135,10 +2135,11 @@ window.applyPromo = function() {
     }
   } catch(e) {}
 
-  // ── Codes convertis depuis points (fide_converted) ──
+  // ── Codes convertis depuis points (fide_converted local + SB) ──
   try {
     var session = JSON.parse(localStorage.getItem('peptoids:account_session') || 'null');
     if (session) {
+      // Chercher d'abord en local
       var allConverted = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
       var userConverted = allConverted[session.id] || [];
       var fideConv = userConverted.find(function(c){ return c.code === code && !c.used; });
@@ -2152,8 +2153,34 @@ window.applyPromo = function() {
         msg.textContent = '✓ Code "' + code + '" appliqué — -' + promoFixed + '€ de réduction !';
         msg.style.color = '#00ff88'; updateCart(); return;
       }
+      // Si pas trouvé localement, chercher dans Supabase settings
+      var settingsKey = 'fide_codes_' + session.id;
+      fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent(settingsKey) + '&select=value', {
+        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+      }).then(function(r){ return r.json(); }).then(function(rows){
+        if (!rows || !rows[0] || !rows[0].value) { showPromoError(msg, '✗ Code invalide.'); return; }
+        var codes = Array.isArray(rows[0].value) ? rows[0].value : [];
+        var found = codes.find(function(c){ return c.code === code && !c.used; });
+        if (!found) { showPromoError(msg, '✗ Code invalide.'); return; }
+        if (found.expiresAt && new Date() > new Date(found.expiresAt)) { showPromoError(msg, '✗ Ce code a expiré.'); return; }
+        // Synchroniser en local
+        var ac2 = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
+        if (!ac2[session.id]) ac2[session.id] = [];
+        if (!ac2[session.id].find(function(c){ return c.code === code; })) ac2[session.id].push(found);
+        localStorage.setItem('peptoids:fide_converted', JSON.stringify(ac2));
+        // Appliquer
+        promoDiscount = 0;
+        promoFixed = found.fixedAmount || found.discount || found.value || 10;
+        promoApplied = code;
+        msg.style.display = 'block';
+        msg.textContent = '✓ Code "' + code + '" appliqué — -' + promoFixed + '€ de réduction !';
+        msg.style.color = '#00ff88'; updateCart();
+      }).catch(function(){ showPromoError(msg, '✗ Code invalide.'); });
+      return; // on attend la réponse async
     }
   } catch(e) {}
+
+  function showPromoError(el, txt) { el.textContent = txt; el.style.color = '#ff6060'; }
 
   // ── Codes custom depuis admin (avec usage unique + expiration) ──
   try {

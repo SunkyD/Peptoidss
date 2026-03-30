@@ -949,19 +949,35 @@ function convertPoints() {
     used: false
   };
 
-  // Sauvegarder dans custom_promos local (pour le checkout)
+  // 1. Sauvegarder localement dans fide_converted
+  saveFideConvertedCode(user.id, entry);
+
+  // 2. Sauvegarder dans custom_promos local
   try {
     var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
     if (!Array.isArray(cp)) cp = [];
     cp.push(entry);
     localStorage.setItem('peptoids:custom_promos', JSON.stringify(cp));
   } catch(e) {}
-  // Sync Supabase — colonnes existantes seulement
-  fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
-    method: 'POST',
-    headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
-    body: JSON.stringify({ code: code, pct: 0, max_uses: 1, uses: 0, active: true })
-  }).catch(function(e){ console.warn('SB fide promo:', e.message); });
+
+  // 3. Sauvegarder dans Supabase settings sous clé 'fide_codes_<userId>'
+  // pour pouvoir les récupérer depuis index.html
+  try {
+    var settingsKey = 'fide_codes_' + user.id;
+    var existing = [];
+    fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent(settingsKey) + '&select=value', {
+      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+    }).then(function(r){ return r.json(); }).then(function(rows){
+      if (rows && rows[0] && rows[0].value) existing = rows[0].value;
+      if (!Array.isArray(existing)) existing = [];
+      existing.push(entry);
+      fetch(SUPABASE_URL + '/rest/v1/settings?on_conflict=key', {
+        method: 'POST',
+        headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
+        body: JSON.stringify({ key: settingsKey, value: existing, updated_at: new Date().toISOString() })
+      }).catch(function(e){ console.warn('SB fide save:', e.message); });
+    }).catch(function(e){ console.warn('SB fide fetch:', e.message); });
+  } catch(e) {}
 
   // Sauvegarder dans l'historique fidélité
   saveFideConvertedCode(user.id, entry);
