@@ -2409,131 +2409,90 @@ function saveUserPoints() {
   setTimeout(function(){ btn.textContent='💾 Sauver'; btn.style.background=''; loadComptes(); }, 1500);
 }
 
+var _currentModalUser = null;
+
 function renderModalCodes(user) {
+  _currentModalUser = user;
   var section = document.getElementById('mCodesSection');
-  var list = document.getElementById('mCodesList');
+  var list    = document.getElementById('mCodesList');
   section.style.display = 'block';
-  list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">Chargement...</div>';
+  list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">⏳ Chargement...</div>';
 
-  var allCodes = [];
-
-  // 1. Codes admin manuels (promoCodes sur l'objet user)
-  (user.promoCodes || []).forEach(function(c){
-    allCodes.push({ code:c.code, label:'-'+c.value+'€', source:'Admin', used:c.used, expiresAt:c.expiresAt });
-  });
-
-  // 2. Codes custom_promos locaux filtrés par userId
-  try {
-    var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
-    if (Array.isArray(cp)) {
-      cp.filter(function(c){ return c.userId === user.id; }).forEach(function(c){
-        var label = c.fixedAmount ? '-'+c.fixedAmount+'€' : c.discount ? '-'+c.discount+'€' : '-?';
-        var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source === 'fidelite' ? 'Points fidélité' : 'Custom';
-        allCodes.push({ code:c.code, label:label, source:src, used:(c.uses||0) >= (c.maxUses||1), expiresAt:c.expiresAt });
-      });
-    }
-  } catch(e){}
-
-  // 3. Fetch Supabase settings fide_codes_<userId>
-  SB.getSetting('fide_codes_' + user.id).then(function(sbCodes){
-    if (Array.isArray(sbCodes)) {
-      sbCodes.forEach(function(c){
-        if (!allCodes.find(function(x){ return x.code === c.code; })) {
-          var label = c.fixedAmount ? '-'+c.fixedAmount+'€' : c.discount ? '-'+c.discount+'€' : '-10€';
-          var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source === 'admin' ? 'Admin' : 'Points fidélité';
-          allCodes.push({ code:c.code, label:label, source:src, used:c.used||false, expiresAt:c.expiresAt });
-        }
-      });
-    }
-    displayCodes(allCodes, user, list);
-  }).catch(function(){
-    displayCodes(allCodes, user, list);
+  // Charger depuis Supabase settings
+  SB.getSetting('fide_codes_' + user.id).then(function(codes) {
+    var arr = Array.isArray(codes) ? codes : [];
+    _displayCodes(arr, list, user.id);
+  }).catch(function() {
+    _displayCodes([], list, user.id);
   });
 }
 
-function displayCodes(allCodes, user, list) {
+function _displayCodes(codes, list, userId) {
   list.innerHTML = '';
-  if (allCodes.length === 0) {
+  if (codes.length === 0) {
     list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">Aucun code pour ce client</div>';
   } else {
-    allCodes.forEach(function(c) {
+    codes.forEach(function(c) {
       var div = document.createElement('div');
       div.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,200,255,0.06);';
-      var statusColor = c.used ? 'rgba(255,60,60,0.7)' : 'rgba(0,255,136,0.8)';
-      var statusText  = c.used ? '✗ Utilisé' : '✓ Actif';
+      var used = c.used || (c.uses >= (c.maxUses || 1));
+      var statusColor = used ? 'rgba(255,60,60,0.7)' : 'rgba(0,255,136,0.8)';
+      var statusText  = used ? '✗ Utilisé' : '✓ Actif';
+      var val = c.fixedAmount || c.discount || c.value || '?';
+      var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source === 'fidelite' ? 'Points fidélité' : 'Admin';
       var exp = c.expiresAt ? ' · exp. ' + new Date(c.expiresAt).toLocaleDateString('fr-FR') : '';
       div.innerHTML =
         '<div>' +
           '<div style="font-family:Orbitron,monospace;font-size:11px;color:#00c8ff;">' + c.code + '</div>' +
-          '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">' + c.label + ' · ' + c.source + exp + ' · <span style="color:'+statusColor+';">'+statusText+'</span></div>' +
-        '</div>';
-      if (c.source === 'Admin') {
-        div.innerHTML += '<button onclick="deleteUserCode(\'' + c.code + '\')" style="background:rgba(255,60,60,0.07);border:1px solid rgba(255,60,60,0.2);border-radius:6px;padding:4px 8px;color:rgba(255,100,100,0.6);cursor:pointer;font-size:11px;">✕</button>';
-      }
+          '<div style="font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;">-' + val + '€ · ' + src + exp + ' · <span style="color:' + statusColor + ';">' + statusText + '</span></div>' +
+        '</div>' +
+        '<button onclick="_deleteCode(\''+c.code+'\',\''+userId+'\')" style="background:rgba(255,60,60,0.07);border:1px solid rgba(255,60,60,0.2);border-radius:6px;padding:4px 8px;color:rgba(255,100,100,0.6);cursor:pointer;font-size:11px;">✕</button>';
       list.appendChild(div);
     });
   }
-
-  // Add code form
+  // Formulaire ajout
   var addRow = document.createElement('div');
   addRow.style.cssText = 'display:flex;gap:8px;margin-top:12px;align-items:center;';
   addRow.innerHTML =
-    '<input id="newCodeVal" type="number" min="1" max="100" placeholder="€" style="width:64px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.2);border-radius:8px;padding:8px;color:#fff;font-family:Orbitron,monospace;font-size:13px;font-weight:700;text-align:center;outline:none;">' +
-    '<button onclick="addUserCode()" class="promo-action-btn" style="flex:1;padding:8px 12px;">+ Créer un code</button>';
+    '<input id="newCodeVal" type="number" min="1" max="500" placeholder="€" style="width:72px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.2);border-radius:8px;padding:8px;color:#fff;font-family:Orbitron,monospace;font-size:13px;font-weight:700;text-align:center;outline:none;">' +
+    '<button onclick="addUserCode()" class="promo-action-btn" style="flex:1;padding:8px 12px;">+ Créer un code</button>' +
+    '<span id="addCodeMsg" style="font-size:11px;color:var(--green);min-width:60px;"></span>';
   list.appendChild(addRow);
 }
 
 function addUserCode() {
   if (!currentCompteId) return;
   var val = parseInt(document.getElementById('newCodeVal').value) || 0;
-  if (val <= 0) { alert('Valeur invalide'); return; }
-  var users = [];
-  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
-  var idx = users.findIndex(function(u){ return u.id === currentCompteId; });
-  if (idx < 0) return;
-  var code = 'FIDE-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-' + Date.now().toString(36).substr(-4).toUpperCase();
-  var expiry = new Date(); expiry.setDate(expiry.getDate() + 30);
-  if (!users[idx].promoCodes) users[idx].promoCodes = [];
-  users[idx].promoCodes.push({ code: code, value: val, used: false, createdAt: new Date().toISOString(), expiresAt: expiry.toISOString() });
-  // Sauvegarder dans fide_promos local
-  try {
-    var fc = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
-    fc.push({ code: code, value: val, userId: currentCompteId, used: false, expiresAt: expiry.toISOString() });
-    localStorage.setItem('peptoids:fide_promos', JSON.stringify(fc));
-  } catch(e) {}
-  localStorage.setItem('peptoids:users', JSON.stringify(users));
+  if (val <= 0) { alert('Montant invalide'); return; }
+  var code = 'ADMIN-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  var expiry = new Date(); expiry.setDate(expiry.getDate() + 90);
+  var entry = { code:code, discount:val, fixedAmount:val, discountType:'fixed', singleUse:true, maxUses:1, uses:0, active:true, source:'admin', userId:currentCompteId, expiresAt:expiry.toISOString(), used:false };
 
-  // Sync Supabase settings sous clé fide_codes_<userId>
-  var sbKey = 'fide_codes_' + currentCompteId;
-  var newEntry = { code: code, discount: val, discountType: 'fixed', singleUse: true, maxUses: 1, uses: 0, active: true, source: 'admin', userId: currentCompteId, expiresAt: expiry.toISOString(), used: false };
-  SB.getSetting(sbKey).then(function(existing){
+  // Charger liste existante, ajouter, sauvegarder
+  SB.getSetting('fide_codes_' + currentCompteId).then(function(existing){
     var arr = Array.isArray(existing) ? existing : [];
-    arr.push(newEntry);
-    SB.setSetting(sbKey, arr).catch(function(e){ console.warn('SB fide_codes:', e.message); });
+    arr.push(entry);
+    return SB.setSetting('fide_codes_' + currentCompteId, arr);
   }).catch(function(){
-    SB.setSetting(sbKey, [newEntry]).catch(function(e){ console.warn('SB fide_codes:', e.message); });
-  });
-
-  renderModalCodes(users[idx]);
+    return SB.setSetting('fide_codes_' + currentCompteId, [entry]);
+  }).then(function(){
+    var msg = document.getElementById('addCodeMsg');
+    if (msg) { msg.textContent = '✓ Créé !'; setTimeout(function(){ msg.textContent=''; }, 2000); }
+    if (_currentModalUser) renderModalCodes(_currentModalUser);
+  }).catch(function(e){ console.warn('SB addCode:', e); });
 }
 
-function deleteUserCode(code) {
-  if (!currentCompteId) return;
+function _deleteCode(code, userId) {
   if (!confirm('Supprimer le code ' + code + ' ?')) return;
-  var users = [];
-  try { users = JSON.parse(localStorage.getItem('peptoids:users') || '[]'); } catch(e) {}
-  var idx = users.findIndex(function(u){ return u.id === currentCompteId; });
-  if (idx < 0) return;
-  users[idx].promoCodes = (users[idx].promoCodes || []).filter(function(c){ return c.code !== code; });
-  // Remove from fide_promos too
-  try {
-    var fc = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
-    fc = fc.filter(function(c){ return c.code !== code; });
-    localStorage.setItem('peptoids:fide_promos', JSON.stringify(fc));
-  } catch(e) {}
-  localStorage.setItem('peptoids:users', JSON.stringify(users));
-  renderModalCodes(users[idx]);
+  SB.getSetting('fide_codes_' + userId).then(function(existing){
+    var arr = Array.isArray(existing) ? existing.filter(function(c){ return c.code !== code; }) : [];
+    return SB.setSetting('fide_codes_' + userId, arr);
+  }).then(function(){
+    if (_currentModalUser) renderModalCodes(_currentModalUser);
+  }).catch(function(e){ console.warn('SB deleteCode:', e); });
 }
+
+function deleteUserCode(code) { _deleteCode(code, currentCompteId); }
 
 function deleteAccount() {
   if (!currentCompteId) return;
