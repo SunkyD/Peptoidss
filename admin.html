@@ -2413,37 +2413,46 @@ function renderModalCodes(user) {
   var section = document.getElementById('mCodesSection');
   var list = document.getElementById('mCodesList');
   section.style.display = 'block';
-  list.innerHTML = '';
+  list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">Chargement...</div>';
 
-  // Collecter tous les codes de ce client
   var allCodes = [];
 
-  // 1. Codes admin manuels (promoCodes)
+  // 1. Codes admin manuels (promoCodes sur l'objet user)
   (user.promoCodes || []).forEach(function(c){
     allCodes.push({ code:c.code, label:'-'+c.value+'€', source:'Admin', used:c.used, expiresAt:c.expiresAt });
   });
 
-  // 2. Codes FIDE convertis depuis points (fide_converted)
-  try {
-    var fc = JSON.parse(localStorage.getItem('peptoids:fide_converted') || '{}');
-    var userFide = fc[user.id] || [];
-    userFide.forEach(function(c){
-      allCodes.push({ code:c.code, label:'-'+(c.discount||c.value||10)+'€', source:'Points fidélité', used:c.used, expiresAt:c.expiresAt });
-    });
-  } catch(e){}
-
-  // 3. Codes parrainage/slots depuis custom_promos
+  // 2. Codes custom_promos locaux filtrés par userId
   try {
     var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
     if (Array.isArray(cp)) {
       cp.filter(function(c){ return c.userId === user.id; }).forEach(function(c){
-        var label = c.fixedAmount ? '-'+c.fixedAmount+'€' : c.discount ? '-'+c.discount+'%' : '-?';
-        var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source || 'Custom';
-        allCodes.push({ code:c.code, label:label, source:src, used:c.uses >= (c.maxUses||1), expiresAt:c.expiresAt });
+        var label = c.fixedAmount ? '-'+c.fixedAmount+'€' : c.discount ? '-'+c.discount+'€' : '-?';
+        var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source === 'fidelite' ? 'Points fidélité' : 'Custom';
+        allCodes.push({ code:c.code, label:label, source:src, used:(c.uses||0) >= (c.maxUses||1), expiresAt:c.expiresAt });
       });
     }
   } catch(e){}
 
+  // 3. Fetch Supabase settings fide_codes_<userId>
+  SB.getSetting('fide_codes_' + user.id).then(function(sbCodes){
+    if (Array.isArray(sbCodes)) {
+      sbCodes.forEach(function(c){
+        if (!allCodes.find(function(x){ return x.code === c.code; })) {
+          var label = c.fixedAmount ? '-'+c.fixedAmount+'€' : c.discount ? '-'+c.discount+'€' : '-10€';
+          var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Machine à sous' : c.source === 'admin' ? 'Admin' : 'Points fidélité';
+          allCodes.push({ code:c.code, label:label, source:src, used:c.used||false, expiresAt:c.expiresAt });
+        }
+      });
+    }
+    displayCodes(allCodes, user, list);
+  }).catch(function(){
+    displayCodes(allCodes, user, list);
+  });
+}
+
+function displayCodes(allCodes, user, list) {
+  list.innerHTML = '';
   if (allCodes.length === 0) {
     list.innerHTML = '<div style="color:rgba(255,255,255,0.25);font-size:12px;padding:8px 0;">Aucun code pour ce client</div>';
   } else {
