@@ -2153,11 +2153,18 @@ window.applyPromo = function() {
           return;
         }
       }
-      promoDiscount = customCode.discount / 100;
-      promoFixed = customCode.fixedAmount || 0;
+      promoDiscount = 0;
+      promoFixed = 0;
+      // Détecter si montant fixe ou pourcentage
+      if (customCode.discountType === 'fixed' || customCode.fixedAmount > 0) {
+        promoFixed = customCode.fixedAmount || customCode.discount || 0;
+      } else {
+        promoDiscount = (customCode.discount || 0) / 100;
+        promoFixed = customCode.fixedAmount || 0;
+      }
       promoApplied = code;
-      var savingTxt = customCode.fixedAmount
-        ? '-' + customCode.fixedAmount + '€'
+      var savingTxt = (customCode.discountType === 'fixed' || customCode.fixedAmount > 0)
+        ? '-' + (customCode.fixedAmount || customCode.discount) + '€'
         : '-' + customCode.discount + '%';
       msg.textContent = '✓ Code "' + code + '" appliqué — ' + savingTxt + ' de réduction !';
       msg.style.color = '#00ff88';
