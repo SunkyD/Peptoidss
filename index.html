@@ -3817,16 +3817,21 @@ initBanner();
   } catch(e) {}
 })();
 
-// Lien Lucky si machine activée
-document.addEventListener('DOMContentLoaded', function() {
+// Lien Lucky — affiché après sync Supabase
+function showSlotsNav() {
   try {
-    var slotsCfg = JSON.parse(localStorage.getItem('peptoids:slots_config') || '{}');
-    if (slotsCfg.active) {
-      var slotsItem = document.getElementById('slotsNavItem');
-      if (slotsItem) slotsItem.style.display = '';
+    var cfg = JSON.parse(localStorage.getItem('peptoids:slots_config') || '{}');
+    if (cfg.active) {
+      var si = document.getElementById('slotsNavItem');
+      var ms = document.getElementById('mobileSlots');
+      if (si) si.style.display = '';
+      if (ms) ms.style.display = '';
     }
   } catch(e) {}
-});
+}
+document.addEventListener('sb:ready', showSlotsNav);
+// Fallback si SB déjà chargé
+if (window._sbReady) showSlotsNav();
 
 (function() {
   try {
@@ -4281,18 +4286,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (cartCount) obs.observe(cartCount, {childList:true, characterData:true, subtree:true});
   }
 });
-// Slots dans menu mobile
-document.addEventListener('DOMContentLoaded', function(){
-  try {
-    var cfg = JSON.parse(localStorage.getItem('peptoids:slots_config') || '{}');
-    if (cfg.active) {
-      var el = document.getElementById('mobileSlots');
-      if (el) el.style.display = '';
-      var si = document.getElementById('slotsNavItem');
-      if (si) si.style.display = '';
-    }
-  } catch(e){}
-});
+// Slots dans menu mobile — géré par showSlotsNav() ci-dessus
 </script>
 </body>
 </html>
