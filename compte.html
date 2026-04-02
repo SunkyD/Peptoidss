@@ -397,46 +397,33 @@ async function _sbFetch(method, path, body) {
 
 var SB = {
   async getUsers() {
-    var rows = await _sbFetch('GET', '/rest/v1/users?select=*');
+    var rows = await _sbFetch('GET', '/rest/v1/users?select=id,prenom,nom,email,pass_hash,ref_code,referred_by,points,created_at');
     return (rows || []).map(function(r) {
       return { id:r.id, prenom:r.prenom, nom:r.nom, email:r.email,
         pwd: r.pass_hash, refCode:r.ref_code, referredBy:r.referred_by||null,
-        points:r.points||0, referralCount:r.referral_count||0, createdAt:r.created_at };
+        points:r.points||0, createdAt:r.created_at };
     });
   },
   async saveUser(user) {
     return _sbFetch('POST', '/rest/v1/users?on_conflict=id', {
-      id:            user.id,
-      prenom:        user.prenom,
-      nom:           user.nom,
-      email:         user.email,
-      pass_hash:     user.pwd,
-      ref_code:      user.refCode   || null,
-      referred_by:   user.referredBy || null,
-      points:        user.points    || 0,
-      cumul_points:  0,
-      total_points:  0,
-      last_orders_total: 0,
-      bonus_applied: false,
-      promo_codes:   [],
-      created_at:    user.createdAt
+      id:           user.id,
+      prenom:       user.prenom,
+      nom:          user.nom,
+      email:        user.email,
+      pass_hash:    user.pwd,
+      ref_code:     user.refCode    || null,
+      referred_by:  user.referredBy || null,
+      points:       user.points     || 0,
+      created_at:   user.createdAt
     });
   },
-  async getSetting(key) {
-    var rows = await _sbFetch('GET', '/rest/v1/settings?key=eq.' + encodeURIComponent(key) + '&select=value');
-    if (!rows || rows.length === 0) return null;
-    return rows[0].value;
-  },
-  async setSetting(key, value) {
-    return _sbFetch('POST', '/rest/v1/settings?on_conflict=key', { key: key, value: value, updated_at: new Date().toISOString() });
-  },
   async getUserByEmail(email) {
-    var rows = await _sbFetch('GET', '/rest/v1/users?email=eq.' + encodeURIComponent(email) + '&select=*');
+    var rows = await _sbFetch('GET', '/rest/v1/users?email=eq.' + encodeURIComponent(email) + '&select=id,prenom,nom,email,pass_hash,ref_code,referred_by,points,created_at');
     if (!rows || rows.length === 0) return null;
     var r = rows[0];
     return { id:r.id, prenom:r.prenom, nom:r.nom, email:r.email,
       pwd:r.pass_hash, refCode:r.ref_code, referredBy:r.referred_by||null,
-      points:r.points||0, referralCount:r.referral_count||0, createdAt:r.created_at };
+      points:r.points||0, createdAt:r.created_at };
   }
 };
 
@@ -693,7 +680,7 @@ function showDash() {
 
   // Carte conversion points
   updateConvertCard(pts);
-  // codes chargés via loadUserCodes dans showDash
+  renderConvertHistory(user.id);
 
   // Barre grade
   if (nextG) {
@@ -789,61 +776,33 @@ function showDash() {
       }
     }
 
+    // Afficher le code promo filleul si présent dans custom_promos
+    try {
+      var customPromos = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+      if (Array.isArray(customPromos)) {
+        var myPromo = customPromos.find(function(p){ return p.source === 'parrainage' && p.userId === user.id && p.active && p.uses < (p.maxUses||1); });
+        if (myPromo) {
+          var promoSect = document.getElementById('promoSection');
+          var promoList = document.getElementById('promoList');
+          if (promoSect && promoList) {
+            promoSect.style.display = '';
+            var expiry = myPromo.expiresAt ? ' · exp. ' + new Date(myPromo.expiresAt).toLocaleDateString('fr-FR') : '';
+            var promoHtml = '<div class="promo-chip" onclick="window._copyCode(\'' + myPromo.code + '\')" title="Code parrainage filleul">' + myPromo.code + ' — -' + myPromo.discount + '%' + expiry + '</div>';
+            promoList.innerHTML = promoHtml + promoList.innerHTML;
+          }
+        }
+      }
+    } catch(e) {}
   } catch(e) {}
 
-  // Charger TOUS les codes depuis Supabase
-  loadUserCodes(user.id);
-}
-
-function loadUserCodes(userId) {
-  var promoSect = document.getElementById('promoSection');
-  var promoList = document.getElementById('promoList');
-  var histEl    = document.getElementById('convertHistory');
-  var listEl    = document.getElementById('convertHistoryList');
-  if (!promoSect || !promoList) return;
-
-  SB.getSetting('fide_codes_' + userId).then(function(codes) {
-    var arr = Array.isArray(codes) ? codes : [];
-    // Filtrer les actifs et non expirés
-    var actifs = arr.filter(function(c){
-      if (c.used) return false;
-      if ((c.uses || 0) >= (c.maxUses || 1)) return false;
-      if (c.expiresAt && new Date() > new Date(c.expiresAt)) return false;
-      return true;
-    });
-    var utilises = arr.filter(function(c){ return c.used || (c.uses || 0) >= (c.maxUses || 1); });
-
-    if (actifs.length > 0) {
-      promoSect.style.display = '';
-      promoList.innerHTML = actifs.map(function(c){
-        var val = c.fixedAmount || c.discount || c.value || '?';
-        var src = c.source === 'parrainage' ? 'Parrainage' : c.source === 'slots' ? 'Lucky' : c.source === 'fidelite' ? 'Points' : 'Cadeau';
-        var exp = c.expiresAt ? ' · exp. ' + new Date(c.expiresAt).toLocaleDateString('fr-FR') : '';
-        return '<div class="promo-chip" onclick="window._copyCode(\'' + c.code + '\')" title="' + src + exp + '">' +
-          c.code + ' <span style="font-size:9px;opacity:0.7;">-' + val + '€</span>' +
-        '</div>';
-      }).join('');
-    } else {
-      promoSect.style.display = 'none';
-    }
-
-    // Historique (codes utilisés + actifs dans la section convertir)
-    if (histEl && listEl && arr.length > 0) {
-      histEl.style.display = '';
-      listEl.innerHTML = arr.slice().reverse().map(function(c){
-        var val = c.fixedAmount || c.discount || c.value || '?';
-        var used = c.used || (c.uses || 0) >= (c.maxUses || 1);
-        var usedCls = used ? ' used' : '';
-        var tag = used
-          ? ' <span style="font-size:9px;opacity:0.5;">[UTILISÉ]</span>'
-          : ' <span style="font-size:9px;color:rgba(0,255,136,0.5);">-' + val + '€</span>';
-        var exp = c.expiresAt ? new Date(c.expiresAt).toLocaleDateString('fr-FR') : '';
-        return '<span class="convert-chip' + usedCls + '" onclick="' + (used ? '' : 'window._copyCode(\'' + c.code + '\')') + '" title="exp. ' + exp + '">' + c.code + tag + '</span>';
-      }).join('');
-    }
-  }).catch(function(){
-    promoSect.style.display = 'none';
-  });
+  // Promos fidélité
+  var fidePromos = getFidePromos()[user.id] || [];
+  if (fidePromos.length > 0) {
+    document.getElementById('promoSection').style.display = '';
+    document.getElementById('promoList').innerHTML = fidePromos.map(function(p){
+      return '<div class="promo-chip" onclick="copyCode(\''+p.code+'\')">'+p.code+' — '+p.label+'</div>';
+    }).join('');
+  }
 }
 
 function copyReferral() {
@@ -985,14 +944,28 @@ function convertPoints() {
     used: false
   };
 
-  // Sauvegarder dans Supabase settings (source unique de vérité)
-  SB.getSetting('fide_codes_' + user.id).then(function(existing){
-    var arr = Array.isArray(existing) ? existing : [];
-    arr.push(entry);
-    return SB.setSetting('fide_codes_' + user.id, arr);
-  }).catch(function(){
-    return SB.setSetting('fide_codes_' + user.id, [entry]);
-  }).catch(function(e){ console.warn('SB fide_codes:', e.message); });
+  // Sauvegarder dans custom_promos (pour le checkout)
+  try {
+    var cp = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
+    if (!Array.isArray(cp)) cp = [];
+    cp.push(entry);
+    localStorage.setItem('peptoids:custom_promos', JSON.stringify(cp));
+    fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
+      method: 'POST',
+      headers: Object.assign({}, SBH, { Prefer: 'resolution=merge-duplicates' }),
+      body: JSON.stringify(entry)
+    }).catch(function(e){ console.warn('SB fide promo:', e.message); });
+  } catch(e) {}
+
+  // Sync Supabase
+  fetch(SUPABASE_URL + '/rest/v1/promos?on_conflict=code', {
+    method: 'POST',
+    headers: SBH,
+    body: JSON.stringify(entry)
+  }).catch(function(e){ console.warn('SB fide promo:', e.message); });
+
+  // Sauvegarder dans l'historique fidélité
+  saveFideConvertedCode(user.id, entry);
 
   // Afficher le résultat
   var resultEl = document.getElementById('convertResult');
@@ -1008,7 +981,7 @@ function convertPoints() {
 
   // Mettre à jour la carte
   updateConvertCard(user.points);
-  loadUserCodes(user.id);
+  renderConvertHistory(user.id);
 
   // Rafraîchir le compteur points dans le dashboard
   document.getElementById('userPoints').textContent = user.points.toLocaleString('fr-FR');
