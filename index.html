@@ -121,6 +121,106 @@ nav {
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--cyan); }
+
+/* ── HAMBURGER MOBILE ── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  z-index: 200;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  background: rgba(1,6,16,0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,200,255,0.1);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+}
+.mobile-menu.open {
+  max-height: 500px;
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu-inner {
+  padding: 20px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mobile-menu-inner a {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mobile-menu-inner a:hover { color: var(--cyan); }
+.mobile-menu-inner a:last-child { border-bottom: none; }
+.mobile-menu-divider {
+  height: 1px;
+  background: rgba(0,200,255,0.1);
+  margin: 8px 0;
+}
+.mobile-menu-bottom {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.mobile-menu-bottom a, .mobile-menu-bottom button {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+.mobile-btn-compte {
+  background: rgba(0,200,255,0.08);
+  border: 1px solid rgba(0,200,255,0.2) !important;
+  color: var(--cyan) !important;
+}
+.mobile-btn-panier {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  color: #000 !important;
+}
 /* ── GLITCH ── */
 #glitchLogo{position:relative;cursor:pointer;}
 #glitchLogo::before,#glitchLogo::after{content:attr(data-text);position:absolute;top:0;left:0;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;background:inherit;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;}
@@ -527,6 +627,9 @@ footer {
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   nav { padding:0 20px; }
+  .hamburger { display:flex !important; }
+  .mobile-menu { display:block; }
+  .nav-right { display:none; }
   .nav-links { display:none; }
   .hero { padding:90px 20px 50px; }
   .hero-inner { flex-direction:column-reverse; gap:30px; align-items:center; }
@@ -609,7 +712,27 @@ footer {
     <a href="compte.html" id="navCompteBtn" style="font-family:'Orbitron',monospace;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:8px;transition:all 0.2s;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(0,200,255,0.3)'" onmouseout="this.style.color='rgba(255,255,255,0.5)';this.style.borderColor='rgba(255,255,255,0.1)'">👤 COMPTE</a>
     <button class="nav-cart" id="cartToggle">🛒 Panier <span id="cartCount">(0)</span></button>
   </div>
+  <!-- Hamburger mobile -->
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Menu mobile déroulant -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="produits.html" onclick="closeMobileMenu()">🧪 Produits</a>
+    <a href="apropos.html" onclick="closeMobileMenu()">ℹ️ À propos</a>
+    <a href="#reviews" onclick="closeMobileMenu()">⭐ Avis</a>
+    <a href="contact.html" onclick="closeMobileMenu()">📩 Contact</a>
+    <a href="slots.html" id="mobileSlots" style="display:none;color:var(--gold);">🎰 Lucky</a>
+    <div class="mobile-menu-divider"></div>
+    <div class="mobile-menu-bottom">
+      <a href="compte.html" class="mobile-btn-compte" id="mobileCompteBtn">👤 COMPTE</a>
+      <button class="mobile-btn-panier" onclick="closeMobileMenu();document.getElementById('cartToggle').click();">🛒 PANIER <span id="mobileCartCount"></span></button>
+    </div>
+  </div>
+</div>
 
 <!-- ══ CART DRAWER ══ -->
 <div id="cartOverlay" style="display:none;pointer-events:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:998;backdrop-filter:blur(4px);" onclick="closeCart()"></div>
@@ -1702,38 +1825,6 @@ try {
 } catch(e) {}
 
 let cartItems = {};  // { id: { ...product, qty } }
-
-function saveCart() {
-  var s = {};
-  Object.keys(cartItems).forEach(function(k){ s[k] = cartItems[k].qty; });
-  localStorage.setItem('peptoids:cart', JSON.stringify(s));
-}
-
-function loadCart() {
-  try {
-    var s = JSON.parse(localStorage.getItem('peptoids:cart') || '{}');
-    if (!Object.keys(s).length) return;
-    Object.keys(s).forEach(function(key) {
-      var qty = s[key] || 1;
-      var p = PRODUCTS[key];
-      if (!p) {
-        try {
-          var isVip = key.startsWith('vip-');
-          var src = JSON.parse(localStorage.getItem(isVip ? 'peptoids:vip_products' : 'peptoids:custom_products') || '[]');
-          var found = src.find(function(x){ return x.id === key; });
-          if (!found) return;
-          p = { name: found.nom, color: 'rgba(255,170,0,0.15)', emoji: '🟡', price: found.prix };
-          PRODUCTS[key] = p;
-        } catch(e){ return; }
-      }
-      var pRef = p;
-      cartItems[key] = { name: pRef.name, color: pRef.color||'rgba(255,170,0,0.15)', emoji: pRef.emoji||'🟡', qty: qty,
-        get price(){ return getEffectivePrice(key).price; }
-      };
-    });
-    if (Object.keys(cartItems).length) updateCart();
-  } catch(e){}
-}
 let promoDiscount = 0;  // pourcentage (0-1)
 let promoFixed = 0;     // montant fixe en euros
 let promoApplied = '';
@@ -1801,7 +1892,6 @@ function addToCart(key) {
   } else {
     showToast((p.emoji||'👑') + '  ' + p.name.split('/')[0].trim() + ' ajouté !');
   }
-  saveCart();
   openCart();
 }
 
@@ -2010,17 +2100,17 @@ function updateCart() {
       if (!cartItems[k]) return;
       cartItems[k].qty--;
       if (cartItems[k].qty <= 0) delete cartItems[k];
-      updateCart(); saveCart();
+      updateCart();
     });
     div.querySelector('.btn-plus').addEventListener('click', () => {
       if (!cartItems[k]) return;
       cartItems[k].qty++;
-      updateCart(); saveCart();
+      updateCart();
     });
     div.querySelector('.btn-del').addEventListener('click', () => {
       delete cartItems[k];
       checkPromoStillValid();
-      updateCart(); saveCart();
+      updateCart();
     });
     container.appendChild(div);
   });
@@ -2033,13 +2123,13 @@ window.changeQty = function(key, delta) {
   if (!cartItems[key]) return;
   cartItems[key].qty += delta;
   if (cartItems[key].qty <= 0) delete cartItems[key];
-  updateCart(); saveCart();
+  updateCart();
 }
 
 window.removeItem = function(key) {
   delete cartItems[key];
   if (promoApplied) checkPromoStillValid();
-  updateCart(); saveCart();
+  updateCart();
 }
 
 // ══ UPSELL INTELLIGENT ══
@@ -2527,7 +2617,6 @@ window.confirmOrder = async function() {
     showConfirmModal(order);
 
     cartItems = {};
-    localStorage.removeItem('peptoids:cart');
     promoDiscount = 0;
     promoFixed = 0;
     promoApplied = '';
@@ -3741,29 +3830,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 (function() {
   try {
-    // Gérer ?add= depuis produits.html
-    var urlParams = new URLSearchParams(window.location.search);
-    var addKey = urlParams.get('add');
     var pending = JSON.parse(localStorage.getItem('peptoids:pending_add') || '[]');
-    if (addKey) {
-      addKey = decodeURIComponent(addKey);
-      if (!PRODUCTS[addKey]) {
-        try {
-          var customs2 = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
-          var found2 = customs2.find(function(x){ return x.id === addKey; });
-          if (found2) PRODUCTS[addKey] = { name: found2.nom, color: 'rgba(255,170,0,0.15)', emoji: '🟡', price: found2.prix };
-        } catch(e){}
-      }
-      pending.push({ key: addKey, name: PRODUCTS[addKey] ? PRODUCTS[addKey].name : addKey, emoji: PRODUCTS[addKey] ? PRODUCTS[addKey].emoji : '🟡' });
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-
     if (pending.length > 0) {
-      loadCart();
       pending.forEach(function(item) {
         var key = item.key;
         if (!PRODUCTS[key]) {
-          PRODUCTS[key] = { name: item.name, color: 'rgba(0,150,255,0.2)', emoji: item.emoji || '🔵',
+          PRODUCTS[key] = { name: item.name, price: item.price, color: 'rgba(0,150,255,0.2)', emoji: item.emoji || '🔵',
             get price() { return getEffectivePrice(key).price; }
           };
         }
@@ -3773,9 +3845,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }; }
       });
       localStorage.removeItem('peptoids:pending_add');
-      updateCart(); saveCart();
-    } else {
-      loadCart();
+      updateCart();
     }
     // Open cart if requested
     if (localStorage.getItem('peptoids:open_cart') === '1') {
@@ -4175,6 +4245,54 @@ setTimeout(function(){
   }
   draw();
 })();
+</script>
+<script>
+// ── HAMBURGER MOBILE ──
+function toggleMobileMenu() {
+  var menu = document.getElementById('mobileMenu');
+  var btn  = document.getElementById('hamburgerBtn');
+  var open = menu.classList.toggle('open');
+  btn.classList.toggle('active', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('active');
+  document.body.style.overflow = '';
+}
+// Fermer si on clique en dehors
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('mobileMenu');
+  var btn  = document.getElementById('hamburgerBtn');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && !btn.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+// Sync cart count dans menu mobile
+var _origUpdateCart = typeof updateCart === 'function' ? updateCart : null;
+document.addEventListener('DOMContentLoaded', function(){
+  var mo = document.getElementById('mobileCartCount');
+  if (mo) {
+    var obs = new MutationObserver(function(){
+      var c = document.getElementById('cartCount');
+      if (c && mo) mo.textContent = c.textContent;
+    });
+    var cartCount = document.getElementById('cartCount');
+    if (cartCount) obs.observe(cartCount, {childList:true, characterData:true, subtree:true});
+  }
+});
+// Slots dans menu mobile
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    var cfg = JSON.parse(localStorage.getItem('peptoids:slots_config') || '{}');
+    if (cfg.active) {
+      var el = document.getElementById('mobileSlots');
+      if (el) el.style.display = '';
+      var si = document.getElementById('slotsNavItem');
+      if (si) si.style.display = '';
+    }
+  } catch(e){}
+});
 </script>
 </body>
 </html>
