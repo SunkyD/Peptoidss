@@ -2218,97 +2218,84 @@ function addUpsell(key) {
 
 // ══ PROMO CODES ══
 window.applyPromo = function() {
-  var LIVE_PROMOS = { 'LOG5': 0.05, 'WELCOME7': 0.07 };
-  try {
-    var custom = localStorage.getItem('peptoids:active_promos');
-    if (custom) Object.assign(LIVE_PROMOS, JSON.parse(custom));
-  } catch(e) {}
-  Object.assign(LIVE_PROMOS, PROMO_CODES);
-
   var code = document.getElementById('promoInput').value.trim().toUpperCase();
-  var msg = document.getElementById('promoMsg');
+  var msg  = document.getElementById('promoMsg');
   msg.style.display = 'block';
+  if (!code) { msg.textContent = '✗ Entrez un code.'; msg.style.color = '#ff6060'; return; }
 
-  // Check fixed-amount fidelity codes first
-  try {
-    var fideCodes = JSON.parse(localStorage.getItem('peptoids:fide_promos') || '[]');
-    var fide = fideCodes.find(function(c){ return c.code === code && !c.used; });
-    if (fide) {
-      // Check expiry
-      if (fide.expiresAt && new Date() > new Date(fide.expiresAt)) {
-        msg.textContent = '✗ Ce code fidélité a expiré.';
-        msg.style.color = '#ff6060';
-        return;
-      }
-      promoDiscount = 0;
-      promoFixed = fide.value;
-      promoApplied = code;
-      msg.textContent = '✓ Code fidélité "' + code + '" appliqué — -' + fide.value + '€ de réduction !';
-      msg.style.color = '#00ff88';
-      updateCart();
-      return;
-    }
-  } catch(e) {}
-
-  // ── Codes custom depuis admin (avec usage unique + expiration) ──
-  try {
-    var customList = JSON.parse(localStorage.getItem('peptoids:custom_promos') || '[]');
-    var customCode = customList.find(function(p){ return p.code === code && p.active; });
-    if (customCode) {
-      // Vérifier expiration
-      if (customCode.expiresAt && new Date() > new Date(customCode.expiresAt)) {
-        msg.textContent = '✗ Ce code a expiré.';
-        msg.style.color = '#ff6060';
-        return;
-      }
-      // Vérifier usage unique
-      if (customCode.maxUses && customCode.uses >= customCode.maxUses) {
-        msg.textContent = '✗ Ce code a atteint sa limite d\'utilisation.';
-        msg.style.color = '#ff6060';
-        return;
-      }
-      // Vérifier si déjà utilisé dans cette session (usage unique strict)
-      if (customCode.singleUse) {
-        var usedCodes = JSON.parse(localStorage.getItem('peptoids:used_promos') || '[]');
-        if (usedCodes.includes(code)) {
-          msg.textContent = '✗ Ce code a déjà été utilisé.';
-          msg.style.color = '#ff6060';
-          return;
-        }
-      }
-      promoDiscount = customCode.discount / 100;
-      promoFixed = customCode.fixedAmount || 0;
-      promoApplied = code;
-      var savingTxt = customCode.fixedAmount
-        ? '-' + customCode.fixedAmount + '€'
-        : '-' + customCode.discount + '%';
-      msg.textContent = '✓ Code "' + code + '" appliqué — ' + savingTxt + ' de réduction !';
-      msg.style.color = '#00ff88';
-      // Incrémenter l'usage
-      customCode.uses = (customCode.uses || 0) + 1;
-      localStorage.setItem('peptoids:custom_promos', JSON.stringify(customList));
-      if (customCode.singleUse) {
-        var usedCodes2 = JSON.parse(localStorage.getItem('peptoids:used_promos') || '[]');
-        usedCodes2.push(code);
-        localStorage.setItem('peptoids:used_promos', JSON.stringify(usedCodes2));
-      }
-      updateCart();
-      return;
-    }
-  } catch(e) {}
-
-  // Standard % promo codes
-  if (LIVE_PROMOS[code] !== undefined) {
-    promoDiscount = LIVE_PROMOS[code];
-    promoFixed = 0;
-    promoApplied = code;
-    msg.textContent = '✓ Code "' + code + '" appliqué — ' + Math.round(promoDiscount * 100) + '% de réduction !';
-    msg.style.color = '#00ff88';
-    updateCart();
-  } else {
-    msg.textContent = '✗ Code invalide.';
-    msg.style.color = '#ff6060';
+  function applyFixed(val) {
+    promoDiscount = 0; promoFixed = val; promoApplied = code;
+    msg.textContent = '✓ Code "' + code + '" appliqué — -' + val + '€ !';
+    msg.style.color = '#00ff88'; updateCart();
   }
+  function applyPct(pct) {
+    promoDiscount = pct; promoFixed = 0; promoApplied = code;
+    msg.textContent = '✓ Code "' + code + '" appliqué — -' + Math.round(pct*100) + '% !';
+    msg.style.color = '#00ff88'; updateCart();
+  }
+  function invalid(txt) { msg.textContent = txt||'✗ Code invalide.'; msg.style.color='#ff6060'; }
+
+  // 1. Codes FIDE locaux (fide_converted)
+  try {
+    var session = JSON.parse(localStorage.getItem('peptoids:account_session')||'null');
+    if (session) {
+      var all = JSON.parse(localStorage.getItem('peptoids:fide_converted')||'{}');
+      var uc = (all[session.id]||[]).find(function(c){ return c.code===code&&!c.used; });
+      if (uc) { if (uc.expiresAt&&new Date()>new Date(uc.expiresAt)){invalid('✗ Code expiré.');return;} applyFixed(uc.fixedAmount||uc.discount||uc.value||10); return; }
+    }
+  } catch(e){}
+
+  // 2. Codes fide_promos local
+  try {
+    var fc = JSON.parse(localStorage.getItem('peptoids:fide_promos')||'[]');
+    var fide = fc.find(function(c){ return c.code===code&&!c.used; });
+    if (fide) { if (fide.expiresAt&&new Date()>new Date(fide.expiresAt)){invalid('✗ Code expiré.');return;} applyFixed(fide.value); return; }
+  } catch(e){}
+
+  // 3. Codes custom_promos local (admin)
+  try {
+    var rawList = localStorage.getItem('peptoids:custom_promos');
+    var customList = rawList ? JSON.parse(rawList) : [];
+    if (!Array.isArray(customList)) customList = [];
+    var cp = customList.find(function(p){ return p.code===code&&p.active!==false; });
+    if (cp) {
+      if (cp.expiresAt&&new Date()>new Date(cp.expiresAt)){invalid('✗ Code expiré.');return;}
+      if (cp.maxUses&&cp.uses>=cp.maxUses){invalid("✗ Limite atteinte.");return;}
+      if (cp.singleUse){var used=JSON.parse(localStorage.getItem('peptoids:used_promos')||'[]');if(used.includes(code)){invalid('✗ Code déjà utilisé.');return;}}
+      if (cp.discountType==='fixed'||cp.fixedAmount>0) { applyFixed(cp.fixedAmount||cp.discount||0); }
+      else { applyPct((cp.discount||0)/100); }
+      cp.uses=(cp.uses||0)+1; localStorage.setItem('peptoids:custom_promos',JSON.stringify(customList));
+      if (cp.singleUse){var u2=JSON.parse(localStorage.getItem('peptoids:used_promos')||'[]');u2.push(code);localStorage.setItem('peptoids:used_promos',JSON.stringify(u2));}
+      return;
+    }
+  } catch(e){}
+
+  // 4. Codes % simples (active_promos + PROMO_CODES)
+  try {
+    var LIVE = Object.assign({'LOG5':0.05,'WELCOME7':0.07}, PROMO_CODES);
+    try { var ap=localStorage.getItem('peptoids:active_promos'); if(ap) Object.assign(LIVE,JSON.parse(ap)); } catch(e2){}
+    if (LIVE[code]!==undefined) { applyPct(LIVE[code]); return; }
+  } catch(e){}
+
+  // 5. Codes FIDE depuis Supabase settings (autre appareil)
+  try {
+    var sess2 = JSON.parse(localStorage.getItem('peptoids:account_session')||'null');
+    if (sess2) {
+      fetch(SUPABASE_URL+'/rest/v1/settings?key=eq.fide_codes_'+encodeURIComponent(sess2.id)+'&select=value',{
+        headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}
+      }).then(function(r){return r.json();}).then(function(rows){
+        if (!rows||!rows[0]){invalid();return;}
+        var codes=Array.isArray(rows[0].value)?rows[0].value:[];
+        var f=codes.find(function(c){return c.code===code&&!c.used&&(c.uses||0)<(c.maxUses||1);});
+        if (!f){invalid();return;}
+        if (f.expiresAt&&new Date()>new Date(f.expiresAt)){invalid('✗ Code expiré.');return;}
+        applyFixed(f.fixedAmount||f.discount||f.value||10);
+      }).catch(function(){invalid();});
+      return;
+    }
+  } catch(e){}
+
+  invalid();
 }
 
 function checkPromoStillValid() {
