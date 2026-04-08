@@ -3489,29 +3489,7 @@ function renderVipProducts() {
 })();
 var BANNER_KEY = 'peptoids:banner';
 
-// ══ COMPTEUR DE VISITES ══
-(function() {
-  // Ne compter qu'une fois par session
-  if (sessionStorage.getItem('peptoids:visited')) return;
-  sessionStorage.setItem('peptoids:visited', '1');
-
-  var SB_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
-  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
-  var H = { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates' };
-
-  // Lire le compteur actuel puis incrémenter
-  fetch(SB_URL + '/rest/v1/settings?key=eq.visit_count&select=value', { headers: H })
-    .then(function(r){ return r.json(); })
-    .then(function(rows) {
-      var current = (rows && rows[0] && rows[0].value) ? (parseInt(rows[0].value) || 0) : 0;
-      var newCount = current + 1;
-      // Sauvegarder
-      fetch(SB_URL + '/rest/v1/settings?on_conflict=key', {
-        method: 'POST', headers: H,
-        body: JSON.stringify({ key: 'visit_count', value: newCount, updated_at: new Date().toISOString() })
-      }).catch(function(){});
-    }).catch(function(){});
-})();
+// ══ AVIS DYNAMIQUES ══
 (function() {
   var AVIS_KEY = 'peptoids:avis';
   function loadAvis() {
@@ -4145,5 +4123,21 @@ setTimeout(function(){
   draw();
 })();
 </script>
+
+// ══ COMPTEUR DE VISITES ══
+(function() {
+  if (sessionStorage.getItem('peptoids:visited')) return;
+  sessionStorage.setItem('peptoids:visited', '1');
+  var SB_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+  var H = { apikey:SB_KEY, Authorization:'Bearer '+SB_KEY, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' };
+  fetch(SB_URL+'/rest/v1/settings?key=eq.visit_count&select=value',{headers:H})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      var current = (rows&&rows[0]&&rows[0].value) ? (parseInt(rows[0].value)||0) : 0;
+      fetch(SB_URL+'/rest/v1/settings?on_conflict=key',{method:'POST',headers:H,body:JSON.stringify({key:'visit_count',value:current+1,updated_at:new Date().toISOString()})}).catch(function(){});
+    }).catch(function(){});
+})();
+
 </body>
 </html>
