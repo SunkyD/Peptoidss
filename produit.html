@@ -971,6 +971,49 @@ var VIAL_CONFIGS_MAP = {
 var prodKey = new URLSearchParams(window.location.search).get('id') || '';
 var prodData = PRODUITS[prodKey];
 
+// ── Appliquer les overrides admin depuis Supabase ──
+(function applyOverrides() {
+  if (!prodKey) return;
+  var SUPABASE_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
+  fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent('produit_override_' + prodKey) + '&select=value', {
+    headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+  }).then(function(r){ return r.json(); }).then(function(rows){
+    if (!rows || !rows[0] || !rows[0].value) return;
+    var ov = rows[0].value;
+    if (!prodData) return;
+    // Appliquer les overrides sur prodData
+    if (ov.name)        { prodData.name = ov.name; document.getElementById('prodName') && (document.getElementById('prodName').textContent = ov.name); document.getElementById('breadName') && (document.getElementById('breadName').textContent = ov.name); document.title = ov.name + ' — PEPTOIDS'; }
+    if (ov.subtitle)    { prodData.subtitle = ov.subtitle; document.getElementById('prodSubtitle') && (document.getElementById('prodSubtitle').textContent = ov.subtitle); }
+    if (ov.category)    { prodData.category = ov.category; document.getElementById('prodCategory') && (document.getElementById('prodCategory').textContent = ov.category); }
+    if (ov.desc)        { prodData.desc = ov.desc; document.getElementById('descText') && (document.getElementById('descText').textContent = ov.desc); }
+    if (ov.badge !== undefined) {
+      var badgeEl = document.getElementById('prodBadge');
+      if (badgeEl) { if (ov.badge) { badgeEl.textContent = ov.badge; badgeEl.style.display = ''; } else { badgeEl.style.display = 'none'; } }
+    }
+    if (ov.offer !== undefined) {
+      var offerEl = document.getElementById('prodOffer');
+      if (offerEl) { if (ov.offer) { offerEl.textContent = ov.offer; offerEl.style.display = ''; } else { offerEl.style.display = 'none'; } }
+    }
+    if (ov.specs && ov.specs.length) {
+      var specsEl = document.getElementById('prodSpecs');
+      if (specsEl) {
+        specsEl.innerHTML = ov.specs.map(function(s){
+          return '<div class="spec-item"><span class="spec-icon">'+s.icon+'</span><div><div class="spec-label">'+s.label+'</div><div class="spec-val">'+s.val+'</div></div></div>';
+        }).join('');
+      }
+    }
+    if (ov.composition && ov.composition.length) {
+      var compEl = document.getElementById('prodComposition');
+      if (compEl) {
+        compEl.innerHTML = ov.composition.map(function(c){
+          return '<li>'+c+'</li>';
+        }).join('');
+      }
+    }
+  }).catch(function(){});
+})();
+
 // ── Chercher aussi dans les produits custom ──
 if (!prodData) {
   try {
