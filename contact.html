@@ -112,7 +112,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="info-icon ic-cyan">✉</div>
       <div>
         <div class="info-label">Email</div>
-        <div class="info-val"><strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="53303c3d2732302713233623273c3a37207d3521">[email&#160;protected]</a></strong><br>Réponse sous 24h ouvrées</div>
+        <div class="info-val"><strong><a href="mailto:peptoids.contact@gmail.com" style="color:var(--cyan);text-decoration:none;">peptoids.contact@gmail.com</a></strong><br>Réponse sous 24h ouvrées</div>
       </div>
     </div>
     <div class="info-card">
@@ -218,7 +218,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 <footer class="pf">
   <span>© 2026 PEPTOIDS — Tous droits réservés</span>
-  <span>Support · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfaca0a1bbaeacbb8fbfaabfbba0a6abbce1a9bd">[email&#160;protected]</a></span>
+  <span>Support · <a href="mailto:peptoids.contact@gmail.com" style="color:var(--cyan);text-decoration:none;">peptoids.contact@gmail.com</a></span>
 </footer>
 
 
@@ -300,34 +300,48 @@ function sendContact() {
   if (!sujet)              { err.textContent = '⚠ Veuillez choisir un sujet.'; err.style.display = 'block'; return; }
   if (!message || message.length < 10) { err.textContent = '⚠ Message trop court (minimum 10 caractères).'; err.style.display = 'block'; return; }
 
-  // Save to localStorage (récupérable depuis l'admin Emails)
+  // Save to localStorage + Supabase
   try {
     var leads = JSON.parse(localStorage.getItem('peptoids:leads') || '[]');
     leads.unshift({ email: email, prenom: prenom.replace(/[<>&]/g,''), nom: nom.replace(/[<>&]/g,''), sujet: sujet, message: message.replace(/[<>]/g,''), source: 'contact', date: new Date().toISOString() });
     localStorage.setItem('peptoids:leads', JSON.stringify(leads));
-    // Rate limiting timestamp
-    try {
-      var _ctTs2 = JSON.parse(localStorage.getItem('peptoids:contact_ts') || '[]');
-      _ctTs2.push(Date.now());
-      localStorage.setItem('peptoids:contact_ts', JSON.stringify(_ctTs2));
-    } catch(e) {}
-  } catch(e) {}
-
-  // Sync Supabase
-  try {
+    try { var _ctTs2 = JSON.parse(localStorage.getItem('peptoids:contact_ts') || '[]'); _ctTs2.push(Date.now()); localStorage.setItem('peptoids:contact_ts', JSON.stringify(_ctTs2)); } catch(e) {}
     var SB_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
     var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
-    var allLeads = JSON.parse(localStorage.getItem('peptoids:leads') || '[]');
-    fetch(SB_URL + '/rest/v1/settings?on_conflict=key', {
-      method: 'POST',
-      headers: { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates' },
-      body: JSON.stringify({ key: 'leads', value: allLeads, updated_at: new Date().toISOString() })
-    }).catch(function(){});
+    fetch(SB_URL + '/rest/v1/settings?on_conflict=key', { method:'POST', headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json',Prefer:'resolution=merge-duplicates'}, body:JSON.stringify({key:'leads',value:leads,updated_at:new Date().toISOString()}) }).catch(function(){});
   } catch(e) {}
 
-  // Show success
-  document.getElementById('f-success').classList.add('show');
-  document.querySelector('.submit-btn').style.display = 'none';
+  // ── Envoi Formspree → Gmail ──
+  var btn = document.querySelector('.submit-btn');
+  btn.textContent = 'Envoi en cours...';
+  btn.disabled = true;
+
+  fetch('https://formspree.io/f/maqlzybe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      prenom:  prenom,
+      nom:     nom,
+      email:   email,
+      sujet:   sujet,
+      message: message
+    })
+  }).then(function(r){ return r.json(); }).then(function(data) {
+    if (data.ok || data.next) {
+      document.getElementById('f-success').classList.add('show');
+      btn.style.display = 'none';
+    } else {
+      btn.textContent = 'ENVOYER →';
+      btn.disabled = false;
+      var err2 = document.getElementById('f-error');
+      err2.textContent = '⚠ Erreur envoi. Réessayez.';
+      err2.style.display = 'block';
+    }
+  }).catch(function() {
+    // Si Formspree échoue, on affiche quand même le succès (sauvé en local)
+    document.getElementById('f-success').classList.add('show');
+    btn.style.display = 'none';
+  });
 
   // Clear fields
   ['f-prenom','f-nom','f-email','f-sujet','f-commande','f-message'].forEach(function(id){
