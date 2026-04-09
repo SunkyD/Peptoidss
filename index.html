@@ -1635,23 +1635,6 @@ async function initSupabase() {
     var avis = await SB.getSetting('avis').catch(function(){return null;});
     if (avis !== null) _origLS.setItem('peptoids:avis', JSON.stringify(avis));
 
-    // ── Overrides pages produit ──
-    var _ovKeys = ['Retatrutide', 'GHK-Cu', 'HGH'];
-    await Promise.all(_ovKeys.map(async function(key) {
-      try {
-        var ov = await SB.getSetting('produit_override_' + key);
-        if (!ov) return;
-        var card = document.querySelector('[data-product="' + key + '"]');
-        if (!card) return;
-        var nameEl = card.querySelector('.card-name');
-        var descEl = card.querySelector('.card-desc');
-        var catEl  = card.querySelector('.card-category');
-        if (nameEl && ov.name)     nameEl.textContent = ov.name;
-        if (descEl && ov.desc)     descEl.textContent = ov.desc;
-        if (catEl  && ov.category) catEl.textContent  = ov.category;
-      } catch(e) {}
-    }));
-
     console.log('[Supabase] ✅ Sync terminé — ' + orders.length + ' commandes, ' + users.length + ' clients');
     window._sbReady = true;
     document.dispatchEvent(new Event('sb:ready'));
@@ -3723,30 +3706,75 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 (function() {
+  // Gérer ?add= depuis produits.html
   try {
-    var pending = JSON.parse(localStorage.getItem('peptoids:pending_add') || '[]');
-    if (pending.length > 0) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var addKey = urlParams.get('add');
+    if (addKey) {
+      addKey = decodeURIComponent(addKey);
+      var pending = JSON.parse(localStorage.getItem('peptoids:pending_add') || '[]');
+      pending.push({ key: addKey });
+      localStorage.setItem('peptoids:pending_add', JSON.stringify(pending));
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  } catch(e) {}
+
+  // Traiter les pending après sb:ready (pour avoir les custom products chargés)
+  function processPending() {
+    try {
+      var pending = JSON.parse(localStorage.getItem('peptoids:pending_add') || '[]');
+      if (pending.length === 0) return;
+
+      // Charger les custom products depuis localStorage (déjà sync par SB)
+      var customs = [];
+      try { customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]'); } catch(e) {}
+
       pending.forEach(function(item) {
-        var key = item.key;
-        if (!PRODUCTS[key]) {
-          PRODUCTS[key] = { name: item.name, price: item.price, color: 'rgba(0,150,255,0.2)', emoji: item.emoji || '🔵',
-            get price() { return getEffectivePrice(key).price; }
+        var key = item.key || item;
+        if (!key) return;
+
+        // Chercher dans PRODUCTS (produits de base)
+        var p = PRODUCTS[key];
+
+        // Chercher dans custom products
+        if (!p) {
+          var cp = customs.find(function(c){ return c.id === key; });
+          if (cp) {
+            var cpKey = key;
+            PRODUCTS[cpKey] = { name: cp.nom, color: 'rgba(0,200,255,0.15)', emoji: COULEUR_EMOJI[cp.couleur] || '🧪',
+              get price() { return parseFloat(cp.prix) || 0; }
+            };
+            p = PRODUCTS[cpKey];
+          }
+        }
+
+        if (!p) return; // produit introuvable
+
+        if (cartItems[key]) { cartItems[key].qty++; }
+        else {
+          cartItems[key] = { name: p.name, color: p.color || 'rgba(0,200,255,0.15)', emoji: p.emoji || '🧪', qty: 1,
+            get price() { return PRODUCTS[key] ? PRODUCTS[key].price : 0; }
           };
         }
-        if (cartItems[key]) { cartItems[key].qty++; }
-        else { cartItems[key] = { name: item.name, color: 'rgba(0,150,255,0.2)', emoji: item.emoji || '🔵', qty: 1,
-          get price() { return getEffectivePrice(key).price; }
-        }; }
       });
+
       localStorage.removeItem('peptoids:pending_add');
-      updateCart();
-    }
-    // Open cart if requested
+      updateCart(); saveCart();
+      if (pending.length > 0) openCart();
+    } catch(e) { console.warn('pending_add error:', e); }
+  }
+
+  // Ouvrir panier si demandé
+  try {
     if (localStorage.getItem('peptoids:open_cart') === '1') {
       localStorage.removeItem('peptoids:open_cart');
       setTimeout(openCart, 400);
     }
   } catch(e) {}
+
+  // Attendre sb:ready pour avoir les custom products
+  if (window._sbReady) { processPending(); }
+  else { document.addEventListener('sb:ready', processPending, { once: true }); }
 })();
 (function() {
   var SESSION_KEY = 'peptoids:sessions';

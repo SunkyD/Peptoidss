@@ -193,7 +193,6 @@ body::before {
       <div class="stat-card"><div class="stat-card-label">Nouvelles commandes</div><div class="stat-card-value" id="statNew">—</div><div class="stat-card-sub">En attente</div></div>
       <div class="stat-card"><div class="stat-card-label">Chiffre d'affaires</div><div class="stat-card-value" id="statCA">—</div><div class="stat-card-sub">Total</div></div>
       <div class="stat-card"><div class="stat-card-label">Panier moyen</div><div class="stat-card-value" id="statAvg">—</div><div class="stat-card-sub">Par commande</div></div>
-      <div class="stat-card"><div class="stat-card-label">Visites totales</div><div class="stat-card-value" id="statVisits">—</div><div class="stat-card-sub">Depuis l'ouverture</div></div>
     </div>
     <div class="tabs">
       <button class="tab-btn active" id="tabBtnOrders">📋 Commandes</button>
@@ -721,7 +720,7 @@ body::before {
         <h2>🧪 PAGES PRODUIT</h2>
         <span>Modifiez le contenu affiché sur chaque fiche produit</span>
       </div>
-      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;" id="ppBtnRow">
         <button class="pp-btn active" id="ppBtn-Retatrutide" onclick="selectProduitPage('Retatrutide')">🔵 Retatrutide</button>
         <button class="pp-btn" id="ppBtn-GHK-Cu" onclick="selectProduitPage('GHK-Cu')">🟣 GHK-Cu</button>
         <button class="pp-btn" id="ppBtn-HGH" onclick="selectProduitPage('HGH')">⚪ HGH</button>
@@ -1529,7 +1528,6 @@ function renderStats(orders) {
   document.getElementById('statNew').textContent = newO;
   document.getElementById('statCA').textContent = ca.toFixed(2).replace('.', ',') + ' €';
   document.getElementById('statAvg').textContent = avg.toFixed(2).replace('.', ',') + ' €';
-  SB.getSetting('visit_count').then(function(v){ var el=document.getElementById('statVisits'); if(el) el.textContent=v?parseInt(v).toLocaleString('fr-FR'):'0'; }).catch(function(){});
 }
 
 function renderOrders(orders) {
@@ -1823,16 +1821,44 @@ function saveSlotsConfig() {
 var _currentPP = 'Retatrutide';
 var _ppDefaults = {
   'Retatrutide': { name:'Retatrutide', subtitle:'GLP-1 Triple Agonist', category:'Peptide · Agoniste Triple GLP-1/GIP/Glucagon', desc:"Le Retatrutide est l'agoniste triple des récepteurs GLP-1, GIP et Glucagon de nouvelle génération.", badge:'BEST-SELLER', offer:'-20% sur la 3ème fiole commandée', specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.8% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 20mg'},{icon:'❄️',label:'Stockage',val:'-20°C recommandé'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}], composition:["Retatrutide ≥99.8% (HPLC)","Lyophilisat stérile sans excipient","Flacon 20mg lyophilisé","Production en laboratoire certifié ISO","Analyse individuelle par lot","Eau bactériostatique incluse"] },
-  'GHK-Cu': { name:'GHK-Cu', subtitle:'Copper Peptide Complex', category:'Peptide · Régénération & Anti-oxydant', desc:"Le GHK-Cu est un tripeptide cuivre naturellement présent dans le plasma humain.", badge:'NOUVEAU', offer:'-50% sur la 3ème fiole commandée', specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.5% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 100mg'},{icon:'❄️',label:'Stockage',val:'-20°C recommandé'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}], composition:["GHK-Cu ≥99.5% (HPLC)","Complexe cuivre tripeptidique lyophilisé","Sans conservateur ni excipient","Synthèse peptidique phase solide (SPPS)","Analyse de masse confirmée (MS)","Eau bactériostatique incluse"] },
+  'GHK-Cu': { name:'GHK-Cu', subtitle:'Copper Peptide Complex', category:'Peptide · Régénération & Anti-oxydant', desc:"Le GHK-Cu est un tripeptide cuivre naturellement présent dans le plasma humain.", badge:'NOUVEAU', offer:'-50% sur la 3ème fiole commandée', specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.5% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 50mg'},{icon:'❄️',label:'Stockage',val:'-20°C recommandé'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}], composition:["GHK-Cu ≥99.5% (HPLC)","Complexe cuivre tripeptidique lyophilisé","Sans conservateur ni excipient","Synthèse peptidique phase solide (SPPS)","Analyse de masse confirmée (MS)","Eau bactériostatique incluse"] },
   'HGH': { name:'HGH', subtitle:'Somatropin rDNA — 10 IU', category:'Hormone · Somatotropine Recombinante', desc:"Hormone de croissance humaine recombinante (somatotropine rDNA), 10 IU par flacon.", badge:'', offer:'', specs:[{icon:'🧪',label:'Pureté',val:'> 99% (SDS-PAGE)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Dosage',val:'10 IU / flacon'},{icon:'❄️',label:'Stockage',val:'-20°C (non reconstitué)'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}], composition:["Somatropin rDNA >99% (SDS-PAGE)","191 acides aminés, séquence hGH native","Expression en E. coli recombinant","Lyophilisat stérile 10 IU","Eau bactériostatique incluse"] }
 };
 
-function loadPagesProduitAdmin() { selectProduitPage('Retatrutide'); }
+function loadPagesProduitAdmin() {
+  // Ajouter les custom products dans les boutons
+  var btnRow = document.getElementById('ppBtnRow');
+  if (btnRow) {
+    // Supprimer anciens boutons custom
+    btnRow.querySelectorAll('.pp-btn-custom').forEach(function(b){ b.remove(); });
+    try {
+      var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+      customs.filter(function(c){ return c.actif !== false; }).forEach(function(c){
+        var btn = document.createElement('button');
+        btn.className = 'pp-btn pp-btn-custom';
+        btn.id = 'ppBtn-' + c.id;
+        btn.textContent = '🟡 ' + c.nom;
+        btn.onclick = function(){ selectProduitPage(c.id, c); };
+        btnRow.appendChild(btn);
+      });
+    } catch(e){}
+  }
+  selectProduitPage('Retatrutide');
+}
 
-function selectProduitPage(key) {
+function selectProduitPage(key, customData) {
   _currentPP = key;
-  ['Retatrutide','GHK-Cu','HGH'].forEach(function(k){ var b=document.getElementById('ppBtn-'+k); if(b) b.classList.toggle('active', k===key); });
-  SB.getSetting('produit_override_' + key).then(function(data){ _fillPPForm(data || _ppDefaults[key] || {}); }).catch(function(){ _fillPPForm(_ppDefaults[key] || {}); });
+  document.querySelectorAll('.pp-btn').forEach(function(b){ b.classList.remove('active'); });
+  var active = document.getElementById('ppBtn-' + key);
+  if (active) active.classList.add('active');
+
+  // Si c'est un custom product, utiliser ses données comme défaut
+  if (customData) {
+    var def = { name: customData.nom, subtitle: customData.sousTitre || '', category: customData.categorie || '', desc: customData.description || '', badge: customData.badge || '', offer: customData.offre || '', specs: customData.specs || [], composition: customData.composition || [] };
+    SB.getSetting('produit_override_' + key).then(function(data){ _fillPPForm(data || def); }).catch(function(){ _fillPPForm(def); });
+  } else {
+    SB.getSetting('produit_override_' + key).then(function(data){ _fillPPForm(data || _ppDefaults[key] || {}); }).catch(function(){ _fillPPForm(_ppDefaults[key] || {}); });
+  }
 }
 
 function _fillPPForm(d) {
@@ -1868,7 +1894,7 @@ function saveProduitPage() {
   var data = { name:document.getElementById('ppName').value.trim(), subtitle:document.getElementById('ppSubtitle').value.trim(), category:document.getElementById('ppCategory').value.trim(), desc:document.getElementById('ppDesc').value.trim(), badge:document.getElementById('ppBadge').value.trim(), offer:document.getElementById('ppOffer').value.trim(), specs:_getPpSpecs(), composition:_getPpComp() };
   SB.setSetting('produit_override_' + _currentPP, data).then(function(){
     var msg=document.getElementById('ppSaveMsg'); if(msg){msg.textContent='✓ Page "'+_currentPP+'" sauvegardée !';setTimeout(function(){msg.textContent='';},2500);}
-  }).catch(function(e){ var msg=document.getElementById('ppSaveMsg'); if(msg){msg.textContent='✗ Erreur : '+e.message;msg.style.color='#ff6060';} });
+  }).catch(function(e){ var msg=document.getElementById('ppSaveMsg'); if(msg){msg.style.color='#ff6060';msg.textContent='✗ Erreur : '+e.message;} });
 }
 
 // Auto-refresh
