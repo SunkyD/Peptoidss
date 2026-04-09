@@ -1647,6 +1647,9 @@ async function initSupabase() {
 
 initSupabase();
 
+// Charger le panier persistant après sync Supabase
+document.addEventListener('sb:ready', function() { loadCart(); }, { once: true });
+
 </script>
 <script>
 // ══ CART STATE ══
@@ -1702,6 +1705,42 @@ try {
 } catch(e) {}
 
 let cartItems = {};  // { id: { ...product, qty } }
+
+function saveCart() {
+  try {
+    var s = {};
+    Object.keys(cartItems).forEach(function(k) { s[k] = cartItems[k].qty; });
+    localStorage.setItem('peptoids:cart', JSON.stringify(s));
+  } catch(e) {}
+}
+
+function loadCart() {
+  try {
+    var s = JSON.parse(localStorage.getItem('peptoids:cart') || '{}');
+    Object.keys(s).forEach(function(key) {
+      var qty = parseInt(s[key]) || 1;
+      var p = PRODUCTS[key];
+      if (!p) {
+        try {
+          var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+          var cp = customs.find(function(c){ return c.id === key; });
+          if (cp) {
+            PRODUCTS[key] = { name: cp.nom, color: 'rgba(0,200,255,0.15)', emoji: '🧪',
+              get price() { return parseFloat(cp.prix) || 0; }
+            };
+            p = PRODUCTS[key];
+          }
+        } catch(e2) {}
+      }
+      if (!p) return;
+      var k2 = key;
+      cartItems[key] = { name: p.name, color: p.color || 'rgba(0,200,255,0.15)', emoji: p.emoji || '🧪', qty: qty,
+        get price() { return PRODUCTS[k2] ? (typeof PRODUCTS[k2].price === 'number' ? PRODUCTS[k2].price : getEffectivePrice(k2).price) : 0; }
+      };
+    });
+    if (Object.keys(cartItems).length > 0) updateCart();
+  } catch(e) {}
+}
 let promoDiscount = 0;  // pourcentage (0-1)
 let promoFixed = 0;     // montant fixe en euros
 let promoApplied = '';
@@ -1761,7 +1800,7 @@ function addToCart(key) {
       }
     };
   }
-  updateCart();
+  updateCart(); saveCart();
   if (key === 'Retatrutide' && cartItems[key].qty === 3) {
     showToast('🎁 Offre 3 fioles ! -20% sur la 3ème fiole');
   } else if (key === 'GHK-Cu' && cartItems[key].qty === 3) {
@@ -1977,17 +2016,17 @@ function updateCart() {
       if (!cartItems[k]) return;
       cartItems[k].qty--;
       if (cartItems[k].qty <= 0) delete cartItems[k];
-      updateCart();
+      updateCart(); saveCart();
     });
     div.querySelector('.btn-plus').addEventListener('click', () => {
       if (!cartItems[k]) return;
       cartItems[k].qty++;
-      updateCart();
+      updateCart(); saveCart();
     });
     div.querySelector('.btn-del').addEventListener('click', () => {
       delete cartItems[k];
       checkPromoStillValid();
-      updateCart();
+      updateCart(); saveCart();
     });
     container.appendChild(div);
   });
@@ -2494,6 +2533,7 @@ window.confirmOrder = async function() {
     showConfirmModal(order);
 
     cartItems = {};
+    localStorage.removeItem('peptoids:cart');
     promoDiscount = 0;
     promoFixed = 0;
     promoApplied = '';
@@ -3764,11 +3804,13 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch(e) { console.warn('pending_add error:', e); }
   }
 
-  // Ouvrir panier si demandé
+  // Ouvrir panier si demandé — après chargement du panier
   try {
     if (localStorage.getItem('peptoids:open_cart') === '1') {
       localStorage.removeItem('peptoids:open_cart');
-      setTimeout(openCart, 400);
+      // Attendre que loadCart soit exécuté (via sb:ready)
+      if (window._sbReady) { loadCart(); setTimeout(openCart, 200); }
+      else { document.addEventListener('sb:ready', function(){ setTimeout(openCart, 300); }, { once: true }); }
     }
   } catch(e) {}
 
