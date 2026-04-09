@@ -309,7 +309,7 @@ function renderGrid(){
             (promo&&promo.active?'<div class="old">'+normalP.toFixed(2).replace('.',',')+'€</div>':'<div class="old">'+barredP.toFixed(2).replace('.',',')+'€</div>')+
             '<div class="card-price">'+finalP.toFixed(2).replace('.',',')+'€</div>'+
           '</div>'+
-          '<button class="card-btn" onclick="event.stopPropagation();window.location.href=\'index.html?add='+encodeURIComponent(p.key)+'\'">+ Ajouter</button>'+
+          '<button class="card-btn" onclick="event.stopPropagation();addToCartDirect(\''+p.key+'\',\''+p.name+'\','+finalP+',\''+p.emoji+'\')">+ Ajouter</button>'+
         '</div>'+
       '</div>';
 
@@ -478,5 +478,43 @@ requestAnimationFrame(loop);
 })();
 </script>
 <!-- ── FIN BANDEAU COOKIE ── -->
+<script>
+function addToCartDirect(key, name, price, emoji) {
+  try {
+    // Lire le panier existant
+    var cart = {};
+    try { cart = JSON.parse(localStorage.getItem('peptoids:cart') || '{}'); } catch(e) {}
+    // Ajouter ou incrémenter
+    cart[key] = (cart[key] || 0) + 1;
+    localStorage.setItem('peptoids:cart', JSON.stringify(cart));
+    // Toast visuel
+    showToastProduits('🛒 ' + name.split('/')[0].trim() + ' ajouté !');
+    // Mettre à jour le compteur si présent
+    var cc = document.getElementById('cartCount');
+    if (cc) {
+      var total = Object.values(cart).reduce(function(a,b){ return a+b; }, 0);
+      cc.textContent = '(' + total + ')';
+    }
+  } catch(e) { console.warn('addToCartDirect:', e); }
+}
+
+function showToastProduits(msg) {
+  var t = document.getElementById('toastProduits');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toastProduits';
+    t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(0,200,255,0.12);border:1px solid rgba(0,200,255,0.3);backdrop-filter:blur(16px);border-radius:12px;padding:12px 24px;font-family:Orbitron,monospace;font-size:11px;font-weight:700;letter-spacing:1px;color:#00c8ff;z-index:9999;transition:all 0.3s;opacity:0;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2000);
+}
+</script>
 </body>
 </html>

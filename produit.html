@@ -971,8 +971,6 @@ var VIAL_CONFIGS_MAP = {
 var prodKey = new URLSearchParams(window.location.search).get('id') || '';
 var prodData = PRODUITS[prodKey];
 
-
-
 // ── Chercher aussi dans les produits custom ──
 if (!prodData) {
   try {
@@ -1020,39 +1018,6 @@ if (!prodData) {
 var qty = 1;
 var wished = false;
 
-// ── Fetch override Supabase PUIS rendre la page ──
-(function() {
-  var SUPABASE_URL = 'https://xseaecarjsyphxxcxpcw.supabase.co';
-  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhzZWFlY2FyanN5cGh4eGN4cGN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTUxOTgsImV4cCI6MjA4OTQ5MTE5OH0.cOLLuPTPw4ID4_dLf1D3iiNzZ4SPRgekSOBDOOJyUAY';
-
-  function applyOvAndRender(ov) {
-    // Appliquer l'override sur prodData avant le rendu
-    if (ov && prodData) {
-      if (ov.name)        prodData.name        = ov.name;
-      if (ov.subtitle)    prodData.subtitle    = ov.subtitle;
-      if (ov.category)    prodData.category    = ov.category;
-      if (ov.desc)        prodData.desc        = ov.desc;
-      if (ov.badge !== undefined) prodData.badge = ov.badge;
-      if (ov.offer !== undefined) prodData.offer = ov.offer;
-      if (ov.specs && ov.specs.length)            prodData.specs       = ov.specs;
-      if (ov.composition && ov.composition.length) prodData.composition = ov.composition;
-    }
-    renderPage();
-  }
-
-  if (prodData && prodKey) {
-    fetch(SUPABASE_URL + '/rest/v1/settings?key=eq.' + encodeURIComponent('produit_override_' + prodKey) + '&select=value', {
-      headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
-    }).then(function(r){ return r.json(); }).then(function(rows){
-      var ov = (rows && rows[0] && rows[0].value) ? rows[0].value : null;
-      applyOvAndRender(ov);
-    }).catch(function(){ applyOvAndRender(null); });
-  } else {
-    applyOvAndRender(null);
-  }
-})();
-
-function renderPage() {
 if (!prodData) {
   document.getElementById('productMain').style.display='none';
   document.getElementById('productBottom').style.display='none';
@@ -1138,19 +1103,20 @@ function changeQty(delta){qty=Math.max(1,Math.min(10,qty+delta));document.getEle
 function toggleWish(){wished=!wished;var b=document.getElementById('btnWish');b.textContent=wished?'♥':'♡';b.style.color=wished?'#ff4466':'';b.style.borderColor=wished?'rgba(255,68,102,0.4)':'';}
 function addToCart(){
   if(!prodData)return;
-  var price=parseFloat(document.getElementById('priceNew').textContent.replace(',','.').replace('€',''));
+  var price=parseFloat(document.getElementById('priceNew').textContent.replace(',','.').replace('€','').trim())||0;
   try{
-    var pending=JSON.parse(localStorage.getItem('peptoids:pending_add')||'[]');
-    for(var i=0;i<qty;i++) pending.push({key:prodKey,name:prodData.name,price:price,emoji:prodData.couleur==='blue'?'🔵':prodData.couleur==='purple'?'🟣':'🟢'});
-    localStorage.setItem('peptoids:pending_add',JSON.stringify(pending));
+    // Écrire directement dans peptoids:cart
+    var cart = {};
+    try { cart = JSON.parse(localStorage.getItem('peptoids:cart') || '{}'); } catch(e2) {}
+    cart[prodKey] = (cart[prodKey] || 0) + qty;
+    localStorage.setItem('peptoids:cart', JSON.stringify(cart));
+    // Ouvrir le panier sur index.html
     localStorage.setItem('peptoids:open_cart','1');
   }catch(e){}
   document.getElementById('toastMsg').textContent='✓ '+qty+'x '+prodData.name+' ajouté'+(qty>1?'s':'');
   document.getElementById('toast').classList.add('show');
   setTimeout(function(){window.location.href='index.html';},1300);
 }
-
-} // end renderPage
 </script>
 
 <script id="page-transition-js">
