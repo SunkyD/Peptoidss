@@ -110,6 +110,9 @@ body::before {
 .pp-btn { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 20px; color:rgba(255,255,255,0.4); cursor:pointer; font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:1px; transition:all 0.2s; }
 .pp-btn:hover { border-color:rgba(0,200,255,0.3); color:var(--cyan); }
 .pp-btn.active { background:rgba(0,200,255,0.1); border-color:rgba(0,200,255,0.4); color:var(--cyan); }
+.pp-btn { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 20px; color:rgba(255,255,255,0.4); cursor:pointer; font-family:'Orbitron',monospace; font-size:10px; font-weight:700; letter-spacing:1px; transition:all 0.2s; }
+.pp-btn:hover { border-color:rgba(0,200,255,0.3); color:var(--cyan); }
+.pp-btn.active { background:rgba(0,200,255,0.1); border-color:rgba(0,200,255,0.4); color:var(--cyan); }
 .fixed-badge { position:absolute; top:12px; right:12px; background:rgba(0,200,255,0.1); border:1px solid rgba(0,200,255,0.3); border-radius:6px; padding:3px 8px; font-family:'Orbitron',monospace; font-size:8px; color:rgba(0,200,255,0.7); letter-spacing:1px; }
 .discount-edit { width:64px; background:rgba(0,0,0,0.4); border:1px solid rgba(0,200,255,0.2); border-radius:6px; padding:5px 8px; color:#00ff88; font-family:'Orbitron',monospace; font-size:13px; font-weight:700; outline:none; text-align:center; }
 .promo-form-wrap { background:var(--card); border:1px solid rgba(0,200,255,0.18); border-radius:16px; padding:24px; margin-bottom:24px; }
@@ -210,6 +213,7 @@ body::before {
       <button class="tab-btn" id="tabBtnMessages">📩 Messages</button>
       <button class="tab-btn" id="tabBtnAvis">⭐ Avis</button>
       <button class="tab-btn" id="tabBtnSlots">🎰 Machine à Sous</button>
+      <button class="tab-btn" id="tabBtnPagesProduit">🧪 Pages Produit</button>
       <button class="tab-btn" id="tabBtnPagesProduit">🧪 Pages Produit</button>
     </div>
 
@@ -753,6 +757,45 @@ body::before {
           <button onclick="addPpComp()" class="promo-action-btn" style="margin-top:8px;">+ Ajouter une ligne</button>
         </div>
         <button onclick="saveProduitPage()" class="promo-create-btn" style="width:100%;padding:16px;font-size:12px;">💾 SAUVEGARDER CETTE PAGE</button>
+        <div id="ppSaveMsg" style="font-size:12px;color:var(--green);min-height:18px;text-align:center;"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tabPagesProduit">
+      <div class="section-head"><h2>🧪 PAGES PRODUIT</h2><span>Modifiez le contenu affiché sur chaque fiche produit</span></div>
+      <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;" id="ppBtnRow">
+        <button class="pp-btn active" id="ppBtn-Retatrutide" onclick="selectProduitPage('Retatrutide')">🔵 Retatrutide</button>
+        <button class="pp-btn" id="ppBtn-GHK-Cu" onclick="selectProduitPage('GHK-Cu')">🟣 GHK-Cu</button>
+        <button class="pp-btn" id="ppBtn-HGH" onclick="selectProduitPage('HGH')">⚪ HGH</button>
+      </div>
+      <div id="ppEditor" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">INFORMATIONS DE BASE</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">NOM</label><input class="promo-input" id="ppName" style="padding:10px 14px;width:100%;"></div>
+            <div><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">SOUS-TITRE</label><input class="promo-input" id="ppSubtitle" style="padding:10px 14px;width:100%;"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">CATÉGORIE</label><input class="promo-input" id="ppCategory" style="padding:10px 14px;width:100%;"></div>
+          <div><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">DESCRIPTION</label><textarea class="promo-input" id="ppDesc" rows="5" style="padding:10px 14px;width:100%;resize:vertical;line-height:1.6;"></textarea></div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">BADGE & OFFRE</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">BADGE</label><input class="promo-input" id="ppBadge" style="padding:10px 14px;width:100%;"></div>
+            <div><label style="font-size:11px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">OFFRE SPÉCIALE</label><input class="promo-input" id="ppOffer" style="padding:10px 14px;width:100%;"></div>
+          </div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">SPÉCIFICATIONS</div>
+          <div id="ppSpecsList"></div>
+          <button onclick="addPpSpec()" class="promo-action-btn" style="margin-top:8px;">+ Ajouter</button>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;">
+          <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.4);margin-bottom:16px;">COMPOSITION</div>
+          <div id="ppCompList"></div>
+          <button onclick="addPpComp()" class="promo-action-btn" style="margin-top:8px;">+ Ajouter</button>
+        </div>
+        <button onclick="saveProduitPage()" class="promo-create-btn" style="width:100%;padding:16px;font-size:12px;">💾 SAUVEGARDER</button>
         <div id="ppSaveMsg" style="font-size:12px;color:var(--green);min-height:18px;text-align:center;"></div>
       </div>
     </div>
@@ -1477,6 +1520,7 @@ document.getElementById('tabBtnMessages').addEventListener('click', function() {
 document.getElementById('tabBtnAvis').addEventListener('click', function() { switchTab('avis'); });
 document.getElementById('tabBtnSlots').addEventListener('click', function() { switchTab('slots'); loadSlotsAdmin(); });
 document.getElementById('tabBtnPagesProduit').addEventListener('click', function() { switchTab('pagesproduit'); loadPagesProduitAdmin(); });
+document.getElementById('tabBtnPagesProduit').addEventListener('click', function() { switchTab('pagesproduit'); loadPagesProduitAdmin(); });
 
 function switchTab(tab) {
   var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots','pagesproduit'];
@@ -1893,6 +1937,23 @@ function saveProduitPage() {
   }).catch(function(e){ var msg=document.getElementById('ppSaveMsg'); if(msg){msg.style.color='#ff6060';msg.textContent='✗ Erreur : '+e.message;} });
 }
 
+
+// ══ PAGES PRODUIT ADMIN ══
+var _currentPP='Retatrutide';
+var _ppDefaults={'Retatrutide':{name:'Retatrutide',subtitle:'GLP-1 Triple Agonist',category:'Peptide · Agoniste Triple GLP-1/GIP/Glucagon',desc:"Le Retatrutide est l'agoniste triple des récepteurs GLP-1, GIP et Glucagon.",badge:'BEST-SELLER',offer:'-20% sur la 3ème fiole',specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.8% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 20mg'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["Retatrutide ≥99.8%","Lyophilisat stérile","Flacon 20mg","Laboratoire certifié ISO","Eau bactériostatique incluse"]},'GHK-Cu':{name:'GHK-Cu',subtitle:'Copper Peptide Complex',category:'Peptide · Régénération & Anti-oxydant',desc:"Le GHK-Cu est un tripeptide cuivre naturellement présent dans le plasma humain.",badge:'NOUVEAU',offer:'-50% sur la 3ème fiole',specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.5% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 50mg'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["GHK-Cu ≥99.5%","Complexe cuivre lyophilisé","Sans excipient","SPPS","Eau bactériostatique incluse"]},'HGH':{name:'HGH',subtitle:'Somatropin rDNA — 10 IU',category:'Hormone · Somatotropine Recombinante',desc:"Hormone de croissance humaine recombinante, 10 IU par flacon.",badge:'',offer:'',specs:[{icon:'🧪',label:'Pureté',val:'> 99%'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Dosage',val:'10 IU / flacon'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["Somatropin rDNA >99%","191 acides aminés","Lyophilisat 10 IU","Eau bactériostatique incluse"]}};
+function loadPagesProduitAdmin(){var btnRow=document.getElementById('ppBtnRow');if(btnRow){btnRow.querySelectorAll('.pp-btn-custom').forEach(function(b){b.remove();});try{var customs=JSON.parse(localStorage.getItem('peptoids:custom_products')||'[]');customs.filter(function(c){return c.actif!==false;}).forEach(function(c){var btn=document.createElement('button');btn.className='pp-btn pp-btn-custom';btn.id='ppBtn-'+c.id;btn.textContent='🟡 '+c.nom;btn.onclick=(function(cc){return function(){selectProduitPage(cc.id,cc);};})(c);btnRow.appendChild(btn);});}catch(e){}}selectProduitPage('Retatrutide');}
+function selectProduitPage(key,customData){_currentPP=key;document.querySelectorAll('.pp-btn').forEach(function(b){b.classList.remove('active');});var a=document.getElementById('ppBtn-'+key);if(a)a.classList.add('active');if(customData){var def={name:customData.nom,subtitle:customData.sousTitre||'',category:customData.categorie||'',desc:customData.description||'',badge:customData.badge||'',offer:customData.offre||'',specs:customData.specs||[],composition:customData.composition||[]};SB.getSetting('produit_override_'+key).then(function(d){_fillPPForm(d||def);}).catch(function(){_fillPPForm(def);});}else{SB.getSetting('produit_override_'+key).then(function(d){_fillPPForm(d||_ppDefaults[key]||{});}).catch(function(){_fillPPForm(_ppDefaults[key]||{});});}}
+function _fillPPForm(d){document.getElementById('ppName').value=d.name||'';document.getElementById('ppSubtitle').value=d.subtitle||'';document.getElementById('ppCategory').value=d.category||'';document.getElementById('ppDesc').value=d.desc||'';document.getElementById('ppBadge').value=d.badge||'';document.getElementById('ppOffer').value=d.offer||'';_renderPpSpecs(d.specs||[]);_renderPpComp(d.composition||[]);}
+function _renderPpSpecs(specs){var el=document.getElementById('ppSpecsList');if(!el)return;el.innerHTML=specs.map(function(s,i){return '<div style="display:grid;grid-template-columns:50px 1fr 1fr 32px;gap:8px;align-items:center;margin-bottom:8px;"><input class="promo-input" style="padding:6px 8px;text-align:center;" value="'+s.icon+'" id="ppSIcon'+i+'"><input class="promo-input" style="padding:6px 10px;" placeholder="Label" value="'+s.label+'" id="ppSLabel'+i+'"><input class="promo-input" style="padding:6px 10px;" placeholder="Valeur" value="'+s.val+'" id="ppSVal'+i+'"><button onclick="removePpSpec('+i+')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:6px;color:#ff6060;cursor:pointer;padding:4px;">✕</button></div>';}).join('');el.dataset.count=specs.length;}
+function _getPpSpecs(){var n=parseInt(document.getElementById('ppSpecsList').dataset.count||0),s=[];for(var i=0;i<n;i++){var ic=document.getElementById('ppSIcon'+i),la=document.getElementById('ppSLabel'+i),va=document.getElementById('ppSVal'+i);if(ic&&la&&va)s.push({icon:ic.value,label:la.value,val:va.value});}return s;}
+function addPpSpec(){var s=_getPpSpecs();s.push({icon:'🔬',label:'',val:''});_renderPpSpecs(s);}
+function removePpSpec(i){var s=_getPpSpecs();s.splice(i,1);_renderPpSpecs(s);}
+function _renderPpComp(comp){var el=document.getElementById('ppCompList');if(!el)return;el.innerHTML=comp.map(function(c,i){return '<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input class="promo-input" style="padding:6px 10px;flex:1;" value="'+c+'" id="ppComp'+i+'"><button onclick="removePpComp('+i+')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:6px;color:#ff6060;cursor:pointer;padding:4px 8px;">✕</button></div>';}).join('');el.dataset.count=comp.length;}
+function _getPpComp(){var n=parseInt(document.getElementById('ppCompList').dataset.count||0),c=[];for(var i=0;i<n;i++){var inp=document.getElementById('ppComp'+i);if(inp)c.push(inp.value);}return c;}
+function addPpComp(){var c=_getPpComp();c.push('');_renderPpComp(c);}
+function removePpComp(i){var c=_getPpComp();c.splice(i,1);_renderPpComp(c);}
+function saveProduitPage(){var data={name:document.getElementById('ppName').value.trim(),subtitle:document.getElementById('ppSubtitle').value.trim(),category:document.getElementById('ppCategory').value.trim(),desc:document.getElementById('ppDesc').value.trim(),badge:document.getElementById('ppBadge').value.trim(),offer:document.getElementById('ppOffer').value.trim(),specs:_getPpSpecs(),composition:_getPpComp()};SB.setSetting('produit_override_'+_currentPP,data).then(function(){var msg=document.getElementById('ppSaveMsg');if(msg){msg.textContent='✓ Page "'+_currentPP+'" sauvegardée !';setTimeout(function(){msg.textContent='';},2500);}}).catch(function(e){var msg=document.getElementById('ppSaveMsg');if(msg){msg.style.color='#ff6060';msg.textContent='✗ Erreur : '+e.message;}});}
+
 // Auto-refresh
 setInterval(function() {
   if (document.getElementById('adminScreen').style.display !== 'none') loadOrders();
@@ -2133,6 +2194,82 @@ function loadPrix() {
     card.appendChild(saveBtn);
     grid.appendChild(card);
   });
+
+  // ── Produits custom ──
+  try {
+    var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+    customs.filter(function(c){ return c.actif !== false; }).forEach(function(c) {
+      var key = c.id;
+      var pr = prix[key] || { normal: parseFloat(c.prix)||0, barred: parseFloat(c.prixBarre||c.prix)||0 };
+
+      var card = document.createElement('div');
+      card.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;';
+
+      var header = document.createElement('div');
+      header.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:20px;';
+      header.innerHTML = '<span style="font-size:24px;">🟡</span><div><div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+c.nom+'</div><div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">Produit custom</div></div>';
+
+      var priceDisplay = document.createElement('div');
+      priceDisplay.style.cssText = 'background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.12);border-radius:10px;padding:12px 16px;margin-bottom:16px;';
+      priceDisplay.innerHTML = '<div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:4px;">PRIX ACTUEL</div><div style="font-family:Orbitron,monospace;font-size:20px;font-weight:900;color:#00c8ff;">'+pr.normal.toFixed(2).replace('.',',')+'€</div>';
+
+      var inputsDiv = document.createElement('div');
+      inputsDiv.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;';
+
+      var inpStyle = 'width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.15);border-radius:8px;padding:10px 12px;color:#fff;font-family:Orbitron,monospace;font-size:14px;font-weight:700;outline:none;';
+
+      var normalDiv = document.createElement('div');
+      normalDiv.innerHTML = '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">PRIX NORMAL (€)</label>';
+      var normalInp = document.createElement('input');
+      normalInp.type='number'; normalInp.step='0.01'; normalInp.min='0'; normalInp.value=pr.normal;
+      normalInp.style.cssText = inpStyle;
+      normalDiv.appendChild(normalInp);
+
+      var barredDiv = document.createElement('div');
+      barredDiv.innerHTML = '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">PRIX BARRÉ (€)</label>';
+      var barredInp = document.createElement('input');
+      barredInp.type='number'; barredInp.step='0.01'; barredInp.min='0'; barredInp.value=pr.barred||pr.normal;
+      barredInp.style.cssText = inpStyle;
+      barredDiv.appendChild(barredInp);
+
+      inputsDiv.appendChild(normalDiv);
+      inputsDiv.appendChild(barredDiv);
+
+      var saveBtn = document.createElement('button');
+      saveBtn.className = 'promo-create-btn';
+      saveBtn.style.cssText = 'width:100%;padding:12px;';
+      saveBtn.textContent = '💾 Sauvegarder les prix';
+
+      (function(k, nInp, bInp, btn, cp) {
+        btn.addEventListener('click', function(){
+          var normal = parseFloat(nInp.value)||0;
+          var barred = parseFloat(bInp.value)||0;
+          if (normal <= 0) { alert('Prix invalide'); return; }
+          // Mettre à jour dans prix admin
+          var p2 = getPrix();
+          p2[k] = { normal:normal, barred:barred };
+          localStorage.setItem(PRIX_KEY, JSON.stringify(p2));
+          SB.setSetting('prices', p2).catch(function(e){ console.warn('SB prices:', e.message); });
+          // Mettre à jour le prix dans custom_products
+          try {
+            var cps = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+            var idx = cps.findIndex(function(x){ return x.id === k; });
+            if (idx >= 0) { cps[idx].prix = normal; cps[idx].prixBarre = barred; localStorage.setItem('peptoids:custom_products', JSON.stringify(cps)); SB.setSetting('custom_products', cps).catch(function(){}); }
+          } catch(e2) {}
+          loadPrix();
+          btn.textContent = '✓ Sauvegardé !';
+          btn.style.background = 'rgba(0,255,136,0.8)';
+          setTimeout(function(){ btn.textContent='💾 Sauvegarder les prix'; btn.style.background=''; }, 2000);
+        });
+      })(key, normalInp, barredInp, saveBtn, c);
+
+      card.appendChild(header);
+      card.appendChild(priceDisplay);
+      card.appendChild(inputsDiv);
+      card.appendChild(saveBtn);
+      grid.appendChild(card);
+    });
+  } catch(e) {}
 }
 
 // ══ PRODUCT PROMOS ══
