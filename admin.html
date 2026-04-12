@@ -1981,11 +1981,24 @@ function getAllProductsForFioles() {
 }
 
 function loadFiolesAdmin() {
-  _fiolesData = getFiolesConfigAdmin();
-  // Defaults si vide
-  if (!_fiolesData['Retatrutide']) _fiolesData['Retatrutide'] = { active:true, qty:3, pct:20 };
-  if (!_fiolesData['GHK-Cu'])      _fiolesData['GHK-Cu']      = { active:true, qty:3, pct:50 };
-  renderFiolesGrid();
+  // Charger depuis Supabase d'abord, puis localStorage
+  SB.getSetting('fioles_promos').then(function(sbData) {
+    if (sbData && typeof sbData === 'object' && Object.keys(sbData).length > 0) {
+      _fiolesData = sbData;
+      localStorage.setItem('peptoids:fioles_promos', JSON.stringify(sbData));
+    } else {
+      _fiolesData = getFiolesConfigAdmin();
+    }
+    // Defaults si vide
+    if (!_fiolesData['Retatrutide']) _fiolesData['Retatrutide'] = { active:true, qty:3, pct:20 };
+    if (!_fiolesData['GHK-Cu'])      _fiolesData['GHK-Cu']      = { active:true, qty:3, pct:50 };
+    renderFiolesGrid();
+  }).catch(function() {
+    _fiolesData = getFiolesConfigAdmin();
+    if (!_fiolesData['Retatrutide']) _fiolesData['Retatrutide'] = { active:true, qty:3, pct:20 };
+    if (!_fiolesData['GHK-Cu'])      _fiolesData['GHK-Cu']      = { active:true, qty:3, pct:50 };
+    renderFiolesGrid();
+  });
 }
 
 function renderFiolesGrid() {
@@ -1993,6 +2006,11 @@ function renderFiolesGrid() {
   if (!grid) return;
   var allProds = getAllProductsForFioles();
   var inConfig = Object.keys(_fiolesData);
+
+  if (inConfig.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:30px;color:rgba(255,255,255,0.25);font-size:13px;">Aucune promo configurée — cliquez sur "+ Ajouter" ci-dessous</div>';
+    return;
+  }
 
   grid.innerHTML = inConfig.map(function(key, i) {
     var cfg = _fiolesData[key];
