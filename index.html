@@ -1666,8 +1666,25 @@ document.addEventListener('sb:ready', function() {
   // 2. Section produits custom sous les produits de base
   function renderCustomSection() {
     try {
-      var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
-      var actifs = customs.filter(function(c){ return c.actif !== false; });
+      var raw = localStorage.getItem('peptoids:custom_products');
+      var customs = [];
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        // Peut être un tableau direct ou un objet wrappé
+        if (Array.isArray(parsed)) {
+          customs = parsed;
+        } else if (parsed && typeof parsed === 'object') {
+          // Cas où c'est un objet {0: {...}, 1: {...}} ou similaire
+          customs = Object.values(parsed).filter(function(v){ return v && v.id; });
+        }
+      }
+      // Trier par date de création (les plus récents d'abord) et garder les 2 derniers
+      actifs.sort(function(a, b) {
+        var da = new Date(a.createdAt || a.created || 0);
+        var db = new Date(b.createdAt || b.created || 0);
+        return db - da;
+      });
+      var derniers = actifs.slice(0, 2);
       var section = document.getElementById('customProductsSection');
       if (!section) {
         section = document.createElement('section');
@@ -1676,7 +1693,7 @@ document.addEventListener('sb:ready', function() {
         var vipSection = document.getElementById('vipSection');
         if (vipSection) vipSection.parentNode.insertBefore(section, vipSection);
       }
-      if (actifs.length === 0) { section.innerHTML = ''; return; }
+      if (derniers.length === 0) { section.innerHTML = ''; return; }
 
       var cfg = JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}');
       var stock = getStock ? getStock() : {};
@@ -1686,7 +1703,7 @@ document.addEventListener('sb:ready', function() {
         '<h2 class="section-title">Nos <span class="grad">derniers ajouts</span></h2>' +
       '</div>' +
       '<div class="products-grid">' +
-      actifs.map(function(p) {
+      derniers.map(function(p) {
         var prix = parseFloat(p.prix) || 0;
         var prixBarre = parseFloat(p.prixBarre || p.prix) || 0;
         var qty = stock[p.id] !== undefined ? stock[p.id] : 10;
@@ -1732,6 +1749,16 @@ document.addEventListener('sb:ready', function() {
     } catch(e) { console.warn('renderCustomSection:', e); }
   }
   renderCustomSection();
+
+  // Actualisation automatique toutes les 30s pour détecter les nouveaux produits
+  setInterval(function() {
+    SB.getSetting('custom_products').then(function(cp) {
+      if (cp !== null) {
+        localStorage.setItem('peptoids:custom_products', JSON.stringify(cp));
+        renderCustomSection();
+      }
+    }).catch(function(){});
+  }, 30000);
 });
 
 window.addCustomToCart = function(key, name, price, couleur) {
