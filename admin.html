@@ -1543,9 +1543,9 @@ document.getElementById('tabBtnPagesProduit').addEventListener('click', function
 document.getElementById('tabBtnPagesProduit').addEventListener('click', function() { switchTab('pagesproduit'); loadPagesProduitAdmin(); });
 
 function switchTab(tab) {
-  var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots','pagesproduit'];
-  var btnIds  = ['tabBtnOrders','tabBtnPromos','tabBtnStock','tabBtnPP','tabBtnPrix','tabBtnProduits','tabBtnEmails','tabBtnComptes','tabBtnGraphiques','tabBtnBanniere','tabBtnVirement','tabBtnVip','tabBtnMessages','tabBtnAvis','tabBtnSlots','tabBtnPagesProduit'];
-  var panelIds= ['tabOrders','tabPromos','tabStock','tabProductPromos','tabPrix','tabProduits','tabEmails','tabComptes','tabGraphiques','tabBanniere','tabVirement','tabVip','tabMessages','tabAvis','tabSlots','tabPagesProduit'];
+  var tabs    = ['orders','promos','stock','pp','prix','produits','emails','comptes','graphiques','banniere','virement','vip','messages','avis','slots','fioles','pagesproduit'];
+  var btnIds  = ['tabBtnOrders','tabBtnPromos','tabBtnStock','tabBtnPP','tabBtnPrix','tabBtnProduits','tabBtnEmails','tabBtnComptes','tabBtnGraphiques','tabBtnBanniere','tabBtnVirement','tabBtnVip','tabBtnMessages','tabBtnAvis','tabBtnSlots','tabBtnFioles','tabBtnPagesProduit'];
+  var panelIds= ['tabOrders','tabPromos','tabStock','tabProductPromos','tabPrix','tabProduits','tabEmails','tabComptes','tabGraphiques','tabBanniere','tabVirement','tabVip','tabMessages','tabAvis','tabSlots','tabFioles','tabPagesProduit'];
   tabs.forEach(function(t,i){
     document.getElementById(btnIds[i]).classList.toggle('active', t===tab);
     document.getElementById(panelIds[i]).classList.toggle('active', t===tab);
