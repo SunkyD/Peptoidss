@@ -213,6 +213,7 @@ body::before {
       <button class="tab-btn" id="tabBtnMessages">📩 Messages</button>
       <button class="tab-btn" id="tabBtnAvis">⭐ Avis</button>
       <button class="tab-btn" id="tabBtnSlots">🎰 Machine à Sous</button>
+      <button class="tab-btn" id="tabBtnFioles">🎁 Promos Fioles</button>
       <button class="tab-btn" id="tabBtnPagesProduit">🧪 Pages Produit</button>
       <button class="tab-btn" id="tabBtnPagesProduit">🧪 Pages Produit</button>
     </div>
@@ -761,6 +762,24 @@ body::before {
       </div>
     </div>
 
+    <!-- ══ PROMOS FIOLES ══ -->
+    <div class="tab-panel" id="tabFioles">
+      <div class="section-head">
+        <h2>🎁 PROMOS MULTI-FIOLES</h2>
+        <span>Configurez les offres automatiques selon la quantité achetée</span>
+      </div>
+      <div style="background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.1);border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:12px;color:rgba(255,255,255,0.45);line-height:1.7;">
+        💡 La réduction s'applique <strong style="color:var(--cyan);">automatiquement</strong> dans le panier dès que le client atteint la quantité définie. Elle se cumule (ex: 6 fioles = 2× la réduction sur la 3ème et la 6ème).
+      </div>
+      <div id="fiolesGrid" style="display:flex;flex-direction:column;gap:16px;margin-bottom:20px;"></div>
+      <button onclick="addFiolesPromo()" class="promo-create-btn" style="width:100%;padding:14px;font-size:12px;">+ Ajouter une promo fioles</button>
+      <div style="margin-top:16px;text-align:center;">
+        <button onclick="saveFiolesConfig()" class="promo-create-btn" style="padding:14px 40px;font-size:12px;background:linear-gradient(90deg,var(--cyan),var(--purple));">💾 SAUVEGARDER TOUT</button>
+        <div id="fiolesSaveMsg" style="font-size:12px;color:var(--green);margin-top:10px;min-height:18px;"></div>
+      </div>
+    </div>
+
+    <!-- ══ PAGES PRODUIT ══ -->
     <div class="tab-panel" id="tabPagesProduit">
       <div class="section-head"><h2>🧪 PAGES PRODUIT</h2><span>Modifiez le contenu affiché sur chaque fiche produit</span></div>
       <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;" id="ppBtnRow">
@@ -1519,6 +1538,7 @@ document.getElementById('tabBtnVip').addEventListener('click', function() { swit
 document.getElementById('tabBtnMessages').addEventListener('click', function() { switchTab('messages'); });
 document.getElementById('tabBtnAvis').addEventListener('click', function() { switchTab('avis'); });
 document.getElementById('tabBtnSlots').addEventListener('click', function() { switchTab('slots'); loadSlotsAdmin(); });
+document.getElementById('tabBtnFioles').addEventListener('click', function() { switchTab('fioles'); loadFiolesAdmin(); });
 document.getElementById('tabBtnPagesProduit').addEventListener('click', function() { switchTab('pagesproduit'); loadPagesProduitAdmin(); });
 document.getElementById('tabBtnPagesProduit').addEventListener('click', function() { switchTab('pagesproduit'); loadPagesProduitAdmin(); });
 
@@ -1938,6 +1958,125 @@ function saveProduitPage() {
 }
 
 
+// ══ PROMOS FIOLES ADMIN ══
+var _fiolesData = {};
+
+function getFiolesConfigAdmin() {
+  try { return JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}'); } catch(e) { return {}; }
+}
+
+function getAllProductsForFioles() {
+  var list = [
+    { key:'Retatrutide', name:'Retatrutide', emoji:'🔵' },
+    { key:'GHK-Cu',      name:'GHK-Cu',      emoji:'🟣' },
+    { key:'HGH',         name:'HGH',          emoji:'⚪' }
+  ];
+  try {
+    var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+    customs.filter(function(c){ return c.actif !== false; }).forEach(function(c){
+      list.push({ key: c.id, name: c.nom, emoji: '🟡' });
+    });
+  } catch(e) {}
+  return list;
+}
+
+function loadFiolesAdmin() {
+  _fiolesData = getFiolesConfigAdmin();
+  // Defaults si vide
+  if (!_fiolesData['Retatrutide']) _fiolesData['Retatrutide'] = { active:true, qty:3, pct:20 };
+  if (!_fiolesData['GHK-Cu'])      _fiolesData['GHK-Cu']      = { active:true, qty:3, pct:50 };
+  renderFiolesGrid();
+}
+
+function renderFiolesGrid() {
+  var grid = document.getElementById('fiolesGrid');
+  if (!grid) return;
+  var allProds = getAllProductsForFioles();
+  var inConfig = Object.keys(_fiolesData);
+
+  grid.innerHTML = inConfig.map(function(key, i) {
+    var cfg = _fiolesData[key];
+    var prod = allProds.find(function(p){ return p.key === key; }) || { name: key, emoji: '🧪' };
+    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;" id="fiolesCard-'+i+'">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">' +
+        '<div style="display:flex;align-items:center;gap:12px;">' +
+          '<span style="font-size:24px;">'+prod.emoji+'</span>' +
+          '<div>' +
+            '<div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+prod.name+'</div>' +
+            '<select id="fiolesKey-'+i+'" onchange="changeFiolesKey('+i+',this.value)" style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.15);border-radius:6px;padding:4px 8px;color:rgba(255,255,255,0.5);font-size:11px;margin-top:4px;">' +
+              allProds.map(function(p){ return '<option value="'+p.key+'"'+(p.key===key?' selected':'')+'>'+p.emoji+' '+p.name+'</option>'; }).join('') +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:12px;">' +
+          '<span style="font-size:11px;color:rgba(255,255,255,0.35);">ACTIF</span>' +
+          '<label style="position:relative;display:inline-block;width:40px;height:22px;">' +
+            '<input type="checkbox" id="fiolesActive-'+i+'" '+(cfg.active?'checked':'')+' style="opacity:0;width:0;height:0;">' +
+            '<span onclick="document.getElementById('fiolesActive-'+i+'').click()" style="position:absolute;cursor:pointer;inset:0;background:'+(cfg.active?'rgba(0,200,255,0.4)':'rgba(255,255,255,0.1)')+';border-radius:22px;transition:0.3s;"></span>' +
+          '</label>' +
+          '<button onclick="removeFiolesPromo(''+key+'')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:8px;color:#ff6060;cursor:pointer;padding:6px 12px;font-size:12px;">✕ Supprimer</button>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
+        '<div>' +
+          '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:8px;">À PARTIR DE (fioles)</label>' +
+          '<input type="number" min="2" max="20" class="promo-input" style="padding:10px 14px;" value="'+(cfg.qty||3)+'" id="fiolesQty-'+i+'" placeholder="Ex: 3">' +
+          '<div style="font-size:10px;color:rgba(255,255,255,0.25);margin-top:4px;">Dès la '+(cfg.qty||3)+'ème fiole achetée</div>' +
+        '</div>' +
+        '<div>' +
+          '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:8px;">RÉDUCTION SUR LA '+(cfg.qty||3)+'ÈME FIOLE (%)</label>' +
+          '<input type="number" min="1" max="100" class="promo-input" style="padding:10px 14px;" value="'+(cfg.pct||20)+'" id="fiolesPct-'+i+'">' +
+          '<div style="font-size:10px;color:rgba(0,255,136,0.6);margin-top:4px;">-'+(cfg.pct||20)+'% automatiquement dans le panier</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function changeFiolesKey(i, newKey) {
+  var inConfig = Object.keys(_fiolesData);
+  var oldKey = inConfig[i];
+  if (oldKey === newKey) return;
+  if (_fiolesData[newKey]) { alert('Ce produit a déjà une promo configurée.'); return; }
+  _fiolesData[newKey] = _fiolesData[oldKey];
+  delete _fiolesData[oldKey];
+  renderFiolesGrid();
+}
+
+function addFiolesPromo() {
+  var allProds = getAllProductsForFioles();
+  var available = allProds.find(function(p){ return !_fiolesData[p.key]; });
+  if (!available) { alert('Tous les produits ont déjà une promo configurée.'); return; }
+  _fiolesData[available.key] = { active: true, qty: 3, pct: 20 };
+  renderFiolesGrid();
+}
+
+function removeFiolesPromo(key) {
+  if (!confirm('Supprimer la promo pour ' + key + ' ?')) return;
+  delete _fiolesData[key];
+  renderFiolesGrid();
+}
+
+function saveFiolesConfig() {
+  // Lire les valeurs du formulaire
+  var inConfig = Object.keys(_fiolesData);
+  inConfig.forEach(function(key, i) {
+    var activeEl = document.getElementById('fiolesActive-'+i);
+    var qtyEl    = document.getElementById('fiolesQty-'+i);
+    var pctEl    = document.getElementById('fiolesPct-'+i);
+    if (activeEl) _fiolesData[key].active = activeEl.checked;
+    if (qtyEl)    _fiolesData[key].qty    = parseInt(qtyEl.value) || 3;
+    if (pctEl)    _fiolesData[key].pct    = parseInt(pctEl.value) || 20;
+  });
+
+  localStorage.setItem('peptoids:fioles_promos', JSON.stringify(_fiolesData));
+  SB.setSetting('fioles_promos', _fiolesData).catch(function(e){ console.warn('SB fioles:', e.message); });
+
+  var msg = document.getElementById('fiolesSaveMsg');
+  if (msg) { msg.textContent = '✓ Promos sauvegardées et actives sur le site !'; setTimeout(function(){ msg.textContent=''; }, 3000); }
+  renderFiolesGrid();
+}
+
 // ══ PAGES PRODUIT ADMIN ══
 var _currentPP='Retatrutide';
 var _ppDefaults={'Retatrutide':{name:'Retatrutide',subtitle:'GLP-1 Triple Agonist',category:'Peptide · Agoniste Triple GLP-1/GIP/Glucagon',desc:"Le Retatrutide est l'agoniste triple des récepteurs GLP-1, GIP et Glucagon.",badge:'BEST-SELLER',offer:'-20% sur la 3ème fiole',specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.8% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 20mg'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["Retatrutide ≥99.8%","Lyophilisat stérile","Flacon 20mg","Laboratoire certifié ISO","Eau bactériostatique incluse"]},'GHK-Cu':{name:'GHK-Cu',subtitle:'Copper Peptide Complex',category:'Peptide · Régénération & Anti-oxydant',desc:"Le GHK-Cu est un tripeptide cuivre naturellement présent dans le plasma humain.",badge:'NOUVEAU',offer:'-50% sur la 3ème fiole',specs:[{icon:'🧪',label:'Pureté',val:'≥ 99.5% (HPLC)'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Conditionnement',val:'Flacon 50mg'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["GHK-Cu ≥99.5%","Complexe cuivre lyophilisé","Sans excipient","SPPS","Eau bactériostatique incluse"]},'HGH':{name:'HGH',subtitle:'Somatropin rDNA — 10 IU',category:'Hormone · Somatotropine Recombinante',desc:"Hormone de croissance humaine recombinante, 10 IU par flacon.",badge:'',offer:'',specs:[{icon:'🧪',label:'Pureté',val:'> 99%'},{icon:'📦',label:'Format',val:'Lyophilisé stérile'},{icon:'⚗️',label:'Dosage',val:'10 IU / flacon'},{icon:'❄️',label:'Stockage',val:'-20°C'},{icon:'📋',label:'Certificat',val:'CoA inclus'},{icon:'🔬',label:'Usage',val:'Recherche uniquement'}],composition:["Somatropin rDNA >99%","191 acides aminés","Lyophilisat 10 IU","Eau bactériostatique incluse"]}};
@@ -2194,82 +2333,6 @@ function loadPrix() {
     card.appendChild(saveBtn);
     grid.appendChild(card);
   });
-
-  // ── Produits custom ──
-  try {
-    var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
-    customs.filter(function(c){ return c.actif !== false; }).forEach(function(c) {
-      var key = c.id;
-      var pr = prix[key] || { normal: parseFloat(c.prix)||0, barred: parseFloat(c.prixBarre||c.prix)||0 };
-
-      var card = document.createElement('div');
-      card.style.cssText = 'background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;';
-
-      var header = document.createElement('div');
-      header.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:20px;';
-      header.innerHTML = '<span style="font-size:24px;">🟡</span><div><div style="font-family:Orbitron,monospace;font-size:12px;font-weight:700;color:#fff;">'+c.nom+'</div><div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">Produit custom</div></div>';
-
-      var priceDisplay = document.createElement('div');
-      priceDisplay.style.cssText = 'background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.12);border-radius:10px;padding:12px 16px;margin-bottom:16px;';
-      priceDisplay.innerHTML = '<div style="font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1px;margin-bottom:4px;">PRIX ACTUEL</div><div style="font-family:Orbitron,monospace;font-size:20px;font-weight:900;color:#00c8ff;">'+pr.normal.toFixed(2).replace('.',',')+'€</div>';
-
-      var inputsDiv = document.createElement('div');
-      inputsDiv.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;';
-
-      var inpStyle = 'width:100%;background:rgba(0,0,0,0.4);border:1px solid rgba(0,200,255,0.15);border-radius:8px;padding:10px 12px;color:#fff;font-family:Orbitron,monospace;font-size:14px;font-weight:700;outline:none;';
-
-      var normalDiv = document.createElement('div');
-      normalDiv.innerHTML = '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">PRIX NORMAL (€)</label>';
-      var normalInp = document.createElement('input');
-      normalInp.type='number'; normalInp.step='0.01'; normalInp.min='0'; normalInp.value=pr.normal;
-      normalInp.style.cssText = inpStyle;
-      normalDiv.appendChild(normalInp);
-
-      var barredDiv = document.createElement('div');
-      barredDiv.innerHTML = '<label style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.35);display:block;margin-bottom:6px;">PRIX BARRÉ (€)</label>';
-      var barredInp = document.createElement('input');
-      barredInp.type='number'; barredInp.step='0.01'; barredInp.min='0'; barredInp.value=pr.barred||pr.normal;
-      barredInp.style.cssText = inpStyle;
-      barredDiv.appendChild(barredInp);
-
-      inputsDiv.appendChild(normalDiv);
-      inputsDiv.appendChild(barredDiv);
-
-      var saveBtn = document.createElement('button');
-      saveBtn.className = 'promo-create-btn';
-      saveBtn.style.cssText = 'width:100%;padding:12px;';
-      saveBtn.textContent = '💾 Sauvegarder les prix';
-
-      (function(k, nInp, bInp, btn, cp) {
-        btn.addEventListener('click', function(){
-          var normal = parseFloat(nInp.value)||0;
-          var barred = parseFloat(bInp.value)||0;
-          if (normal <= 0) { alert('Prix invalide'); return; }
-          // Mettre à jour dans prix admin
-          var p2 = getPrix();
-          p2[k] = { normal:normal, barred:barred };
-          localStorage.setItem(PRIX_KEY, JSON.stringify(p2));
-          SB.setSetting('prices', p2).catch(function(e){ console.warn('SB prices:', e.message); });
-          // Mettre à jour le prix dans custom_products
-          try {
-            var cps = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
-            var idx = cps.findIndex(function(x){ return x.id === k; });
-            if (idx >= 0) { cps[idx].prix = normal; cps[idx].prixBarre = barred; localStorage.setItem('peptoids:custom_products', JSON.stringify(cps)); SB.setSetting('custom_products', cps).catch(function(){}); }
-          } catch(e2) {}
-          loadPrix();
-          btn.textContent = '✓ Sauvegardé !';
-          btn.style.background = 'rgba(0,255,136,0.8)';
-          setTimeout(function(){ btn.textContent='💾 Sauvegarder les prix'; btn.style.background=''; }, 2000);
-        });
-      })(key, normalInp, barredInp, saveBtn, c);
-
-      card.appendChild(header);
-      card.appendChild(priceDisplay);
-      card.appendChild(inputsDiv);
-      card.appendChild(saveBtn);
-      grid.appendChild(card);
-    });
-  } catch(e) {}
 }
 
 // ══ PRODUCT PROMOS ══
