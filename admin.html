@@ -2010,11 +2010,9 @@ function renderFiolesGrid() {
         '</div>' +
         '<div style="display:flex;align-items:center;gap:12px;">' +
           '<span style="font-size:11px;color:rgba(255,255,255,0.35);">ACTIF</span>' +
-          '<label style="position:relative;display:inline-block;width:40px;height:22px;">' +
-            '<input type="checkbox" id="fiolesActive-'+i+'" '+(cfg.active?'checked':'')+' style="opacity:0;width:0;height:0;">' +
-            '<span onclick="document.getElementById('fiolesActive-'+i+'').click()" style="position:absolute;cursor:pointer;inset:0;background:'+(cfg.active?'rgba(0,200,255,0.4)':'rgba(255,255,255,0.1)')+';border-radius:22px;transition:0.3s;"></span>' +
-          '</label>' +
-          '<button onclick="removeFiolesPromo(''+key+'')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:8px;color:#ff6060;cursor:pointer;padding:6px 12px;font-size:12px;">✕ Supprimer</button>' +
+          '<input type="checkbox" id="fiolesActive-'+i+'" '+(cfg.active?'checked':'')+' style="margin-right:4px;width:16px;height:16px;cursor:pointer;accent-color:var(--cyan);">' +
+          '<label for="fiolesActive-'+i+'" style="font-size:11px;color:rgba(255,255,255,0.5);cursor:pointer;">Actif</label>' +
+          '<button onclick="removeFiolesPromo('+JSON.stringify(key)+')" style="background:rgba(255,60,60,0.08);border:1px solid rgba(255,60,60,0.2);border-radius:8px;color:#ff6060;cursor:pointer;padding:6px 12px;font-size:12px;">✕ Supprimer</button>' +
         '</div>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
