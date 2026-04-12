@@ -1062,14 +1062,7 @@ footer {
         <div class="card-category">Peptide · GLP-1 Triple</div>
         <div class="card-name">Retatrutide / GLP-1 Triple</div>
         <div class="card-desc">Agoniste triple GLP-1/GIP/Glucagon, pureté 99.8%. Flacon stérile lyophilisé avec certificat d'analyse.</div>
-        <!-- Offre 3 fioles -->
-        <div style="background:linear-gradient(135deg,rgba(255,170,0,0.12),rgba(255,100,0,0.08));border:1px solid rgba(255,170,0,0.3);border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;align-items:center;gap:8px;">
-          <span style="font-size:16px;">🎁</span>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:#ffaa00;letter-spacing:1px;">OFFRE 3 FIOLES</div>
-            <div style="font-size:11px;color:rgba(255,200,100,0.8);margin-top:1px;">-20% sur la 3ème fiole automatiquement</div>
-          </div>
-        </div>
+        <div id="offerPill-Retatrutide" style="display:none;border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;align-items:center;gap:8px;"></div>
         <div id="stock-Retatrutide" class="stock-bar"></div>
         <div class="card-footer">
           <div class="card-price-wrap">
@@ -1102,13 +1095,7 @@ footer {
         <div class="card-category">Peptide · Régénération</div>
         <div class="card-name">GHK-Cu / Copper Peptide</div>
         <div class="card-desc">Peptide cuivre régénérant, pureté analytique certifiée. Flacon lyophilisé 100 mg, idéal pour la récupération tissulaire.</div>
-        <div style="background:linear-gradient(135deg,rgba(168,85,247,0.12),rgba(100,0,200,0.08));border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;align-items:center;gap:8px;">
-          <span style="font-size:16px;">🎁</span>
-          <div>
-            <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;color:#a855f7;letter-spacing:1px;">OFFRE 3 FIOLES</div>
-            <div style="font-size:11px;color:rgba(200,150,255,0.85);margin-top:1px;">-50% sur la 3ème fiole automatiquement</div>
-          </div>
-        </div>
+        <div id="offerPill-GHK-Cu" style="border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;align-items:center;gap:8px;"></div>
         <div id="stock-GHK-Cu" class="stock-bar"></div>
         <div class="card-footer">
           <div class="card-price-wrap">
@@ -1634,8 +1621,6 @@ async function initSupabase() {
     if (vip !== null) _origLS.setItem('peptoids:vip', JSON.stringify(vip));
     var avis = await SB.getSetting('avis').catch(function(){return null;});
     if (avis !== null) _origLS.setItem('peptoids:avis', JSON.stringify(avis));
-    var fiolesPromos = await SB.getSetting('fioles_promos').catch(function(){return null;});
-    if (fiolesPromos !== null) _origLS.setItem('peptoids:fioles_promos', JSON.stringify(fiolesPromos));
 
     console.log('[Supabase] ✅ Sync terminé — ' + orders.length + ' commandes, ' + users.length + ' clients');
     window._sbReady = true;
@@ -1648,6 +1633,131 @@ async function initSupabase() {
 }
 
 initSupabase();
+
+// Charger le panier persistant après sync Supabase
+document.addEventListener('sb:ready', function() { loadCart(); }, { once: true });
+
+// ── Mise à jour dynamique des pills d'offre + section custom ──
+document.addEventListener('sb:ready', function() {
+  // 1. Pills d'offre dynamiques depuis fioles_promos
+  function updateOfferPills() {
+    try {
+      var cfg = JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}');
+      if (!cfg['Retatrutide']) cfg['Retatrutide'] = { active:true, qty:3, pct:20 };
+      if (!cfg['GHK-Cu'])      cfg['GHK-Cu']      = { active:true, qty:3, pct:50 };
+
+      Object.keys(cfg).forEach(function(key) {
+        var c = cfg[key];
+        var el = document.getElementById('offerPill-' + key);
+        if (!el) return;
+        if (!c.active) { el.style.display = 'none'; return; }
+        el.style.display = 'flex';
+        el.style.background = 'linear-gradient(135deg,rgba(255,170,0,0.12),rgba(255,100,0,0.08))';
+        el.style.border = '1px solid rgba(255,170,0,0.3)';
+        el.innerHTML = '<span style="font-size:16px;">🎁</span><div>' +
+          '<div style="font-family:Orbitron,monospace;font-size:9px;font-weight:700;color:#ffaa00;letter-spacing:1px;">OFFRE ' + c.qty + ' FIOLES</div>' +
+          '<div style="font-size:11px;color:rgba(255,200,100,0.8);margin-top:1px;">-' + c.pct + '% sur la ' + c.qty + 'ème fiole automatiquement</div>' +
+        '</div>';
+      });
+    } catch(e) {}
+  }
+  updateOfferPills();
+
+  // 2. Section produits custom sous les produits de base
+  function renderCustomSection() {
+    try {
+      var customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]');
+      var actifs = customs.filter(function(c){ return c.actif !== false; });
+      var section = document.getElementById('customProductsSection');
+      if (!section) {
+        section = document.createElement('section');
+        section.id = 'customProductsSection';
+        section.style.cssText = 'width:100%;position:relative;z-index:1;padding:0 40px 60px;max-width:1200px;margin:0 auto;';
+        var vipSection = document.getElementById('vipSection');
+        if (vipSection) vipSection.parentNode.insertBefore(section, vipSection);
+      }
+      if (actifs.length === 0) { section.innerHTML = ''; return; }
+
+      var cfg = JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}');
+      var stock = getStock ? getStock() : {};
+
+      section.innerHTML = '<div class="section-header" style="margin-bottom:32px;">' +
+        '<div class="section-tag">✦ Nouveautés ✦</div>' +
+        '<h2 class="section-title">Nos <span class="grad">derniers ajouts</span></h2>' +
+      '</div>' +
+      '<div class="products-grid">' +
+      actifs.map(function(p) {
+        var prix = parseFloat(p.prix) || 0;
+        var prixBarre = parseFloat(p.prixBarre || p.prix) || 0;
+        var qty = stock[p.id] !== undefined ? stock[p.id] : 10;
+        var sc = qty<=0?'#ff4466':qty<=3?'#ffaa00':'#00ff88';
+        var slabel = qty<=0?'❌ Rupture':qty<=3?'⚠️ '+qty+' restants':'✅ En stock ('+qty+')';
+        var offreCfg = cfg[p.id];
+        var offreHtml = '';
+        if (offreCfg && offreCfg.active) {
+          offreHtml = '<div style="background:linear-gradient(135deg,rgba(255,170,0,0.12),rgba(255,100,0,0.08));border:1px solid rgba(255,170,0,0.3);border-radius:10px;padding:8px 12px;margin:8px 0;display:flex;align-items:center;gap:8px;">' +
+            '<span style="font-size:16px;">🎁</span>' +
+            '<div><div style="font-family:Orbitron,monospace;font-size:9px;font-weight:700;color:#ffaa00;">OFFRE '+offreCfg.qty+' FIOLES</div>' +
+            '<div style="font-size:11px;color:rgba(255,200,100,0.8);">-'+offreCfg.pct+'% sur la '+offreCfg.qty+'ème fiole</div></div>' +
+          '</div>';
+        }
+        return '<div class="product-card" data-product="'+p.id+'">' +
+          '<div class="card-info" style="padding:20px;">' +
+            '<div class="card-category">'+(p.categorie||'Peptide · Recherche')+'</div>' +
+            '<div class="card-name">'+p.nom+'</div>' +
+            '<div class="card-desc">'+(p.description||'')+'</div>' +
+            offreHtml +
+            '<div class="stock-bar"><div class="stock-fill" style="width:'+Math.min(100,qty*10)+'%;background:'+sc+';box-shadow:0 0 6px '+sc+';"></div></div>' +
+            '<div class="card-footer">' +
+              '<div class="card-price-wrap">' +
+                (prixBarre > prix ? '<div class="old">'+prixBarre.toFixed(2).replace('.',',')+'€</div>' : '') +
+                '<div class="card-price">'+prix.toFixed(2).replace('.',',')+'€</div>' +
+              '</div>' +
+              '<button class="card-add" onclick="addCustomToCart(\''+p.id+'\',\''+p.nom.replace(/'/g,'')+'\','+prix+',\''+( p.couleur||'blue')+'\')">+ Ajouter</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>';
+
+      // Register in PRODUCTS
+      actifs.forEach(function(p) {
+        if (!PRODUCTS[p.id]) {
+          var prix = parseFloat(p.prix) || 0;
+          PRODUCTS[p.id] = { name: p.nom, color: 'rgba(0,200,255,0.15)', emoji: '🧪',
+            get price() { return parseFloat(p.prix) || 0; }
+          };
+        }
+      });
+    } catch(e) { console.warn('renderCustomSection:', e); }
+  }
+  renderCustomSection();
+});
+
+window.addCustomToCart = function(key, name, price, couleur) {
+  // S'assurer que le produit est dans PRODUCTS
+  if (!PRODUCTS[key]) {
+    PRODUCTS[key] = { name: name, color: 'rgba(0,200,255,0.15)', emoji: '🧪',
+      get price() { return price; }
+    };
+  }
+  // Vérifier stock
+  var stock = getStock ? getStock() : {};
+  var qty = stock[key] !== undefined ? stock[key] : 10;
+  var inCart = cartItems[key] ? cartItems[key].qty : 0;
+  if (qty <= inCart) { showToast('⚠️ Stock insuffisant !'); return; }
+
+  if (cartItems[key]) {
+    cartItems[key].qty++;
+  } else {
+    cartItems[key] = { name: name, color: 'rgba(0,200,255,0.15)', emoji: '🧪', qty: 1,
+      get price() { return PRODUCTS[key] ? PRODUCTS[key].price : price; }
+    };
+  }
+  updateCart(); saveCart();
+  showToast('🧪 ' + name.split('/')[0].trim() + ' ajouté !');
+  openCart();
+};
 
 </script>
 <script>
@@ -1704,6 +1814,42 @@ try {
 } catch(e) {}
 
 let cartItems = {};  // { id: { ...product, qty } }
+
+function saveCart() {
+  try {
+    var s = {};
+    Object.keys(cartItems).forEach(function(k){ s[k] = cartItems[k].qty; });
+    localStorage.setItem('peptoids:cart', JSON.stringify(s));
+  } catch(e) {}
+}
+
+function loadCart() {
+  try {
+    var s = JSON.parse(localStorage.getItem('peptoids:cart') || '{}');
+    if (!Object.keys(s).length) return;
+    var customs = [];
+    try { customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]'); } catch(e2) {}
+    Object.keys(s).forEach(function(key) {
+      var qty = parseInt(s[key]) || 1;
+      var p = PRODUCTS[key];
+      if (!p) {
+        var cp = customs.find(function(c){ return c.id === key; });
+        if (cp) {
+          PRODUCTS[key] = { name: cp.nom, color: 'rgba(0,200,255,0.15)', emoji: '🧪',
+            get price() { return parseFloat(cp.prix) || 0; }
+          };
+          p = PRODUCTS[key];
+        }
+      }
+      if (!p) return;
+      var k2 = key;
+      cartItems[key] = { name: p.name, color: p.color || 'rgba(0,200,255,0.15)', emoji: p.emoji || '🧪', qty: qty,
+        get price() { return PRODUCTS[k2] ? (typeof PRODUCTS[k2].price === 'number' ? PRODUCTS[k2].price : getEffectivePrice(k2).price) : 0; }
+      };
+    });
+    if (Object.keys(cartItems).length > 0) updateCart();
+  } catch(e) {}
+}
 let promoDiscount = 0;  // pourcentage (0-1)
 let promoFixed = 0;     // montant fixe en euros
 let promoApplied = '';
@@ -1763,12 +1909,16 @@ function addToCart(key) {
       }
     };
   }
-  updateCart();
-  if (key === 'Retatrutide' && cartItems[key].qty === 3) {
-    showToast('🎁 Offre 3 fioles ! -20% sur la 3ème fiole');
-  } else if (key === 'GHK-Cu' && cartItems[key].qty === 3) {
-    showToast('🎁 Offre 3 fioles ! -50% sur la 3ème fiole');
-  } else {
+  updateCart(); saveCart();
+  try {
+    var fCfg = JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}');
+    var fEntry = fCfg[key];
+    if (fEntry && fEntry.active && cartItems[key].qty === fEntry.qty) {
+      showToast('🎁 Offre ' + fEntry.qty + ' fioles ! -' + fEntry.pct + '% appliqué !');
+    } else {
+      showToast((p.emoji||'👑') + '  ' + p.name.split('/')[0].trim() + ' ajouté !');
+    }
+  } catch(e) {
     showToast((p.emoji||'👑') + '  ' + p.name.split('/')[0].trim() + ' ajouté !');
   }
   openCart();
@@ -1820,32 +1970,27 @@ function updateCart() {
   const keys = Object.keys(cartItems);
   const totalQty = keys.reduce((s, k) => s + cartItems[k].qty, 0);
 
-  // ── Promos multi-fioles dynamiques (configurées dans l'admin) ──
-  function getFiolesConfig() {
-    try { return JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}'); } catch(e) { return {}; }
-  }
-  var fiolesConfig = getFiolesConfig();
+  // ── Promos multi-fioles dynamiques ──
+  var _fiolesConfig = {};
+  try { _fiolesConfig = JSON.parse(localStorage.getItem('peptoids:fioles_promos') || '{}'); } catch(e2) {}
+  if (!_fiolesConfig['Retatrutide']) _fiolesConfig['Retatrutide'] = { active:true, qty:3, pct:20 };
+  if (!_fiolesConfig['GHK-Cu'])      _fiolesConfig['GHK-Cu']      = { active:true, qty:3, pct:50 };
 
-  // Défauts hardcodés si pas de config admin
-  if (!fiolesConfig['Retatrutide']) fiolesConfig['Retatrutide'] = { active: true, qty: 3, pct: 20 };
-  if (!fiolesConfig['GHK-Cu'])      fiolesConfig['GHK-Cu']      = { active: true, qty: 3, pct: 50 };
-
-  // Calcul des bonus dynamiques pour tous les produits configurés
   var fiolesBonus = {};
   var totalFiolesBonus = 0;
-  Object.keys(fiolesConfig).forEach(function(key) {
-    var cfg = fiolesConfig[key];
+  Object.keys(_fiolesConfig).forEach(function(key) {
+    var cfg = _fiolesConfig[key];
     if (!cfg.active || !cartItems[key]) return;
     var qty = cartItems[key].qty;
     var price = cartItems[key].price;
-    var triggerQty = cfg.qty || 3;
-    var groups = Math.floor(qty / triggerQty);
+    var tQty = cfg.qty || 3;
+    var groups = Math.floor(qty / tQty);
     var bonus = groups * price * (cfg.pct / 100);
-    fiolesBonus[key] = { qty: qty, price: price, groups: groups, bonus: bonus, cfg: cfg };
+    fiolesBonus[key] = { qty:qty, price:price, groups:groups, bonus:bonus, cfg:cfg };
     totalFiolesBonus += bonus;
   });
 
-  // Compat variables pour le code existant
+  // Compat
   const retaQty    = cartItems['Retatrutide'] ? cartItems['Retatrutide'].qty : 0;
   const retaPrice  = cartItems['Retatrutide'] ? cartItems['Retatrutide'].price : 0;
   const retaGroups = fiolesBonus['Retatrutide'] ? fiolesBonus['Retatrutide'].groups : 0;
@@ -1968,55 +2113,21 @@ function updateCart() {
     }
   }
 
-  // ── Rows dynamiques pour tous les autres produits configurés ──
+  // Rows dynamiques pour produits custom configurés
   Object.keys(fiolesBonus).forEach(function(key) {
-    if (key === 'Retatrutide' || key === 'GHK-Cu') return; // déjà gérés
-    var fb = fiolesBonus[key];
-    var cfg = fb.cfg;
-    var rowId = 'fiolesRow-' + key;
-    var hintId = 'fiolesHint-' + key;
-    var color = cfg.color || '#00c8ff';
-
-    // Bonus row
+    if (key === 'Retatrutide' || key === 'GHK-Cu') return;
+    var fb = fiolesBonus[key]; var cfg = fb.cfg;
+    var rowId = 'fiolesRow-' + key; var hintId = 'fiolesHint-' + key;
     var row = document.getElementById(rowId);
-    if (!row) {
-      row = document.createElement('div');
-      row.id = rowId;
-      row.style.cssText = 'display:none;justify-content:space-between;margin-bottom:8px;align-items:center;';
-      row.innerHTML = '<span style="font-size:11px;color:'+color+';">🎁 Offre '+(cfg.qty||3)+'ème '+key.split('/')[0].trim()+'</span><span style="font-family:Orbitron,monospace;font-size:12px;color:'+color+';" id="'+rowId+'El"></span>';
-      var dr = document.getElementById('discountRow');
-      if (dr) dr.after(row);
-    }
+    if (!row) { row = document.createElement('div'); row.id = rowId; row.style.cssText = 'display:none;justify-content:space-between;margin-bottom:8px;align-items:center;'; row.innerHTML = '<span style="font-size:11px;color:#00c8ff;">🎁 Offre '+(cfg.qty||3)+'ème '+key+'</span><span style="font-family:Orbitron,monospace;font-size:12px;color:#00c8ff;" id="'+rowId+'El"></span>'; var dr=document.getElementById('discountRow'); if(dr) dr.after(row); }
     row.style.display = fb.bonus > 0 ? 'flex' : 'none';
-    var rowEl = document.getElementById(rowId+'El');
-    if (rowEl) rowEl.textContent = fb.bonus > 0 ? '-'+fmt(fb.bonus) : '';
-
-    // Hint
+    var rowEl = document.getElementById(rowId+'El'); if(rowEl) rowEl.textContent = fb.bonus > 0 ? '-'+fmt(fb.bonus) : '';
     var hint = document.getElementById(hintId);
-    if (!hint) {
-      hint = document.createElement('div');
-      hint.id = hintId;
-      hint.style.cssText = 'margin:0 24px 8px;border-radius:10px;padding:10px 14px;font-size:11px;line-height:1.6;display:none;transition:all 0.3s;';
-      var sb3 = document.getElementById('shippingBar');
-      if (sb3) sb3.before(hint);
-    }
+    if (!hint) { hint = document.createElement('div'); hint.id = hintId; hint.style.cssText = 'margin:0 24px 8px;border-radius:10px;padding:10px 14px;font-size:11px;line-height:1.6;display:none;'; var sb3=document.getElementById('shippingBar'); if(sb3) sb3.before(hint); }
     var rem = fb.qty % (cfg.qty||3);
-    var nextGrp = fb.qty + ((cfg.qty||3) - rem);
-    var prodShort = key.split('/')[0].trim();
-    if (rem > 0) {
-      var need = (cfg.qty||3) - rem;
-      hint.style.display = 'block';
-      hint.style.background = 'rgba(0,200,255,0.07)';
-      hint.style.border = '1px solid rgba(0,200,255,0.2)';
-      hint.innerHTML = '🎁 <span style="color:rgba(180,230,255,0.9);">Plus que <strong style="color:'+color+';">'+need+' '+prodShort+'</strong> pour -'+cfg.pct+'% sur la '+nextGrp+'ème fiole !</span>';
-    } else if (fb.qty > 0) {
-      hint.style.display = 'block';
-      hint.style.background = 'rgba(0,200,255,0.1)';
-      hint.style.border = '1px solid rgba(0,200,255,0.3)';
-      hint.innerHTML = '✅ <span style="color:'+color+';">-'+cfg.pct+'% appliqué sur la '+fb.qty+'ème fiole'+(fb.qty>(cfg.qty||3)?' · ×'+fb.groups:'')+' !</span>';
-    } else {
-      hint.style.display = 'none';
-    }
+    if (rem > 0) { hint.style.display='block'; hint.style.background='rgba(0,200,255,0.07)'; hint.style.border='1px solid rgba(0,200,255,0.2)'; hint.innerHTML='🎁 <span style="color:rgba(180,230,255,0.9);">Plus que <strong style="color:#00c8ff;">'+(cfg.qty-rem)+' '+key+'</strong> pour -'+cfg.pct+'% !</span>'; }
+    else if (fb.qty > 0) { hint.style.display='block'; hint.style.background='rgba(0,200,255,0.1)'; hint.style.border='1px solid rgba(0,200,255,0.3)'; hint.innerHTML='✅ <span style="color:#00c8ff;">-'+cfg.pct+'% appliqué !</span>'; }
+    else { hint.style.display='none'; }
   });
 
   // Items container
@@ -2053,17 +2164,17 @@ function updateCart() {
       if (!cartItems[k]) return;
       cartItems[k].qty--;
       if (cartItems[k].qty <= 0) delete cartItems[k];
-      updateCart();
+      updateCart(); saveCart();
     });
     div.querySelector('.btn-plus').addEventListener('click', () => {
       if (!cartItems[k]) return;
       cartItems[k].qty++;
-      updateCart();
+      updateCart(); saveCart();
     });
     div.querySelector('.btn-del').addEventListener('click', () => {
       delete cartItems[k];
       checkPromoStillValid();
-      updateCart();
+      updateCart(); saveCart();
     });
     container.appendChild(div);
   });
@@ -2570,6 +2681,7 @@ window.confirmOrder = async function() {
     showConfirmModal(order);
 
     cartItems = {};
+    localStorage.removeItem('peptoids:cart');
     promoDiscount = 0;
     promoFixed = 0;
     promoApplied = '';
