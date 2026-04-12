@@ -1678,13 +1678,9 @@ document.addEventListener('sb:ready', function() {
           customs = Object.values(parsed).filter(function(v){ return v && v.id; });
         }
       }
-      // Trier par date de création (les plus récents d'abord) et garder les 2 derniers
-      actifs.sort(function(a, b) {
-        var da = new Date(a.createdAt || a.created || 0);
-        var db = new Date(b.createdAt || b.created || 0);
-        return db - da;
-      });
-      var derniers = actifs.slice(0, 2);
+      // Garder les 2 derniers ajoutés (fin du tableau = plus récents)
+      var actifs = customs.filter(function(c){ return c.actif !== false && c.id && c.nom; });
+      var derniers = actifs.slice(-2).reverse();
       var section = document.getElementById('customProductsSection');
       if (!section) {
         section = document.createElement('section');
