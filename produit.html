@@ -971,6 +971,37 @@ var VIAL_CONFIGS_MAP = {
 var prodKey = new URLSearchParams(window.location.search).get('id') || '';
 var prodData = PRODUITS[prodKey];
 
+// ── Appliquer l'override admin (Pages Produit) depuis Supabase ──
+function applyOverride(override) {
+  if (!override || typeof override !== 'object') return;
+  if (!prodData) prodData = {};
+  if (override.name)        prodData.name        = override.name;
+  if (override.subtitle)    prodData.subtitle    = override.subtitle;
+  if (override.category)    prodData.category    = override.category;
+  if (override.desc)        prodData.desc        = override.desc;
+  if (override.badge)       prodData.badge       = override.badge;
+  if (override.offer)       prodData.offer       = override.offer;
+  if (override.specs && override.specs.length)       prodData.specs       = override.specs;
+  if (override.composition && override.composition.length) prodData.composition = override.composition;
+}
+
+// Chercher override dans localStorage d'abord (sync rapide)
+try {
+  var lsOverride = localStorage.getItem('peptoids:produit_override_' + prodKey);
+  if (lsOverride) applyOverride(JSON.parse(lsOverride));
+} catch(e) {}
+
+// Puis sync depuis Supabase
+document.addEventListener('sb:ready', function() {
+  SB.getSetting('produit_override_' + prodKey).then(function(ov) {
+    if (ov) {
+      localStorage.setItem('peptoids:produit_override_' + prodKey, JSON.stringify(ov));
+      applyOverride(ov);
+      renderProduit(); // Re-render avec les données fraîches
+    }
+  }).catch(function(){});
+});
+
 // ── Chercher aussi dans les produits custom ──
 if (!prodData) {
   try {
@@ -1018,6 +1049,7 @@ if (!prodData) {
 var qty = 1;
 var wished = false;
 
+function renderProduit() {
 if (!prodData) {
   document.getElementById('productMain').style.display='none';
   document.getElementById('productBottom').style.display='none';
@@ -1097,7 +1129,9 @@ if (!prodData) {
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
-}
+} // fin renderProduit
+
+renderProduit();
 
 function changeQty(delta){qty=Math.max(1,Math.min(10,qty+delta));document.getElementById('qtyVal').textContent=qty;}
 function toggleWish(){wished=!wished;var b=document.getElementById('btnWish');b.textContent=wished?'♥':'♡';b.style.color=wished?'#ff4466':'';b.style.borderColor=wished?'rgba(255,68,102,0.4)':'';}
