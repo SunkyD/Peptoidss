@@ -888,31 +888,7 @@ function drawVial(canvas, cfg, t, bubbles) {
   }
 }
 
-// ── ANIMATION LOOP ──
-let _t0 = null;
-function _loop(ts) {
-  if (!_t0) _t0 = ts;
-  const t = (ts - _t0) / 1000;
-  VIAL_CONFIGS.forEach((cfg, i) => {
-    const c = document.getElementById(cfg.id);
-    if (!c) return;
-    // update bubbles
-    BUBBLES[i].forEach(b => {
-      b.y += b.vy; b.x += b.vx;
-      if (b.y < 0.01) { b.y = 0.80+Math.random()*0.18; b.x = 0.2+Math.random()*0.6; b.op = 0.12+Math.random()*0.5; }
-      if (b.x < 0.04 || b.x > 0.96) b.vx *= -1;
-    });
-    drawVial(c, cfg, t, BUBBLES[i]);
-  });
-  // Sur mobile : limiter à 20fps pour éviter le bug de scroll iOS
-  var isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-  if (isMobile) {
-    setTimeout(function(){ requestAnimationFrame(_loop); }, 50);
-  } else {
-    requestAnimationFrame(_loop);
-  }
-}
-requestAnimationFrame(_loop);
+
 
 
 // ── Map des configs par couleur (format index.html) ──
@@ -997,7 +973,19 @@ document.addEventListener('sb:ready', function() {
     if (ov) {
       localStorage.setItem('peptoids:produit_override_' + prodKey, JSON.stringify(ov));
       applyOverride(ov);
-      renderProduit(); // Re-render avec les données fraîches
+      // Re-render uniquement le texte, pas l'animation
+      if (prodData) {
+        document.title = prodData.name + ' — PEPTOIDS';
+        document.getElementById('breadName').textContent  = prodData.name;
+        document.getElementById('prodCategory').textContent = prodData.category;
+        document.getElementById('prodName').textContent    = prodData.name;
+        document.getElementById('prodSubtitle').textContent = prodData.subtitle || '';
+        document.getElementById('descText').textContent    = prodData.desc || '';
+        if (prodData.badge) { var b=document.getElementById('prodBadge'); if(b){b.style.display='';b.textContent=prodData.badge;} }
+        if (prodData.offer) { document.getElementById('offerPill').style.display=''; document.getElementById('offerText').textContent=prodData.offer; }
+        if (prodData.specs) document.getElementById('specsGrid').innerHTML=prodData.specs.map(function(s){return '<div class="spec-item"><span class="spec-icon">'+s.icon+'</span><div class="spec-text"><div class="spec-label">'+s.label+'</div><div class="spec-val">'+s.val+'</div></div></div>';}).join('');
+        if (prodData.composition) document.getElementById('compositionList').innerHTML=prodData.composition.map(function(c){return '<li>'+c+'</li>';}).join('');
+      }
     }
   }).catch(function(){});
 });
@@ -1058,8 +1046,8 @@ if (!prodData) {
 } else {
   document.title = prodData.name + ' — PEPTOIDS';
   var savedPrix = getPrix()[prodKey] || {};
-  var normalP = savedPrix.normal || prodData.prix.normal;
-  var barredP = savedPrix.barred || prodData.prix.barred;
+  var normalP = savedPrix.normal || (prodData.prix && prodData.prix.normal) || 49.99;
+  var barredP = savedPrix.barred || (prodData.prix && prodData.prix.barred) || 79.99;
   var stockObj = getStock();
   var qty_stock = stockObj[prodKey] !== undefined ? stockObj[prodKey] : 10;
   document.getElementById('breadName').textContent  = prodData.name;
@@ -1094,7 +1082,7 @@ if (!prodData) {
   var vCfg = Object.assign({}, VIAL_CONFIGS_MAP[prodData.couleur] || VIAL_CONFIGS_MAP['blue'], {
     name: prodData.name.split('/')[0].trim().substring(0,10),
     sub:  prodData.subtitle ? prodData.subtitle.substring(0,18) : '',
-    dose: prodData.prix ? prodData.prix.normal.toFixed(2).replace('.',',')+'€ / fl.' : ''
+    dose: prodData.prix ? prodData.prix.normal.toFixed(2).replace('.',',')+'€ / fl.' : normalP.toFixed(2).replace('.',',')+'€ / fl.'
   });
 
   // Bubbles pour la fiole produit
@@ -1129,6 +1117,7 @@ if (!prodData) {
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+} // fin else
 } // fin renderProduit
 
 renderProduit();
