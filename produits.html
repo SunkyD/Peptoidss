@@ -487,6 +487,7 @@ function addToCartDirect(key, name, price, emoji) {
     // Ajouter ou incrémenter
     cart[key] = (cart[key] || 0) + 1;
     localStorage.setItem('peptoids:cart', JSON.stringify(cart));
+    localStorage.setItem('peptoids:open_cart', '1');
     // Toast visuel
     showToastProduits('🛒 ' + name.split('/')[0].trim() + ' ajouté !');
     // Mettre à jour le compteur si présent
