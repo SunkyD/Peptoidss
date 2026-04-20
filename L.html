@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Séche Agressive — TRT/HGH/Reta/GHK-Cu</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan: #00c8ff;
+  --purple: #a855f7;
+  --green: #00ff88;
+  --gold: #ffd700;
+  --red: #ff4466;
+  --orange: #ff8c00;
+  --orange: #ff8c00;
+  --dark: #020810;
+  --card: rgba(4,10,28,0.97);
+  --border: rgba(255,68,102,0.1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--dark);
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,68,102,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,68,102,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+/* Halo rouge */
+body::after {
+  content: '';
+  position: fixed;
+  top: -200px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 500px;
+  background: radial-gradient(ellipse, rgba(255,68,102,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.wrap { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+/* Header */
+.header { text-align: center; margin-bottom: 48px; animation: fadeUp 0.7s ease; }
+.brand-tag { font-family: 'Orbitron', monospace; font-size: 10px; letter-spacing: 5px; color: rgba(255,68,102,0.5); margin-bottom: 16px; }
+.title { font-family: 'Orbitron', monospace; font-size: clamp(24px, 4vw, 38px); font-weight: 900; letter-spacing: 3px; background: linear-gradient(90deg, #fff 0%, #ff6680 40%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+.subtitle { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+
+/* Alerte déficit */
+.deficit-alert {
+  background: rgba(255,68,102,0.06);
+  border: 1px solid rgba(255,68,102,0.25);
+  border-radius: 14px;
+  padding: 16px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: fadeUp 0.6s 0.05s ease both;
+}
+.deficit-alert-icon { font-size: 28px; flex-shrink: 0; animation: pulse 2s infinite; }
+.deficit-alert-text { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+.deficit-alert-text strong { color: var(--red); font-family: 'Orbitron', monospace; font-size: 11px; }
+
+/* Stack */
+.stack-banner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; animation: fadeUp 0.6s 0.08s ease both; }
+.stack-card { border-radius: 12px; padding: 14px 16px; text-align: center; }
+.stack-card.trt  { background: rgba(255,68,102,0.06); border: 1px solid rgba(255,68,102,0.2); }
+.stack-card.hgh  { background: rgba(0,200,255,0.06); border: 1px solid rgba(0,200,255,0.2); }
+.stack-card.reta { background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.2); }
+.stack-card.ghk  { background: rgba(0,255,136,0.06); border: 1px solid rgba(0,255,136,0.2); }
+.stack-icon { font-size: 20px; margin-bottom: 6px; }
+.stack-name { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; letter-spacing: 2px; margin-bottom: 3px; }
+.stack-card.trt  .stack-name { color: var(--red); }
+.stack-card.hgh  .stack-name { color: var(--cyan); }
+.stack-card.reta .stack-name { color: var(--purple); }
+.stack-card.ghk  .stack-name { color: var(--green); }
+.stack-dose  { font-size: 11px; color: rgba(255,255,255,0.35); margin-bottom: 4px; }
+.stack-effect { font-size: 9px; color: rgba(255,255,255,0.2); font-style: italic; line-height: 1.4; }
+
+/* Macros */
+.macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; animation: fadeUp 0.6s 0.1s ease both; }
+.macro-card { background: var(--card); border-radius: 14px; padding: 18px 16px; text-align: center; position: relative; overflow: hidden; }
+.macro-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.macro-card.kcal::before { background: linear-gradient(90deg, var(--red), var(--orange)); }
+.macro-card.prot::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.macro-card.gluc::before { background: linear-gradient(90deg, var(--gold), #ff8c00); }
+.macro-card.lip::before  { background: linear-gradient(90deg, var(--purple), var(--red)); }
+.macro-card.kcal { border: 1px solid rgba(255,68,102,0.15); }
+.macro-card.prot { border: 1px solid rgba(0,255,136,0.15); }
+.macro-card.gluc { border: 1px solid rgba(255,215,0,0.12); }
+.macro-card.lip  { border: 1px solid rgba(168,85,247,0.15); }
+.macro-val { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+.macro-card.kcal .macro-val { color: var(--red); }
+.macro-card.prot .macro-val { color: var(--green); }
+.macro-card.gluc .macro-val { color: var(--gold); }
+.macro-card.lip  .macro-val { color: var(--purple); }
+.macro-label { font-size: 9px; letter-spacing: 2px; color: rgba(255,255,255,0.25); }
+.macro-note  { font-size: 9px; color: rgba(255,255,255,0.15); margin-top: 3px; }
+
+/* Planning */
+.week-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 8px; margin-bottom: 36px; animation: fadeUp 0.6s 0.12s ease both; }
+.day-cell { border-radius: 10px; padding: 10px 6px; text-align: center; }
+.day-cell.sport { background: rgba(255,68,102,0.07); border: 1px solid rgba(255,68,102,0.18); }
+.day-cell.repos { background: rgba(168,85,247,0.05); border: 1px solid rgba(168,85,247,0.12); }
+.day-name { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; margin-bottom: 5px; }
+.day-cell.sport .day-name { color: var(--red); }
+.day-cell.repos .day-name { color: rgba(168,85,247,0.6); }
+.day-emoji { font-size: 14px; margin-bottom: 3px; }
+.day-type { font-size: 8px; color: rgba(255,255,255,0.2); }
+
+/* Repas */
+.day-section { margin-bottom: 32px; animation: fadeUp 0.6s ease both; }
+.day-header { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.day-label { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; letter-spacing: 3px; color: rgba(255,255,255,0.18); white-space: nowrap; }
+.day-line { flex: 1; height: 1px; background: rgba(255,68,102,0.1); }
+
+.repas-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.repas-card { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 16px; transition: border-color 0.2s, transform 0.2s; }
+.repas-card:hover { transform: translateY(-2px); }
+.repas-card.matin  { border-top: 2px solid rgba(255,215,0,0.3); }
+.repas-card.midi   { border-top: 2px solid rgba(255,68,102,0.4); }
+.repas-card.gouter { border-top: 2px solid rgba(0,255,136,0.3); }
+.repas-card.soir   { border-top: 2px solid rgba(168,85,247,0.35); }
+
+.repas-time { font-family: 'Orbitron', monospace; font-size: 8px; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px; }
+.repas-card.matin  .repas-time { color: rgba(255,215,0,0.6); }
+.repas-card.midi   .repas-time { color: rgba(255,68,102,0.7); }
+.repas-card.gouter .repas-time { color: rgba(0,255,136,0.7); }
+.repas-card.soir   .repas-time { color: rgba(168,85,247,0.7); }
+
+.repas-name { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.4; }
+.ingredients { list-style: none; }
+.ingredients li { font-size: 11px; color: rgba(255,255,255,0.4); padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; gap: 4px; }
+.ingredients li:last-child { border-bottom: none; }
+.qty { font-family: 'Orbitron', monospace; font-size: 10px; color: var(--cyan); font-weight: 700; flex-shrink: 0; }
+.prot-badge { display: inline-block; font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 6px; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.2); color: var(--green); flex-shrink: 0; }
+.kcal-row { margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; }
+.kcal-row span:first-child { font-size: 10px; color: rgba(255,255,255,0.18); }
+.kcal-row span:last-child { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); }
+.macro-mini { display: flex; justify-content: space-between; margin-top: 5px; }
+.macro-mini span { font-size: 9px; font-family: 'Orbitron', monospace; }
+
+/* Whey bar */
+.whey-bar { margin-top: 10px; background: rgba(0,255,136,0.03); border: 1px solid rgba(0,255,136,0.12); border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.whey-bar-left { display: flex; align-items: center; gap: 12px; }
+.whey-bar-title { font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700; letter-spacing: 2px; color: rgba(0,255,136,0.6); margin-bottom: 3px; }
+.whey-bar-desc { font-size: 11px; color: rgba(255,255,255,0.35); }
+.whey-kcal { font-family: 'Orbitron', monospace; font-size: 15px; font-weight: 900; color: var(--green); }
+
+/* Stack notes */
+.stack-notes { background: rgba(255,68,102,0.03); border: 1px solid rgba(255,68,102,0.12); border-radius: 16px; padding: 24px; margin-top: 20px; }
+.stack-notes-title { font-family: 'Orbitron', monospace; font-size: 10px; letter-spacing: 4px; color: rgba(255,68,102,0.45); margin-bottom: 16px; }
+.stack-note-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.stack-note { font-size: 11px; color: rgba(255,255,255,0.3); line-height: 1.7; }
+.stack-note strong { display: block; margin-bottom: 5px; font-family: 'Orbitron', monospace; font-size: 9px; letter-spacing: 1px; }
+.stack-note.trt  strong { color: var(--red); }
+.stack-note.hgh  strong { color: var(--cyan); }
+.stack-note.reta strong { color: var(--purple); }
+.stack-note.ghk  strong { color: var(--green); }
+
+/* Règles */
+.rules-section { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; padding: 24px; margin-top: 20px; }
+.rules-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(255,255,255,0.2); margin-bottom: 18px; }
+.rules-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.rule { display: flex; gap: 10px; align-items: flex-start; }
+.rule-icon { font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+.rule-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.8); margin-bottom: 3px; }
+.rule-desc { font-size: 11px; color: rgba(255,255,255,0.28); line-height: 1.6; }
+
+/* Activité */
+.activity-section { background: var(--card); border: 1px solid rgba(255,68,102,0.12); border-radius: 18px; padding: 24px; margin-top: 20px; }
+.activity-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(255,68,102,0.45); margin-bottom: 18px; }
+.activity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.activity-card { background: rgba(0,0,0,0.2); border-radius: 10px; padding: 16px; }
+.activity-card-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: var(--red); margin-bottom: 10px; }
+.activity-stat { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px; color: rgba(255,255,255,0.35); }
+.activity-stat span:last-child { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--red); }
+
+/* Budget */
+.budget-section { background: var(--card); border: 1px solid rgba(255,215,0,0.12); border-radius: 18px; padding: 24px; margin-top: 20px; }
+.budget-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 4px; color: rgba(255,215,0,0.4); margin-bottom: 18px; }
+.budget-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+.budget-cat-title { font-family: 'Orbitron', monospace; font-size: 9px; letter-spacing: 2px; margin-bottom: 10px; }
+.budget-item { font-size: 11px; color: rgba(255,255,255,0.4); padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; }
+.budget-price { color: var(--gold); font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; flex-shrink:0; margin-left:6px; }
+.budget-total { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,215,0,0.08); display: flex; justify-content: space-between; align-items: center; }
+
+.disclaimer { text-align: center; font-size: 10px; color: rgba(255,255,255,0.1); letter-spacing: 1px; margin-top: 40px; line-height: 1.7; }
+
+@media(max-width:700px) {
+  .repas-grid, .stack-note-grid { grid-template-columns: 1fr 1fr; }
+  .macros, .rules-grid, .budget-grid, .activity-grid { grid-template-columns: 1fr 1fr; }
+  .stack-banner { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand-tag">⚡ PROTOCOLE SÉCHE AGRESSIVE ⚡</div>
+    <div class="title">CUT EXTRÊME</div>
+    <div class="subtitle">Homme · 23 ans · 88kg · 1m76 · TRT + HGH + Reta + GHK-Cu</div>
+  </div>
+
+  <!-- Alerte -->
+  <div class="deficit-alert">
+    <div class="deficit-alert-icon">⚠️</div>
+    <div class="deficit-alert-text">
+      <strong>DÉFICIT RÉEL ~-1500 KCAL/JOUR</strong><br>
+      Ce protocole est rendu possible grâce au stack — la TRT et la HGH préservent le muscle en déficit important, le Reta brûle les graisses viscérales, le GHK-Cu préserve la peau. Écoutez votre corps — si fatigue excessive, ajouter une portion de riz au dîner.
+    </div>
+  </div>
+
+  <!-- Stack 4 composés -->
+  <div class="stack-banner">
+    <div class="stack-card trt">
+      <div class="stack-icon">💉</div>
+      <div class="stack-name">TESTOSTÉRONE</div>
+      <div class="stack-dose">TRT · 150mg/sem</div>
+      <div class="stack-effect">Préserve le muscle · Force · Anti-catabolique</div>
+    </div>
+    <div class="stack-card hgh">
+      <div class="stack-icon">⚗️</div>
+      <div class="stack-name">HGH</div>
+      <div class="stack-dose">3 UI / jour</div>
+      <div class="stack-effect">Lipolyse directe · IGF-1 · Brûle les graisses</div>
+    </div>
+    <div class="stack-card reta">
+      <div class="stack-icon">🧬</div>
+      <div class="stack-name">RETATRUTIDE</div>
+      <div class="stack-dose">3mg / semaine</div>
+      <div class="stack-effect">Coupe l'appétit · Brûle graisses viscérales</div>
+    </div>
+    <div class="stack-card ghk">
+      <div class="stack-icon">🔬</div>
+      <div class="stack-name">GHK-CU</div>
+      <div class="stack-dose">3mg / jour</div>
+      <div class="stack-effect">Peau · Collagène · Anti-flasque en séche</div>
+    </div>
+  </div>
+
+  <!-- Macros -->
+  <div class="macros">
+    <div class="macro-card kcal">
+      <div class="macro-val">1771*</div>
+      <div class="macro-label">KCAL / JOUR</div>
+      <div class="macro-note">Déficit réel ~-1500 kcal</div>
+    </div>
+    <div class="macro-card prot">
+      <div class="macro-val">204g</div>
+      <div class="macro-label">PROTÉINES</div>
+      <div class="macro-note">Anti-catabolique</div>
+    </div>
+    <div class="macro-card gluc">
+      <div class="macro-val">131g</div>
+      <div class="macro-label">GLUCIDES</div>
+      <div class="macro-note">Autour du sport</div>
+    </div>
+    <div class="macro-card lip">
+      <div class="macro-val">44g</div>
+      <div class="macro-label">LIPIDES</div>
+      <div class="macro-note">Maintien hormonal</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:11px;color:rgba(255,255,255,0.15);margin:8px 0 32px;letter-spacing:1px;">
+    * Jours sport : ~1771 kcal · 205g prot · 131g gluc · 47g lip — Jours repos : ~1380 kcal
+  </div>
+
+  <!-- Planning -->
+  <div class="week-grid">
+    <div class="day-cell sport"><div class="day-name">LUN</div><div class="day-emoji">💪🔥</div><div class="day-type">Push+Cardio</div></div>
+    <div class="day-cell sport"><div class="day-name">MAR</div><div class="day-emoji">💪</div><div class="day-type">Pull</div></div>
+    <div class="day-cell sport"><div class="day-name">MER</div><div class="day-emoji">💪🔥</div><div class="day-type">Jambes+Cardio</div></div>
+    <div class="day-cell sport"><div class="day-name">JEU</div><div class="day-emoji">💪</div><div class="day-type">Push</div></div>
+    <div class="day-cell sport"><div class="day-name">VEN</div><div class="day-emoji">💪🔥</div><div class="day-type">Pull+Cardio</div></div>
+    <div class="day-cell repos"><div class="day-name">SAM</div><div class="day-emoji">🚶</div><div class="day-type">Repos actif</div></div>
+    <div class="day-cell repos"><div class="day-name">DIM</div><div class="day-emoji">😴</div><div class="day-type">Repos complet</div></div>
+  </div>
+
+  <!-- JOURS SPORT -->
+  <div class="day-section" style="animation-delay:0.15s">
+    <div class="day-header">
+      <div class="day-label">LUNDI → VENDREDI — JOURS D'ENTRAÎNEMENT (~2455 kcal)</div>
+      <div class="day-line"></div>
+    </div>
+    <div class="repas-grid">
+
+      <div class="repas-card matin">
+        <div class="repas-time">MATIN · 7H00</div>
+        <div class="repas-name">Shaker Whey</div>
+        <ul class="ingredients">
+          <li><span>Whey protéine</span><span class="prot-badge">PROT</span><span class="qty">40g</span></li>
+          <li><span>Eau froide</span><span class="qty">400ml</span></li>
+          <li><span>Banane</span><span class="qty">1 entière</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~310 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 32g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 28g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 2g</span>
+        </div>
+      </div>
+
+      <div class="repas-card midi">
+        <div class="repas-time">MIDI · 12H30</div>
+        <div class="repas-name">Poulet + Riz<br>+ Légumes</div>
+        <ul class="ingredients">
+          <li><span>Blanc de poulet</span><span class="prot-badge">PROT</span><span class="qty">250g</span></li>
+          <li><span>Riz basmati (cuit)</span><span class="qty">130g</span></li>
+          <li><span>Poivron rouge</span><span class="qty">1 entier</span></li>
+          <li><span>Tomates cerises</span><span class="qty">100g</span></li>
+          <li><span>Huile tournesol</span><span class="qty">1 càs</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~672 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 84g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 39g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 20g</span>
+        </div>
+      </div>
+
+      <div class="repas-card gouter">
+        <div class="repas-time">16H00 · POST-SÉANCE</div>
+        <div class="repas-name">Shaker Whey<br>post-entraînement</div>
+        <ul class="ingredients">
+          <li><span>Whey protéine</span><span class="prot-badge">PROT</span><span class="qty">40g</span></li>
+          <li><span>Eau froide</span><span class="qty">400ml</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~160 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 30g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 4g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 2g</span>
+        </div>
+      </div>
+
+      <div class="repas-card soir">
+        <div class="repas-time">SOIR · 19H30</div>
+        <div class="repas-name">Viande/Poisson<br>+ Pâtes + Légumes</div>
+        <ul class="ingredients">
+          <li><span>Bœuf 5% ou lieu noir</span><span class="prot-badge">PROT</span><span class="qty">250g</span></li>
+          <li><span>Pâtes complètes (cuites)</span><span class="qty">130g</span></li>
+          <li><span>Haricots verts</span><span class="qty">200g</span></li>
+          <li><span>Huile tournesol</span><span class="qty">1 càs</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~579 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 58g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 35g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 23g</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pré-entraînement -->
+    <div style="margin-top:12px;background:rgba(255,140,0,0.04);border:1px solid rgba(255,140,0,0.18);border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:22px;">⚡</span>
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;color:rgba(255,140,0,0.7);margin-bottom:3px;">PRÉ-ENTRAÎNEMENT · 30 MIN AVANT LA SÉANCE</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);">Crème de riz Prozis · 25g + 120ml d'eau + 5 dattes</div>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:900;color:var(--orange);">~200 kcal</div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:3px;">
+          <span style="font-size:10px;color:rgba(0,255,136,0.5);font-family:'Orbitron',monospace;">P 3g</span>
+          <span style="font-size:10px;color:rgba(255,215,0,0.6);font-family:'Orbitron',monospace;">G 49g</span>
+          <span style="font-size:10px;color:rgba(168,85,247,0.4);font-family:'Orbitron',monospace;">L 0g</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:right;margin-top:8px;font-size:10px;font-family:'Orbitron',monospace;color:rgba(255,68,102,0.5);">
+      TOTAL JOUR SPORT : ~1771 kcal · P 205g · G 131g · L 47g
+    </div>
+  </div>
+
+  <!-- REPOS SAM -->
+  <div class="day-section" style="animation-delay:0.2s">
+    <div class="day-header">
+      <div class="day-label">SAMEDI — REPOS ACTIF (~2000 kcal)</div>
+      <div class="day-line"></div>
+    </div>
+    <div class="repas-grid" style="grid-template-columns:repeat(3,1fr);">
+
+      <div class="repas-card matin">
+        <div class="repas-time">MATIN · 8H00</div>
+        <div class="repas-name">Shaker Whey</div>
+        <ul class="ingredients">
+          <li><span>Whey protéine</span><span class="prot-badge">PROT</span><span class="qty">40g</span></li>
+          <li><span>Eau froide</span><span class="qty">400ml</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~160 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 30g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 4g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 2g</span>
+        </div>
+      </div>
+
+      <div class="repas-card midi">
+        <div class="repas-time">MIDI · 13H00</div>
+        <div class="repas-name">Poulet + Riz réduit<br>+ Légumes</div>
+        <ul class="ingredients">
+          <li><span>Blanc de poulet</span><span class="prot-badge">PROT</span><span class="qty">250g</span></li>
+          <li><span>Riz basmati (cuit)</span><span class="qty">130g</span></li>
+          <li><span>Haricots verts</span><span class="qty">200g</span></li>
+          <li><span>Tomates fraîches</span><span class="qty">150g</span></li>
+          <li><span>Huile tournesol</span><span class="qty">1 càs</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~640 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 68g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 50g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 16g</span>
+        </div>
+      </div>
+
+      <div class="repas-card soir">
+        <div class="repas-time">SOIR · 19H30</div>
+        <div class="repas-name">Lieu noir vapeur<br>+ Légumes · 0 glucides</div>
+        <ul class="ingredients">
+          <li><span>Lieu noir / merlan</span><span class="prot-badge">PROT</span><span class="qty">250g</span></li>
+          <li><span>Haricots verts</span><span class="qty">250g</span></li>
+          <li><span>Poivron rouge</span><span class="qty">1 entier</span></li>
+          <li><span>Tomates</span><span class="qty">150g</span></li>
+          <li><span>Huile tournesol</span><span class="qty">1 càs</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~470 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 55g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 20g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 14g</span>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <!-- REPOS DIM -->
+  <div class="day-section" style="animation-delay:0.23s">
+    <div class="day-header">
+      <div class="day-label">DIMANCHE — REPOS COMPLET + REPAS LIBRE MIDI</div>
+      <div class="day-line"></div>
+    </div>
+    <div class="repas-grid" style="grid-template-columns:repeat(3,1fr);">
+
+      <div class="repas-card matin">
+        <div class="repas-time">MATIN · 9H00</div>
+        <div class="repas-name">Shaker Whey</div>
+        <ul class="ingredients">
+          <li><span>Whey protéine</span><span class="prot-badge">PROT</span><span class="qty">40g</span></li>
+          <li><span>Eau froide</span><span class="qty">400ml</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~160 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 30g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 4g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 2g</span>
+        </div>
+      </div>
+
+      <div class="repas-card midi" style="border-top-color:rgba(255,215,0,0.4);background:rgba(255,215,0,0.02);">
+        <div class="repas-time" style="color:rgba(255,215,0,0.7);">MIDI · REPAS LIBRE 🎉</div>
+        <div class="repas-name" style="color:#ffd700;">Recharge libre<br>~800-1000 kcal</div>
+        <ul class="ingredients">
+          <li><span>Ce dont tu as envie 😊</span></li>
+          <li><span>Restaurant, cuisine maison</span></li>
+          <li><span>Garder des protéines ✓</span></li>
+          <li><span>Relance la leptine</span><span class="qty">💪</span></li>
+        </ul>
+        <div class="kcal-row" style="border-color:rgba(255,215,0,0.08);"><span>OBJECTIF</span><span style="color:#ffd700;">Recharge métabolique</span></div>
+      </div>
+
+      <div class="repas-card soir">
+        <div class="repas-time">SOIR · 19H30</div>
+        <div class="repas-name">Bœuf + Pâtes<br>+ Sauce tomate</div>
+        <ul class="ingredients">
+          <li><span>Bœuf haché 5%</span><span class="prot-badge">PROT</span><span class="qty">250g</span></li>
+          <li><span>Pâtes complètes (cuites)</span><span class="qty">130g</span></li>
+          <li><span>Tomates concassées</span><span class="qty">200g</span></li>
+          <li><span>Poivron rouge</span><span class="qty">½</span></li>
+          <li><span>Huile tournesol</span><span class="qty">1 càs</span></li>
+        </ul>
+        <div class="kcal-row"><span>KCAL</span><span>~720 kcal</span></div>
+        <div class="macro-mini">
+          <span style="color:rgba(0,255,136,0.6);">P 55g</span>
+          <span style="color:rgba(255,215,0,0.6);">G 70g</span>
+          <span style="color:rgba(168,85,247,0.5);">L 20g</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notes stack -->
+  <div class="stack-notes">
+    <div class="stack-notes-title">⚡ NUTRITION OPTIMISÉE POUR VOTRE STACK</div>
+    <div class="stack-note-grid">
+      <div class="stack-note trt">
+        <strong>💉 TRT 150mg</strong>
+        3g/kg de protéines — la testo booste la synthèse protéique au max. Même en déficit ~-1500 kcal, la TRT protège la masse musculaire si l'entraînement est intensif. Priorité aux protéines à chaque repas.
+      </div>
+      <div class="stack-note hgh">
+        <strong>⚗️ HGH 3UI</strong>
+        La HGH active la lipolyse directe — elle force le corps à brûler les graisses comme carburant. Injecter le matin à jeun pour maximiser l'effet brûle-graisse. Éviter les sucres simples les 2-3h post-injection.
+      </div>
+      <div class="stack-note reta">
+        <strong>🧬 RETATRUTIDE 3mg</strong>
+        Va couper fortement l'appétit les 2-4 premières semaines. Si vous ne pouvez pas atteindre 2455 kcal, ne forcez pas — descendre à 2000 kcal est acceptable avec ce stack. Boire 3L+ pour éviter la nausée.
+      </div>
+      <div class="stack-note ghk">
+        <strong>🔬 GHK-CU 3mg/j</strong>
+        Rôle crucial en séche : régénère le collagène et l'élasticité de la peau pour éviter l'effet "flasque" lors de la perte de gras rapide. Injecter en sous-cutané sur les zones de perte de gras ciblées.
+      </div>
+    </div>
+  </div>
+
+  <!-- Règles -->
+  <div class="rules-section">
+    <div class="rules-title">RÈGLES DE LA SÉCHE AGRESSIVE</div>
+    <div class="rules-grid">
+      <div class="rule"><div class="rule-icon">💧</div><div><div class="rule-title">3.5L d'eau minimum</div><div class="rule-desc">Le Reta et la HGH augmentent les besoins en eau. 3.5L/jour, 4L+ les jours intenses. L'eau aide aussi à réduire les nausées du Reta.</div></div></div>
+      <div class="rule"><div class="rule-icon">⚖️</div><div><div class="rule-title">Pesée + photos hebdo</div><div class="rule-desc">Le lundi matin à jeun. Avec TRT la rétention d'eau fausse la balance — les photos toutes les 2 semaines sont plus fiables pour voir la vraie progression.</div></div></div>
+      <div class="rule"><div class="rule-icon">😴</div><div><div class="rule-title">8h de sommeil</div><div class="rule-desc">La HGH agit à 80% pendant le sommeil profond. C'est là que la lipolyse et l'IGF-1 sont à leur pic. Le sommeil est un élément du stack.</div></div></div>
+      <div class="rule"><div class="rule-icon">🥩</div><div><div class="rule-title">264g protéines/jour</div><div class="rule-desc">Ne pas négliger même si l'appétit est coupé. Privilégier les shakers whey si l'estomac est difficile. Répartir sur 4-5 prises minimum.</div></div></div>
+      <div class="rule"><div class="rule-icon">🩸</div><div><div class="rule-title">Bilan sanguin mensuel</div><div class="rule-desc">TRT + HGH + déficit : surveiller hématocrite, IGF-1, glycémie, bilan hépatique. Indispensable pour un suivi sécurisé.</div></div></div>
+      <div class="rule"><div class="rule-icon">📊</div><div><div class="rule-title">Durée : 8-12 semaines max</div><div class="rule-desc">Un cycle de séche agressive ne doit pas dépasser 12 semaines. Prévoir une phase de maintenance avant un nouveau cycle.</div></div></div>
+    </div>
+  </div>
+
+  <!-- Activité -->
+  <div class="activity-section">
+    <div class="activity-title">🔥 ACTIVITÉ PHYSIQUE — SÉCHE</div>
+    <div class="activity-grid">
+      <div class="activity-card">
+        <div class="activity-card-title">👟 PAS QUOTIDIENS</div>
+        <div class="activity-stat"><span>Minimum absolu</span><span>12 000 pas</span></div>
+        <div class="activity-stat"><span>Jours entraînement</span><span>12 000+ pas</span></div>
+        <div class="activity-stat"><span>Jours repos</span><span>12 000 pas</span></div>
+        <div style="margin-top:8px;font-size:10px;color:rgba(255,255,255,0.18);line-height:1.6;">Le NEAT amplifie l'effet du déficit calorique. Sur une séche, chaque pas compte.</div>
+      </div>
+      <div class="activity-card">
+        <div class="activity-card-title">🏃 CARDIO — MARCHE INCLINÉE</div>
+        <div class="activity-stat"><span>Fréquence</span><span>3× / semaine</span></div>
+        <div class="activity-stat"><span>Durée</span><span>20 min post-muscu</span></div>
+        <div class="activity-stat"><span>Inclinaison</span><span>10 – 15%</span></div>
+        <div class="activity-stat"><span>Vitesse</span><span>5 – 6 km/h</span></div>
+        <div class="activity-stat"><span>Dépense</span><span>~200 – 300 kcal</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div class="budget-section">
+    <div class="budget-title">🛒 COURSES LIDL — ~58€/SEMAINE</div>
+    <div class="budget-grid">
+      <div>
+        <div class="budget-cat-title" style="color:rgba(0,255,136,0.5);">PROTÉINES</div>
+        <div class="budget-item"><span>Blancs poulet (1.5kg)</span><span class="budget-price">~13€</span></div>
+        <div class="budget-item"><span>Bœuf haché 5% (300g x2)</span><span class="budget-price">~10€</span></div>
+        <div class="budget-item"><span>Lieu noir surgelé (1kg)</span><span class="budget-price">~6€</span></div>
+
+      </div>
+      <div>
+        <div class="budget-cat-title" style="color:rgba(255,215,0,0.5);">FÉCULENTS</div>
+        <div class="budget-item"><span>Riz basmati (1kg)</span><span class="budget-price">~2€</span></div>
+        <div class="budget-item"><span>Pâtes complètes (500g)</span><span class="budget-price">~1.50€</span></div>
+        <div class="budget-item"><span>Bananes (1kg)</span><span class="budget-price">~1.50€</span></div>
+        <div class="budget-item"><span>Dattes (500g)</span><span class="budget-price">~3€</span></div>
+      </div>
+      <div>
+        <div class="budget-cat-title" style="color:rgba(0,200,255,0.5);">LÉGUMES & AUTRES</div>
+        <div class="budget-item"><span>Haricots verts surgelés (1kg)</span><span class="budget-price">~2€</span></div>
+        <div class="budget-item"><span>Poivrons rouges (4x)</span><span class="budget-price">~3€</span></div>
+        <div class="budget-item"><span>Tomates (filet + concassées)</span><span class="budget-price">~3.50€</span></div>
+        <div class="budget-item"><span>Huile tournesol</span><span class="budget-price">~2€</span></div>
+        <div class="budget-item"><span>Herbes, ail, citron</span><span class="budget-price">~2€</span></div>
+      </div>
+    </div>
+    <div class="budget-total">
+      <div style="font-size:11px;color:rgba(255,255,255,0.18);">💡 Poissons surgelés = même valeur nutritive · moins cher que le frais</div>
+      <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:900;color:var(--gold);">TOTAL ~56€/sem</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Ce plan est conçu pour la recherche et l'information uniquement.<br>
+    Les substances mentionnées sont à usage de recherche. Consultez impérativement un médecin pour tout suivi médical, bilan sanguin et protocole hormonaux.<br>
+    Ne jamais réaliser un déficit calorique agressif sans supervision médicale.
+  </div>
+
+</div>
+</body>
+</html>
