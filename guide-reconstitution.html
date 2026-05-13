@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Reconstitution Peptides — PEPTOIDS</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cyan: #00c8ff;
+  --purple: #a855f7;
+  --green: #00ff88;
+  --gold: #ffd700;
+  --red: #ff4466;
+  --dark: #020818;
+  --card: rgba(6,14,38,0.97);
+  --border: rgba(0,200,255,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--dark);
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  overflow-x: hidden;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,200,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,200,255,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none; z-index: 0;
+}
+.wrap { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+/* Header */
+.header { text-align: center; margin-bottom: 52px; animation: fadeUp 0.7s ease; }
+.brand-tag { font-family: 'Orbitron', monospace; font-size: 10px; letter-spacing: 5px; color: rgba(0,200,255,0.5); margin-bottom: 16px; }
+.title { font-family: 'Orbitron', monospace; font-size: clamp(22px, 4vw, 34px); font-weight: 900; letter-spacing: 3px; background: linear-gradient(90deg, #fff, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+.subtitle { font-size: 13px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+
+/* Alerte */
+.alert {
+  background: rgba(255,215,0,0.05);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 40px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  animation: fadeUp 0.6s 0.05s ease both;
+}
+.alert-icon { font-size: 24px; flex-shrink: 0; }
+.alert-text { font-size: 12px; color: rgba(255,215,0,0.7); line-height: 1.7; }
+.alert-text strong { color: var(--gold); font-family: 'Orbitron', monospace; font-size: 11px; display: block; margin-bottom: 4px; }
+
+/* Section */
+.section { margin-bottom: 36px; animation: fadeUp 0.6s ease both; }
+.section-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: rgba(0,200,255,0.5);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* Matériel */
+.materiel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.mat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.mat-card:hover { border-color: rgba(0,200,255,0.3); }
+.mat-icon { font-size: 28px; margin-bottom: 10px; }
+.mat-name { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: 1px; }
+.mat-desc { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+
+/* Calculateur */
+.calculator {
+  background: var(--card);
+  border: 1px solid rgba(0,200,255,0.15);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 36px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.calc-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; letter-spacing: 4px; color: rgba(0,200,255,0.5); margin-bottom: 24px; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.calc-field label { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.3); display: block; margin-bottom: 8px; font-family: 'Orbitron', monospace; }
+.calc-field input, .calc-field select {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(0,200,255,0.15);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #fff;
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.calc-field input:focus, .calc-field select:focus { border-color: rgba(0,200,255,0.4); }
+.calc-field select option { background: #0d1530; }
+.calc-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, rgba(0,200,255,0.15), rgba(168,85,247,0.15));
+  border: 1px solid rgba(0,200,255,0.3);
+  border-radius: 12px;
+  color: var(--cyan);
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.calc-btn:hover { background: linear-gradient(90deg, rgba(0,200,255,0.25), rgba(168,85,247,0.25)); border-color: rgba(0,200,255,0.5); }
+
+.calc-result {
+  display: none;
+  margin-top: 20px;
+  background: rgba(0,200,255,0.05);
+  border: 1px solid rgba(0,200,255,0.2);
+  border-radius: 14px;
+  padding: 20px;
+}
+.calc-result.show { display: block; }
+.result-title { font-family: 'Orbitron', monospace; font-size: 10px; letter-spacing: 3px; color: rgba(0,200,255,0.5); margin-bottom: 16px; }
+.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.result-item { text-align: center; }
+.result-val { font-family: 'Orbitron', monospace; font-size: 22px; font-weight: 900; color: var(--cyan); margin-bottom: 4px; }
+.result-label { font-size: 10px; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+.result-note { margin-top: 16px; font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.7; padding-top: 14px; border-top: 1px solid rgba(0,200,255,0.1); }
+
+/* Étapes */
+.steps { display: flex; flex-direction: column; gap: 16px; }
+.step {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: border-color 0.2s;
+}
+.step:hover { border-color: rgba(0,200,255,0.25); }
+.step-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  color: rgba(0,200,255,0.2);
+  flex-shrink: 0;
+  min-width: 36px;
+  line-height: 1;
+}
+.step-content {}
+.step-title { font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 6px; letter-spacing: 1px; }
+.step-desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.7; }
+.step-tip { margin-top: 8px; font-size: 11px; color: rgba(0,200,255,0.5); font-style: italic; }
+
+/* Conservation */
+.storage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.storage-card { background: var(--card); border-radius: 14px; padding: 20px; }
+.storage-card.froid { border: 1px solid rgba(0,200,255,0.15); }
+.storage-card.danger { border: 1px solid rgba(255,68,102,0.15); }
+.storage-card-title { font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 2px; margin-bottom: 12px; }
+.storage-card.froid .storage-card-title { color: var(--cyan); }
+.storage-card.danger .storage-card-title { color: var(--red); }
+.storage-item { font-size: 12px; color: rgba(255,255,255,0.4); padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: center; gap: 8px; line-height: 1.5; }
+.storage-item:last-child { border-bottom: none; }
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; gap: 10px; }
+.faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.faq-q { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8); transition: color 0.2s; }
+.faq-q:hover { color: var(--cyan); }
+.faq-arrow { font-size: 12px; color: rgba(0,200,255,0.4); transition: transform 0.3s; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a { display: none; padding: 0 20px 16px; font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.8; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 14px; }
+.faq-item.open .faq-a { display: block; }
+
+.disclaimer { text-align: center; font-size: 10px; color: rgba(255,255,255,0.12); letter-spacing: 1px; margin-top: 48px; line-height: 1.8; }
+
+@media(max-width:680px) {
+  .materiel-grid, .calc-grid, .result-grid, .storage-grid { grid-template-columns: 1fr 1fr; }
+  .materiel-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand-tag">✦ PEPTOIDS · GUIDE TECHNIQUE ✦</div>
+    <div class="title">RECONSTITUTION PEPTIDES</div>
+    <div class="subtitle">Guide complet pour préparer vos peptides en toute sécurité</div>
+  </div>
+
+  <!-- Alerte -->
+  <div class="alert">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text">
+      <strong>USAGE RECHERCHE UNIQUEMENT</strong>
+      Les peptides PEPTOIDS sont destinés exclusivement à la recherche scientifique. Ce guide est fourni à titre informatif. Consultez toujours un professionnel de santé qualifié avant toute manipulation. PEPTOIDS décline toute responsabilité quant à l'usage fait de ces informations.
+    </div>
+  </div>
+
+  <!-- Matériel nécessaire -->
+  <div class="section" style="animation-delay:0.1s">
+    <div class="section-title">🧰 MATÉRIEL NÉCESSAIRE</div>
+    <div class="materiel-grid">
+      <div class="mat-card">
+        <div class="mat-icon">💉</div>
+        <div class="mat-name">Seringues insulin</div>
+        <div class="mat-desc">Seringues 1ml graduées en unités (U100). Aiguilles 29-31G pour injection sous-cutanée.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-icon">💧</div>
+        <div class="mat-name">Eau bactériostatique</div>
+        <div class="mat-desc">Eau pour préparation injectable avec benzyl alcohol 0.9%. Permet une conservation optimale du peptide reconstitué.</div>
+      </div>
+      <div class="mat-card">
+        <div class="mat-icon">🧤</div>
+        <div class="mat-name">Alcool isopropylique</div>
+        <div class="mat-desc">Lingettes ou coton imbibé à 70% pour désinfecter le septum du flacon avant chaque manipulation.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculateur -->
+  <div class="calculator">
+    <div class="calc-title">⚡ CALCULATEUR DE RECONSTITUTION</div>
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label>QUANTITÉ DU FLACON (mg)</label>
+        <input type="number" id="mgFlacon" placeholder="Ex: 10" min="0.1" step="0.1" oninput="autoFillEau()">
+      </div>
+      <div class="calc-field">
+        <label>EAU BACTÉRIOSTATIQUE À AJOUTER (ml)</label>
+        <input type="number" id="mlEau" placeholder="Auto-calculé" min="0.1" step="0.1">
+        <div style="font-size:10px;color:rgba(0,200,255,0.4);margin-top:6px;">💡 Se remplit automatiquement selon le flacon</div>
+      </div>
+      <div class="calc-field">
+        <label>DOSE SOUHAITÉE (mg)</label>
+        <input type="number" id="doseMg" placeholder="Ex: 0.5" min="0.01" step="0.01">
+      </div>
+      <div class="calc-field">
+        <label>TYPE DE SERINGUE</label>
+        <select id="seringuType">
+          <option value="100">U100 (1ml = 100 unités)</option>
+          <option value="50">U50 (1ml = 50 unités)</option>
+        </select>
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calculer()">⚡ CALCULER MA DOSE</button>
+
+    <div class="calc-result" id="calcResult">
+      <div class="result-title">RÉSULTAT DE RECONSTITUTION</div>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="result-val" id="resConc">—</div>
+          <div class="result-label">MG / ML</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="resMl">—</div>
+          <div class="result-label">ML PAR DOSE</div>
+        </div>
+        <div class="result-item">
+          <div class="result-val" id="resUnits">—</div>
+          <div class="result-label">UNITÉS SERINGUE</div>
+        </div>
+      </div>
+      <div class="result-note" id="resNote"></div>
+    </div>
+  </div>
+
+  <!-- Étapes -->
+  <div class="section" style="animation-delay:0.15s">
+    <div class="section-title">📋 ÉTAPES DE RECONSTITUTION</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">SORTIR LE FLACON DU RÉFRIGÉRATEUR</div>
+          <div class="step-desc">Laissez le flacon lyophilisé revenir à température ambiante pendant 10-15 minutes avant de l'ouvrir. Un choc thermique peut dégrader le peptide.</div>
+          <div class="step-tip">💡 Ne jamais chauffer ou agiter le flacon.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">DÉSINFECTER LE SEPTUM</div>
+          <div class="step-desc">Nettoyez le bouchon caoutchouc du flacon de peptide ET le septum du flacon d'eau bactériostatique avec une lingette alcoolisée à 70%. Laissez sécher 30 secondes.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">PRÉLEVER L'EAU BACTÉRIOSTATIQUE</div>
+          <div class="step-desc">Avec une seringue propre, prélevez la quantité d'eau bactériostatique calculée (généralement 1 à 2ml selon le flacon). Introduisez l'aiguille en angle dans le septum.</div>
+          <div class="step-tip">💡 Utilisez le calculateur ci-dessus pour connaître la quantité exacte.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">INJECTER L'EAU DANS LE FLACON</div>
+          <div class="step-desc">Injectez l'eau bactériostatique lentement le long de la paroi du flacon — jamais directement sur la poudre. L'eau doit couler doucement sur les bords.</div>
+          <div class="step-tip">💡 Aiguille orientée vers la paroi de verre, pas vers la poudre lyophilisée.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">LAISSER DISSOUDRE</div>
+          <div class="step-desc">Ne jamais agiter. Faites tourner doucement le flacon entre vos doigts ou laissez-le reposer 5-10 minutes. La poudre doit se dissoudre complètement. La solution doit être claire et incolore.</div>
+          <div class="step-tip">💡 Si la solution reste trouble, ne pas l'utiliser.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">PRÉLEVER LA DOSE ET CONSERVER</div>
+          <div class="step-desc">Prélevez la dose calculée avec une seringue à insuline propre. Conservez le reste au réfrigérateur entre 2°C et 8°C. Notez la date de reconstitution sur le flacon.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conservation -->
+  <div class="section" style="animation-delay:0.2s">
+    <div class="section-title">❄️ CONSERVATION</div>
+    <div class="storage-grid">
+      <div class="storage-card froid">
+        <div class="storage-card-title">✅ BONNES PRATIQUES</div>
+        <div class="storage-item">❄️ Flacon non reconstitué : -20°C (congélateur)</div>
+        <div class="storage-item">🌡️ Flacon reconstitué : 2°C à 8°C (réfrigérateur)</div>
+        <div class="storage-item">📅 Durée après reconstitution : 40 jours max</div>
+        <div class="storage-item">🔒 À l'abri de la lumière</div>
+        <div class="storage-item">🧊 Sortir 10 min avant utilisation</div>
+      </div>
+      <div class="storage-card danger">
+        <div class="storage-card-title">❌ À ÉVITER ABSOLUMENT</div>
+        <div class="storage-item">🔥 Exposition à la chaleur ou au soleil</div>
+        <div class="storage-item">🌡️ Cycles gel/dégel répétés</div>
+        <div class="storage-item">💢 Agiter vigoureusement le flacon</div>
+        <div class="storage-item">⏰ Utiliser après 40 jours de reconstitution</div>
+        <div class="storage-item">🚫 Utiliser si solution trouble ou colorée</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" style="animation-delay:0.25s">
+    <div class="section-title">❓ QUESTIONS FRÉQUENTES</div>
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Quelle quantité d'eau bactériostatique utiliser ? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">La quantité la plus courante est 1ml à 2ml par flacon. Plus vous ajoutez d'eau, plus la solution est diluée et plus le volume par injection est important. Utilisez le calculateur ci-dessus pour adapter selon votre dose souhaitée.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Peut-on utiliser de l'eau stérile à la place de l'eau bactériostatique ? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">L'eau bactériostatique est fortement recommandée car elle contient du benzyl alcohol qui inhibe la croissance bactérienne et permet une conservation de 28 jours. L'eau stérile simple ne se conserve que 24h une fois le flacon ouvert.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">La solution doit-elle être complètement transparente ? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Oui, une solution correctement reconstituée doit être claire et incolore. Une légère teinte jaune peut être normale sur certains peptides. En revanche, une solution trouble, avec des particules visibles ou fortement colorée ne doit pas être utilisée.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Comment savoir combien d'unités tirer sur la seringue ? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Utilisez le calculateur ci-dessus — il vous donne directement le nombre d'unités à tirer selon votre type de seringue (U100 ou U50), la concentration de votre flacon et la dose souhaitée.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Peut-on recongeler un flacon après reconstitution ? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Non. Une fois reconstitué, le flacon ne doit pas être recongelé. Conservez-le au réfrigérateur entre 2°C et 8°C et utilisez-le dans les 40 jours.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Ce guide est fourni à titre informatif uniquement.<br>
+    Les peptides PEPTOIDS sont destinés exclusivement à la recherche scientifique — non destinés à la consommation humaine.<br>
+    PEPTOIDS ne saurait être tenu responsable de l'utilisation faite de ces informations.
+  </div>
+
+</div>
+
+<script>
+function autoFillEau() {
+  var mg = parseFloat(document.getElementById('mgFlacon').value);
+  var mlEau = document.getElementById('mlEau');
+  if (!mg || mg <= 0) { mlEau.value = ''; return; }
+  // 10mg = 1ml, 20mg = 2ml, 30mg = 3ml (ratio 1ml par 10mg)
+  var ml = mg / 10;
+  mlEau.value = ml.toFixed(1);
+}
+
+function calculer() {
+  var mg = parseFloat(document.getElementById('mgFlacon').value);
+  var ml = parseFloat(document.getElementById('mlEau').value);
+  var dose = parseFloat(document.getElementById('doseMg').value);
+  var u = parseInt(document.getElementById('seringuType').value);
+  var res = document.getElementById('calcResult');
+
+  if (!mg || !ml || !dose || mg <= 0 || ml <= 0 || dose <= 0) {
+    alert('Veuillez remplir tous les champs correctement.');
+    return;
+  }
+  if (dose > mg) {
+    alert('La dose souhaitée ne peut pas dépasser la quantité totale du flacon.');
+    return;
+  }
+
+  var conc = mg / ml; // mg/ml
+  var mlDose = dose / conc; // ml par dose
+  var units = mlDose * u; // unités seringue
+  var nbDoses = Math.floor(mg / dose);
+
+  document.getElementById('resConc').textContent = conc.toFixed(2) + ' mg';
+  document.getElementById('resMl').textContent = mlDose.toFixed(3) + ' ml';
+  document.getElementById('resUnits').textContent = Math.round(units) + ' U';
+  document.getElementById('resNote').innerHTML =
+    '📌 Concentration : <strong style="color:var(--cyan);">' + conc.toFixed(2) + ' mg/ml</strong> — ' +
+    'Tirer <strong style="color:var(--cyan);">' + Math.round(units) + ' unités</strong> sur une seringue ' + u + 'U pour une dose de <strong style="color:var(--cyan);">' + dose + ' mg</strong>.<br>' +
+    '📦 Nombre de doses dans ce flacon : <strong style="color:var(--green);">' + nbDoses + ' doses</strong> de ' + dose + ' mg.';
+
+  res.classList.add('show');
+}
+
+function toggleFaq(el) {
+  var item = el.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>
