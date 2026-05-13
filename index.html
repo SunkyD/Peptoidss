@@ -603,6 +603,7 @@ footer {
     <li><a href="apropos.html">À propos</a></li>
     <li><a href="#reviews">Avis</a></li>
     <li><a href="contact.html">Contact</a></li>
+    <li><a href="guide-reconstitution.html" style="color:rgba(0,200,255,0.7);">🧪 Guide</a></li>
     <li id="slotsNavItem" style="display:none;"><a href="slots.html" style="color:var(--gold);animation:slotsPulse 2s ease infinite;">🎰 Lucky</a></li>
   </ul>
   <div class="nav-right">
@@ -1647,15 +1648,6 @@ async function initSupabase() {
 
 initSupabase();
 
-// Ouvrir le panier si flag depuis produit.html
-document.addEventListener('sb:ready', function() {
-  loadCart();
-  if (localStorage.getItem('peptoids:open_cart') === '1') {
-    localStorage.removeItem('peptoids:open_cart');
-    setTimeout(function(){ openCart(); }, 300);
-  }
-}, { once: true });
-
 </script>
 <script>
 // ══ CART STATE ══
@@ -1711,42 +1703,6 @@ try {
 } catch(e) {}
 
 let cartItems = {};  // { id: { ...product, qty } }
-
-function saveCart() {
-  try {
-    var s = {};
-    Object.keys(cartItems).forEach(function(k){ s[k] = cartItems[k].qty; });
-    localStorage.setItem('peptoids:cart', JSON.stringify(s));
-  } catch(e) {}
-}
-
-function loadCart() {
-  try {
-    var s = JSON.parse(localStorage.getItem('peptoids:cart') || '{}');
-    if (!Object.keys(s).length) return;
-    var customs = [];
-    try { customs = JSON.parse(localStorage.getItem('peptoids:custom_products') || '[]'); } catch(e2) {}
-    Object.keys(s).forEach(function(key) {
-      var qty = parseInt(s[key]) || 1;
-      var p = PRODUCTS[key];
-      if (!p) {
-        var cp = customs.find(function(c){ return c.id === key; });
-        if (cp) {
-          PRODUCTS[key] = { name: cp.nom, color: 'rgba(0,200,255,0.15)', emoji: '🧪',
-            get price() { return parseFloat(cp.prix) || 0; }
-          };
-          p = PRODUCTS[key];
-        }
-      }
-      if (!p) return;
-      var k2 = key;
-      cartItems[key] = { name: p.name, color: p.color || 'rgba(0,200,255,0.15)', emoji: p.emoji || '🧪', qty: qty,
-        get price() { return PRODUCTS[k2] ? (typeof PRODUCTS[k2].price === 'number' ? PRODUCTS[k2].price : getEffectivePrice(k2).price) : 0; }
-      };
-    });
-    if (Object.keys(cartItems).length > 0) updateCart();
-  } catch(e) { console.warn('loadCart:', e); }
-}
 let promoDiscount = 0;  // pourcentage (0-1)
 let promoFixed = 0;     // montant fixe en euros
 let promoApplied = '';
@@ -1877,7 +1833,7 @@ function updateCart() {
 
   const subtotal = keys.reduce((s, k) => s + cartItems[k].qty * cartItems[k].price, 0) - retaBonus - ghkBonus;
   const promoDiscount2 = subtotal * promoDiscount + promoFixed;
-  const shipping = subtotal >= 100 ? 0 : 5.00;
+  const shipping = subtotal >= 100 ? 0 : 6.99;
   const total = subtotal - promoDiscount2 + shipping;
 
   // Nav badge
@@ -1888,7 +1844,7 @@ function updateCart() {
   // Totals
   document.getElementById('subtotalEl').textContent = fmt(subtotal);
   document.getElementById('totalEl').textContent = fmt(total);
-  document.getElementById('shippingEl').textContent = subtotal >= 100 ? 'Gratuite 🎁' : '5,00 € · Mondial Relay';
+  document.getElementById('shippingEl').textContent = subtotal >= 100 ? 'Gratuite 🎁' : '6,99 € · Mondial Relay';
   updateShippingBar(subtotal);
 
   // Promo row
@@ -2022,17 +1978,17 @@ function updateCart() {
       if (!cartItems[k]) return;
       cartItems[k].qty--;
       if (cartItems[k].qty <= 0) delete cartItems[k];
-      updateCart(); saveCart();
+      updateCart();
     });
     div.querySelector('.btn-plus').addEventListener('click', () => {
       if (!cartItems[k]) return;
       cartItems[k].qty++;
-      updateCart(); saveCart();
+      updateCart();
     });
     div.querySelector('.btn-del').addEventListener('click', () => {
       delete cartItems[k];
       checkPromoStillValid();
-      updateCart(); saveCart();
+      updateCart();
     });
     container.appendChild(div);
   });
@@ -2348,7 +2304,7 @@ function goToStep2() {
   const ghkBonusR  = Math.floor(ghkQtyR / 3) * ghkPriceR * 0.50;
   const subtotal = keys.reduce((s,k) => s + cartItems[k].qty * cartItems[k].price, 0) - retaBonusR - ghkBonusR;
   const discount = subtotal * promoDiscount + promoFixed;
-  const shipping = subtotal >= 100 ? 0 : 5.00;
+  const shipping = subtotal >= 100 ? 0 : 6.99;
   const total    = Math.max(0, subtotal - discount + shipping);
 
   document.getElementById('recapItems').innerHTML =
@@ -2453,7 +2409,7 @@ window.confirmOrder = async function() {
 
   const subtotal = keys.reduce((s,k) => s + cartItems[k].qty * cartItems[k].price, 0) - retaBonusC - ghkBonusC;
   const discount = subtotal * promoDiscount + promoFixed;
-  const shipping = subtotal >= 100 ? 0 : 5.00;
+  const shipping = subtotal >= 100 ? 0 : 6.99;
   const total    = Math.max(0, subtotal - discount + shipping);
 
   const client = {
@@ -2539,7 +2495,6 @@ window.confirmOrder = async function() {
     showConfirmModal(order);
 
     cartItems = {};
-    localStorage.removeItem('peptoids:cart');
     promoDiscount = 0;
     promoFixed = 0;
     promoApplied = '';
@@ -4029,7 +3984,7 @@ var QUICK_REPLIES = [
 ];
 
 var BOT_RESPONSES = {
-  'livraison': 'Livraison via <strong>Mondial Relay</strong> en 2-5 jours ouvrés. Frais : <strong>5€</strong>, offerte dès 100€. Emballage neutre et discret garanti. 📦',
+  'livraison': 'Livraison via <strong>Mondial Relay</strong> en 2-5 jours ouvrés. Frais : <strong>6,99€</strong>, offerte dès 100€. Emballage neutre et discret garanti. 📦',
   'promo': "Vous avez un code promo ? Entrez-le dans le <strong>panier</strong> avant de valider. Pour en obtenir un, rejoignez notre programme fidélité ! 🎁",
   'suivi': "Votre numéro de suivi vous est envoyé par email après expédition. Retrouvez-le dans <a href='compte.html' style='color:#00c8ff;text-decoration:none;'>votre espace client</a>. 📬",
   'produits': "Nous proposons <strong>3 formules</strong> : Retatrutide GLP-1 Triple, GHK-Cu Copper Peptide et HGH Somatropin. Tous certifiés pureté 99.8% avec certificat d'analyse. 🔬",
